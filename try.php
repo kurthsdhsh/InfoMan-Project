@@ -1,2 +1,2 @@
 <?php
-echo "GAnda lng";
+echo "weh";
