@@ -1,0 +1,315 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+/* Page background (only on pages that contain the login card) */
+body:has(.row.col-md-8.mx-auto) {
+  background: #dcdcdc;
+}
+
+/* ---------- Card ---------- */
+.row.col-md-8.mx-auto {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 760px;
+  height: 420px;
+  margin: 60px auto !important;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+  /* white left half + green gradient right half */
+  background:
+    linear-gradient(to right, #fff 50%, transparent 50%),
+    linear-gradient(160deg, #34d399 0%, #059669 100%);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .12);
+}
+
+/* ---------- Left: form ---------- */
+.row.col-md-8.mx-auto > form {
+  width: 50%;
+  height: 100%;
+  margin: 0;
+  padding: 36px 40px 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* "Signin" title */
+.row.col-md-8.mx-auto > form::before {
+  content: "Signin";
+  display: block;
+  margin-bottom: 24px;
+  text-align: center;
+  font-size: 32px;
+  font-weight: 600;
+  color: #111;
+}
+
+/* Label sits above its input */
+.row.col-md-8.mx-auto .form-outline {
+  display: flex;
+  flex-direction: column-reverse;
+  margin-bottom: 14px !important;
+}
+
+.row.col-md-8.mx-auto .form-label {
+  margin: 0 0 4px;
+  font-size: 11px;
+  color: #666;
+}
+
+.row.col-md-8.mx-auto .form-control {
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 4px;
+  background: #eee;
+  font-family: inherit;
+  font-size: 13px;
+  box-shadow: none;
+}
+
+.row.col-md-8.mx-auto .form-control:focus {
+  background: #eee;
+  outline: 2px solid #059669;
+  box-shadow: none;
+}
+
+/* Sign in button */
+.row.col-md-8.mx-auto .btn-primary {
+  width: 100%;
+  padding: 10px;
+  border: 0;
+  border-radius: 4px;
+  background: #059669;
+  font-family: inherit;
+  font-size: 13px;
+  margin-bottom: 14px !important;
+}
+
+.row.col-md-8.mx-auto .btn-primary:hover,
+.row.col-md-8.mx-auto .btn-primary:focus {
+  background: #047857;
+}
+
+/* ---------- Right: welcome panel ---------- */
+.row.col-md-8.mx-auto::before,
+.row.col-md-8.mx-auto::after {
+  position: absolute;
+  left: 50%;
+  width: 50%;
+  padding: 0 40px;
+  text-align: center;
+  color: #fff;
+  pointer-events: none;
+}
+
+.row.col-md-8.mx-auto::before {
+  content: "Welcome back!";
+  top: 125px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.row.col-md-8.mx-auto::after {
+  content: "We are so happy to have you here. It's great to see you again. We hope you had a safe and enjoyable time away.";
+  top: 165px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* Existing "Not a member? Register" block becomes the pill in the green panel */
+.row.col-md-8.mx-auto .text-center {
+  position: absolute;
+  left: 50%;
+  top: 270px;
+  width: 50%;
+  text-align: center;
+}
+
+.row.col-md-8.mx-auto .text-center p {
+  display: inline-block;
+  margin: 0;
+  padding: 10px 28px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .18);
+  color: #fff;
+  font-size: 12px;
+}
+
+.row.col-md-8.mx-auto .text-center a {
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.row.col-md-8.mx-auto .text-center a:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Mobile: stack, hide the green panel ---------- */
+@media (max-width: 767px) {
+  .row.col-md-8.mx-auto {
+    height: auto;
+    margin: 16px auto !important;
+    background: #fff;
+  }
+
+  .row.col-md-8.mx-auto::before,
+  .row.col-md-8.mx-auto::after {
+    display: none;
+  }
+
+  .row.col-md-8.mx-auto > form {
+    width: 100%;
+    height: auto;
+  }
+
+  .row.col-md-8.mx-auto .text-center {
+    position: static;
+    width: 100%;
+    padding-bottom: 20px;
+  }
+
+  .row.col-md-8.mx-auto .text-center p {
+    background: none;
+    color: #333;
+    padding: 0;
+  }
+
+  .row.col-md-8.mx-auto .text-center a {
+    color: #059669;
+  }
+}
+    
+body:has(.container-fluid.container-lg) {
+  background: #dcdcdc;
+}
+
+/* ---------- Card ---------- */
+.container-fluid.container-lg {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 760px;
+  height: 460px;
+  margin: 60px auto;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+  /* white left half + green gradient right half */
+  background:
+    linear-gradient(to right, #fff 50%, transparent 50%),
+    linear-gradient(160deg, #34d399 0%, #059669 100%);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .12);
+}
+
+/* ---------- Left: form ---------- */
+.container-fluid.container-lg > form {
+  width: 50%;
+  height: 100%;
+  margin: 0;
+  padding: 36px 40px 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* "Register" title */
+.container-fluid.container-lg > form::before {
+  content: "Register";
+  display: block;
+  margin-bottom: 22px;
+  text-align: center;
+  font-size: 32px;
+  font-weight: 600;
+  color: #111;
+}
+
+/* Label sits above its input */
+.container-fluid.container-lg .mb-3 {
+  display: flex;
+  flex-direction: column-reverse;
+  margin-bottom: 12px !important;
+}
+
+.container-fluid.container-lg .form-label {
+  margin: 0 0 4px;
+  font-size: 11px;
+  color: #666;
+}
+
+.container-fluid.container-lg .form-control {
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 4px;
+  background: #eee;
+  font-family: inherit;
+  font-size: 13px;
+  box-shadow: none;
+}
+
+.container-fluid.container-lg .form-control:focus {
+  background: #eee;
+  outline: 2px solid #059669;
+  box-shadow: none;
+}
+
+/* Register button */
+.container-fluid.container-lg .btn-primary {
+  width: 100%;
+  margin-top: 4px;
+  padding: 10px;
+  border: 0;
+  border-radius: 4px;
+  background: #059669;
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.container-fluid.container-lg .btn-primary:hover,
+.container-fluid.container-lg .btn-primary:focus {
+  background: #047857;
+}
+
+/* ---------- Right: green panel ---------- */
+.container-fluid.container-lg::before,
+.container-fluid.container-lg::after {
+  position: absolute;
+  left: 50%;
+  width: 50%;
+  padding: 0 40px;
+  text-align: center;
+  color: #fff;
+  pointer-events: none;
+}
+
+.container-fluid.container-lg::before {
+  content: "Join us!";
+  top: 165px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.container-fluid.container-lg::after {
+  content: "Create your account in a few seconds and start shopping. We are so happy to have you here.";
+  top: 205px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* ---------- Mobile: stack, hide the green panel ---------- */
+@media (max-width: 767px) {
+  .container-fluid.container-lg {
+    height: auto;
+    margin: 16px auto;
+    background: #fff;
+  }
+
+  .container-fluid.container-lg::before,
+  .container-fluid.container-lg::after {
+    display: none;
+  }
+
+  .container-fluid.container-lg > form {
+    width: 100%;
+    height: auto;
+  }
+}
