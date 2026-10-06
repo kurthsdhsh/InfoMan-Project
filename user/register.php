@@ -6,7 +6,7 @@ include("../includes/header.php");
 $error = $_SESSION['message'] ?? null;
 unset($_SESSION['message']);
 ?>
-<!-- loads after everything else; ?v=time() stops the browser from using a cached copy -->
+
 <link rel="stylesheet" href="/InfoMan-Project/includes/style/loginstyle.css?v=<?php echo time(); ?>">
 <div class="container-fluid container-lg">
     <form action="store.php" method="POST">
