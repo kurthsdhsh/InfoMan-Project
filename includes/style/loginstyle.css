@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
 /* Page background (only on pages that contain the login card) */
@@ -71,6 +72,13 @@ body:has(.row.col-md-8.mx-auto) {
   background: #eee;
   outline: 2px solid #059669;
   box-shadow: none;
+}
+
+/* Error / success message (shown above the first field) */
+.row.col-md-8.mx-auto .alert {
+  margin: 0 0 12px;
+  padding: 8px 10px;
+  font-size: 12px;
 }
 
 /* Sign in button */
@@ -179,7 +187,19 @@ body:has(.row.col-md-8.mx-auto) {
     color: #059669;
   }
 }
-    
+
+/* ==========================================================
+   REGISTER PAGE STYLES
+   Paste at the BOTTOM of includes/style/loginstyle.css
+   (header.php already links that file, so register.php is untouched)
+
+   Targets the existing markup:
+   <div class="container-fluid container-lg"> <form> ... </form> </div>
+   The "Register" title and the green "Join us" panel are generated
+   with ::before / ::after, so no HTML is added.
+   ========================================================== */
+
+/* Page background (only on pages that contain the register card) */
 body:has(.container-fluid.container-lg) {
   background: #dcdcdc;
 }
@@ -190,10 +210,11 @@ body:has(.container-fluid.container-lg) {
   display: block;
   width: 100%;
   max-width: 760px;
-  height: 460px;
+  height: auto !important;
+  min-height: 460px !important;
   margin: 60px auto;
   padding: 0;
-  overflow: hidden;
+  overflow: visible !important;
   font-family: 'Poppins', sans-serif;
   /* white left half + green gradient right half */
   background:
@@ -205,9 +226,9 @@ body:has(.container-fluid.container-lg) {
 /* ---------- Left: form ---------- */
 .container-fluid.container-lg > form {
   width: 50%;
-  height: 100%;
+  height: auto !important;
   margin: 0;
-  padding: 36px 40px 24px;
+  padding: 36px 40px 28px;
   display: flex;
   flex-direction: column;
 }
@@ -269,6 +290,13 @@ body:has(.container-fluid.container-lg) {
   background: #047857;
 }
 
+/* Error message (shown above the first field) */
+.container-fluid.container-lg .alert {
+  margin: 0 0 12px;
+  padding: 8px 10px;
+  font-size: 12px;
+}
+
 /* ---------- Right: green panel ---------- */
 .container-fluid.container-lg::before,
 .container-fluid.container-lg::after {
@@ -283,14 +311,14 @@ body:has(.container-fluid.container-lg) {
 
 .container-fluid.container-lg::before {
   content: "Join us!";
-  top: 165px;
+  top: calc(50% - 40px) !important;
   font-size: 20px;
   font-weight: 600;
 }
 
 .container-fluid.container-lg::after {
   content: "Create your account in a few seconds and start shopping. We are so happy to have you here.";
-  top: 205px;
+  top: calc(50% + 5px) !important;
   font-size: 12px;
   line-height: 1.6;
 }
@@ -298,7 +326,7 @@ body:has(.container-fluid.container-lg) {
 /* ---------- Mobile: stack, hide the green panel ---------- */
 @media (max-width: 767px) {
   .container-fluid.container-lg {
-    height: auto;
+    min-height: 0;
     margin: 16px auto;
     background: #fff;
   }
