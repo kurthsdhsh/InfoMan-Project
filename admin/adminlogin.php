@@ -9,8 +9,8 @@ unset($_SESSION['success']);
 if (isset($_POST['submit'])) {
 
     $email = trim($_POST['email']);
-    $sql = "SELECT customer_id, first_name, email, password_hash, account_status
-            FROM tbl_customers WHERE email = ? LIMIT 1";
+    $sql = "SELECT admin_id, admin_name, email, password_hash, account_status
+            FROM tbl_admins WHERE email = ? LIMIT 1";
     $result = mysqli_execute_query($conn, $sql, [$email]);
 
     if ($result->num_rows === 1) {
@@ -22,12 +22,12 @@ if (isset($_POST['submit'])) {
             $error = 'this account is not active';
         } else {
             session_regenerate_id(true);
-            $_SESSION['user_id']     = $row['customer_id'];  // header.php checks user_id
-            $_SESSION['customer_id'] = $row['customer_id'];
-            $_SESSION['first_name']  = $row['first_name'];
+            $_SESSION['user_id']     = $row['admin_id'];     // header.php checks user_id
+            $_SESSION['admin_id']    = $row['admin_id'];
+            $_SESSION['admin_name']  = $row['admin_name'];
             $_SESSION['email']       = $row['email'];
-            $_SESSION['role']        = 'customer';           // header.php reads role; tbl_customers has no role column
-            header("Location: ../index.php");
+            $_SESSION['role']        = 'admin';              // header.php reads role; tbl_admins has no role column
+            header("Location: ../admin_item/index.php");
             exit();
         }
     } else {
