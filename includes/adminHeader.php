@@ -32,12 +32,12 @@
             <a class="nav-link active" aria-current="page" href="/InfoMan-Project/admin_item/index.php">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
+            <a class="nav-link" href="#">User</a>
           </li> 
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
-              Dropdown
+              Items
             </a>
             <ul class="dropdown-menu">
               <?php if ($_SESSION['role'] === 'admin') {
@@ -47,10 +47,14 @@
 
               ?>
 
-              <li><a class="dropdown-item" href="user/myorders.php">My Orders</a></li>
+              <li><a class="dropdown-item" href="user/myorders.php">Food</a></li>
               <li>
-              <li><a class="dropdown-item" href="user/profile.php">My Profile</a></li>
+              <li><a class="dropdown-item" href="user/profile.php">Key Chains</a></li>
               <li>
+              <li><a class="dropdown-item" href="user/myorders.php">Magnets</a></li>
+              <li>
+              <li><a class="dropdown-item" href="user/profile.php">Bags</a></li>
+              <li></li>
                 <hr class="dropdown-divider">
               </li>
 

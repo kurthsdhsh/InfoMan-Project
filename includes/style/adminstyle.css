@@ -1,0 +1,185 @@
+/* ==========================================================
+   ADMIN PRODUCT LIST (admin_item/index.php)
+   Bigger, colored, bordered and centered.
+   Same green as the login/register pages.
+   ========================================================== */
+
+.admin-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  font-size: 16px;
+  color: #4a3b30;
+  text-align: center;
+}
+
+/* ---------- Top: title + Add item button, centered ---------- */
+.admin-container .admin-toolbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.admin-container .admin-toolbar h2 {
+  margin: 0;
+  font-family: inherit;
+  font-size: 30px;
+  font-weight: 700;
+  color: #4a3b30;
+}
+
+/* ---------- Add item button ---------- */
+.admin-container .btn-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #B77466, #957C62);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 6px 16px rgba(183, 116, 102, .35);
+  transition: transform .15s, box-shadow .15s;
+}
+
+.admin-container .btn-add::before {
+  content: "+";
+  font-size: 26px;
+  line-height: 1;
+}
+
+.admin-container .btn-add:hover {
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(183, 116, 102, .45);
+}
+
+/* ---------- Table card with a colored border ---------- */
+.admin-container .table-card {
+  background: #fff;
+  border: 2px solid #B77466;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(183, 116, 102, .15);
+  overflow-x: auto;
+}
+
+.admin-container .admin-table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: 16px;
+}
+
+/* colored header row */
+.admin-container .admin-table thead th {
+  padding: 18px 16px;
+  background: linear-gradient(135deg, #B77466, #957C62);
+  border: 1px solid #9a6054;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap;
+}
+
+/* cells with visible borders, centered */
+.admin-container .admin-table tbody td {
+  padding: 18px 16px;
+  border: 1px solid #E2B59A;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* striped rows in a light green */
+.admin-container .admin-table tbody tr:nth-child(even) {
+  background: #FFF3DC;
+}
+
+.admin-container .admin-table tbody tr:hover {
+  background: #FFE1AF;
+}
+
+/* product picture: bigger, centered */
+.admin-container .admin-table td img {
+  display: block;
+  width: 96px;
+  height: 96px;
+  margin: 0 auto;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid #E2B59A;
+  background: #FFF3DC;
+}
+
+/* name bold */
+.admin-container .admin-table tbody td:nth-child(3) {
+  font-weight: 700;
+  color: #4a3b30;
+}
+
+/* description muted */
+.admin-container .admin-table tbody td:nth-child(4) {
+  max-width: 280px;
+  color: #957C62;
+}
+
+/* ---------- Status badge ---------- */
+.admin-container .status {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: #FFF3DC;
+  color: #957C62;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.admin-container .status-active {
+  background: #FFE1AF;
+  color: #6b5240;
+  border: 1px solid #E2B59A;
+}
+
+.admin-container .status-inactive {
+  background: #F6DDD8;
+  color: #9a4a3c;
+  border: 1px solid #E2B59A;
+}
+
+/* ---------- Edit / delete icons ---------- */
+.admin-container .admin-table tbody td:last-child {
+  white-space: nowrap;
+}
+
+.admin-container .admin-table tbody td:last-child a {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin: 0 4px;
+  border: 1px solid #E2B59A;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 18px;
+  text-decoration: none;
+  transition: background .15s, transform .15s;
+}
+
+.admin-container .admin-table tbody td:last-child a:hover {
+  background: #E2B59A;
+  transform: translateY(-1px);
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 767px) {
+  .admin-container .admin-toolbar h2 {
+    font-size: 24px;
+  }
+}

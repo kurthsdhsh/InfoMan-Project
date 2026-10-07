@@ -1,9 +1,19 @@
+/* ==========================================================
+   LOGIN PAGE STYLES
+   Paste at the bottom of includes/style/style.css
+   (header.php already links that file, so the PHP is untouched)
+
+   Targets the existing markup:
+   <div class="row col-md-8 mx-auto"> <form> ... </form> </div>
+   The green "Welcome back" panel, "Signin" title
+   are generated with ::before / ::after, so no HTML is added.
+   ========================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
 /* Page background (only on pages that contain the login card) */
 body:has(.row.col-md-8.mx-auto) {
-  background: #dcdcdc;
+  background: #FFE1AF;
 }
 
 /* ---------- Card ---------- */
@@ -20,7 +30,7 @@ body:has(.row.col-md-8.mx-auto) {
   /* white left half + green gradient right half */
   background:
     linear-gradient(to right, #fff 50%, transparent 50%),
-    linear-gradient(160deg, #34d399 0%, #059669 100%);
+    linear-gradient(160deg, #B77466 0%, #957C62 100%);
   box-shadow: 0 10px 30px rgba(0, 0, 0, .12);
 }
 
@@ -42,7 +52,7 @@ body:has(.row.col-md-8.mx-auto) {
   text-align: center;
   font-size: 32px;
   font-weight: 600;
-  color: #111;
+  color: #4a3b30;
 }
 
 /* Label sits above its input */
@@ -55,22 +65,22 @@ body:has(.row.col-md-8.mx-auto) {
 .row.col-md-8.mx-auto .form-label {
   margin: 0 0 4px;
   font-size: 11px;
-  color: #666;
+  color: #957C62;
 }
 
 .row.col-md-8.mx-auto .form-control {
   padding: 10px 12px;
   border: 0;
   border-radius: 4px;
-  background: #eee;
+  background: #FFF3DC;
   font-family: inherit;
   font-size: 13px;
   box-shadow: none;
 }
 
 .row.col-md-8.mx-auto .form-control:focus {
-  background: #eee;
-  outline: 2px solid #059669;
+  background: #FFF3DC;
+  outline: 2px solid #B77466;
   box-shadow: none;
 }
 
@@ -87,7 +97,7 @@ body:has(.row.col-md-8.mx-auto) {
   padding: 10px;
   border: 0;
   border-radius: 4px;
-  background: #059669;
+  background: #B77466;
   font-family: inherit;
   font-size: 13px;
   margin-bottom: 14px !important;
@@ -95,7 +105,7 @@ body:has(.row.col-md-8.mx-auto) {
 
 .row.col-md-8.mx-auto .btn-primary:hover,
 .row.col-md-8.mx-auto .btn-primary:focus {
-  background: #047857;
+  background: #9a6054;
 }
 
 /* ---------- Right: welcome panel ---------- */
@@ -179,15 +189,14 @@ body:has(.row.col-md-8.mx-auto) {
 
   .row.col-md-8.mx-auto .text-center p {
     background: none;
-    color: #333;
+    color: #4a3b30;
     padding: 0;
   }
 
   .row.col-md-8.mx-auto .text-center a {
-    color: #059669;
+    color: #B77466;
   }
 }
-
 /* ==========================================================
    REGISTER PAGE STYLES
    Paste at the BOTTOM of includes/style/loginstyle.css
@@ -201,7 +210,7 @@ body:has(.row.col-md-8.mx-auto) {
 
 /* Page background (only on pages that contain the register card) */
 body:has(.container-fluid.container-lg) {
-  background: #dcdcdc;
+  background: #FFE1AF;
 }
 
 /* ---------- Card ---------- */
@@ -219,7 +228,7 @@ body:has(.container-fluid.container-lg) {
   /* white left half + green gradient right half */
   background:
     linear-gradient(to right, #fff 50%, transparent 50%),
-    linear-gradient(160deg, #34d399 0%, #059669 100%);
+    linear-gradient(160deg, #B77466 0%, #957C62 100%);
   box-shadow: 0 10px 30px rgba(0, 0, 0, .12);
 }
 
@@ -241,7 +250,7 @@ body:has(.container-fluid.container-lg) {
   text-align: center;
   font-size: 32px;
   font-weight: 600;
-  color: #111;
+  color: #4a3b30;
 }
 
 /* Label sits above its input */
@@ -254,22 +263,22 @@ body:has(.container-fluid.container-lg) {
 .container-fluid.container-lg .form-label {
   margin: 0 0 4px;
   font-size: 11px;
-  color: #666;
+  color: #957C62;
 }
 
 .container-fluid.container-lg .form-control {
   padding: 10px 12px;
   border: 0;
   border-radius: 4px;
-  background: #eee;
+  background: #FFF3DC;
   font-family: inherit;
   font-size: 13px;
   box-shadow: none;
 }
 
 .container-fluid.container-lg .form-control:focus {
-  background: #eee;
-  outline: 2px solid #059669;
+  background: #FFF3DC;
+  outline: 2px solid #B77466;
   box-shadow: none;
 }
 
@@ -280,14 +289,168 @@ body:has(.container-fluid.container-lg) {
   padding: 10px;
   border: 0;
   border-radius: 4px;
-  background: #059669;
+  background: #B77466;
   font-family: inherit;
   font-size: 13px;
 }
 
 .container-fluid.container-lg .btn-primary:hover,
 .container-fluid.container-lg .btn-primary:focus {
-  background: #047857;
+  background: #9a6054;
+}
+
+/* Error message (shown above the first field) */
+.container-fluid.container-lg .alert {
+  margin: 0 0 12px;
+  padding: 8px 10px;
+  font-size: 12px;
+}
+
+/* ---------- Right: green panel ---------- */
+.container-fluid.container-lg::before,
+.container-fluid.container-lg::after {
+  position: absolute;
+  left: 50%;
+  width: 50%;
+  padding: 0 40px;
+  text-align: center;
+  color: #fff;
+  pointer-events: none;
+}
+
+.container-fluid.container-lg::before {
+  content: "Join us!";
+  top: calc(50% - 40px) !important;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.container-fluid.container-lg::after {
+  content: "Create your account in a few seconds and start shopping. We are so happy to have you here.";
+  top: calc(50% + 5px) !important;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* ---------- Mobile: stack, hide the green panel ---------- */
+@media (max-width: 767px) {
+  .container-fluid.container-lg {
+    min-height: 0;
+    margin: 16px auto;
+    background: #fff;
+  }
+
+  .container-fluid.container-lg::before,
+  .container-fluid.container-lg::after {
+    display: none;
+  }
+
+  .container-fluid.container-lg > form {
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* ==========================================================
+   REGISTER PAGE STYLES
+   Paste at the BOTTOM of includes/style/loginstyle.css
+   (header.php already links that file, so register.php is untouched)
+
+   Targets the existing markup:
+   <div class="container-fluid container-lg"> <form> ... </form> </div>
+   The "Register" title and the green "Join us" panel are generated
+   with ::before / ::after, so no HTML is added.
+   ========================================================== */
+
+/* Page background (only on pages that contain the register card) */
+body:has(.container-fluid.container-lg) {
+  background: #FFE1AF;
+}
+
+/* ---------- Card ---------- */
+.container-fluid.container-lg {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 760px;
+  height: auto !important;
+  min-height: 460px !important;
+  margin: 60px auto;
+  padding: 0;
+  overflow: visible !important;
+  font-family: 'Poppins', sans-serif;
+  /* white left half + green gradient right half */
+  background:
+    linear-gradient(to right, #fff 50%, transparent 50%),
+    linear-gradient(160deg, #B77466 0%, #957C62 100%);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .12);
+}
+
+/* ---------- Left: form ---------- */
+.container-fluid.container-lg > form {
+  width: 50%;
+  height: auto !important;
+  margin: 0;
+  padding: 36px 40px 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* "Register" title */
+.container-fluid.container-lg > form::before {
+  content: "Register";
+  display: block;
+  margin-bottom: 22px;
+  text-align: center;
+  font-size: 32px;
+  font-weight: 600;
+  color: #4a3b30;
+}
+
+/* Label sits above its input */
+.container-fluid.container-lg .mb-3 {
+  display: flex;
+  flex-direction: column-reverse;
+  margin-bottom: 12px !important;
+}
+
+.container-fluid.container-lg .form-label {
+  margin: 0 0 4px;
+  font-size: 11px;
+  color: #957C62;
+}
+
+.container-fluid.container-lg .form-control {
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 4px;
+  background: #FFF3DC;
+  font-family: inherit;
+  font-size: 13px;
+  box-shadow: none;
+}
+
+.container-fluid.container-lg .form-control:focus {
+  background: #FFF3DC;
+  outline: 2px solid #B77466;
+  box-shadow: none;
+}
+
+/* Register button */
+.container-fluid.container-lg .btn-primary {
+  width: 100%;
+  margin-top: 4px;
+  padding: 10px;
+  border: 0;
+  border-radius: 4px;
+  background: #B77466;
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.container-fluid.container-lg .btn-primary:hover,
+.container-fluid.container-lg .btn-primary:focus {
+  background: #9a6054;
 }
 
 /* Error message (shown above the first field) */

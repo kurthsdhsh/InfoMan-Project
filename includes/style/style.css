@@ -14,7 +14,7 @@ h1, h2, h3 {
    GENERAL BUTTONS
    ========================================================== */
 button, .button {
-    background-color: #39b3d7;
+    background-color: #B77466;
     min-width: 100px;
     border: none;
     padding: 10px;
@@ -30,7 +30,7 @@ button, .button {
 }
 
 button:hover, .button:hover {
-    background-color: #44C7ED;
+    background-color: #9a6054;
 }
 
 
@@ -103,15 +103,15 @@ ul.shopping-cart .cart-itm .remove-itm a {
 }
 
 .cart-view-table-front table thead, .cart-view-table-back table thead {
-    background-color: #9CCDFD;
+    background-color: #E2B59A;
 }
 
 .cart-view-table-front table tbody tr.even, .cart-view-table-back table tbody tr.even {
-    background-color: #F7F7F7;
+    background-color: #FFF3DC;
 }
 
 .cart-view-table-front table tbody tr.odd, .cart-view-table-back table tbody tr.odd {
-    background-color: #EDEDED;
+    background-color: #FFE1AF;
 }
 
 .cart-view-table-front button, .cart-view-table-front .button, .cart-view-table-back button, .cart-view-table-back .button {
@@ -137,7 +137,7 @@ body > h1[align="center"] {
     text-align: left !important;
     font-size: 22px;
     font-weight: 600;
-    color: #222;
+    color: #4a3b30;
 }
 
 body > h2 {
@@ -146,7 +146,7 @@ body > h2 {
     padding: 0 12px;
     font-size: 15px;
     font-weight: 400;
-    color: #6b6b6b;
+    color: #957C62;
 }
 
 /* ---------- Grid ---------- */
@@ -169,7 +169,7 @@ ul.products li.product {
     padding: 22px 0;
     background: transparent;
     border: 0;
-    border-bottom: 1px solid #e6e6e6;
+    border-bottom: 1px solid #E2B59A;
 }
 
 ul.products li.product form {
@@ -200,7 +200,7 @@ ul.products .product-thumb img {
     height: 108px;
     object-fit: cover;
     border-radius: 10px;
-    background: #eee;
+    background: #FFF3DC;
 }
 
 ul.products li.product .product-content h3 {
@@ -211,7 +211,7 @@ ul.products li.product .product-content h3 {
     background: none;
     font-size: 20px;
     font-weight: 600;
-    color: #222;
+    color: #4a3b30;
 }
 
 /* description + price text */
@@ -220,7 +220,7 @@ ul.products .product-info {
     padding-right: 48px;      /* room for the + button */
     font-size: 14px;
     line-height: 1.5;
-    color: #6b6b6b;
+    color: #957C62;
 }
 
 /* quantity box hidden: the + button adds 1.
@@ -233,7 +233,7 @@ ul.products .product-info fieldset {
 ul.products .product-info p {
     margin: 4px 0 0;
     font-size: 13px;
-    color: #999;
+    color: #957C62;
 }
 
 /* ---------- Round red "+" button (bottom right) ---------- */
@@ -255,7 +255,7 @@ ul.products .add_to_cart {
     margin: 0;
     border: 0;
     border-radius: 50%;
-    background: #c40000;
+    background: #B77466;
     color: transparent;
     font-size: 0;             /* hides the word "Add" */
     line-height: 0;
@@ -278,7 +278,7 @@ ul.products .add_to_cart::before {
 }
 
 ul.products .add_to_cart:hover {
-    background: #9e0000;
+    background: #9a6054;
 }
 
 /* ---------- Mobile: one column ---------- */
@@ -286,4 +286,276 @@ ul.products .add_to_cart:hover {
     ul.products {
         grid-template-columns: 1fr;
     }
+}
+
+
+/* ==========================================================
+   NAVBAR (palette: #B77466 #FFE1AF #E2B59A #957C62 + white)
+   ========================================================== */
+.navbar.bg-body-tertiary {
+    background-color: #FFE1AF !important;
+    border-bottom: 2px solid #E2B59A;
+}
+
+.navbar .navbar-brand {
+    font-weight: 700;
+    color: #B77466;
+}
+
+.navbar .nav-link {
+    color: #957C62;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+    color: #B77466;
+}
+
+.navbar .form-control {
+    border-color: #E2B59A;
+}
+
+.navbar .form-control:focus {
+    border-color: #B77466;
+    box-shadow: 0 0 0 .2rem rgba(183, 116, 102, .25);
+}
+
+.navbar .btn-outline-success {
+    color: #B77466;
+    border-color: #B77466;
+}
+
+.navbar .btn-outline-success:hover {
+    background-color: #B77466;
+    border-color: #B77466;
+    color: #fff;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: #FFE1AF;
+    color: #B77466;
+}
+
+
+/* ==========================================================
+   BASKET BUTTON (navbar) + BASKET PANEL (slide-in)
+   ========================================================== */
+
+/* ---------- Basket button in the navbar ---------- */
+.navbar .btn-basket {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    min-height: 0;
+    padding: 8px 16px;
+    border: 0;
+    border-radius: 999px;
+    background: #B77466;
+    color: #fff;
+    font: 600 14px/1 'Inter', 'Segoe UI', Arial, sans-serif;
+    text-shadow: none;
+    cursor: pointer;
+}
+
+.navbar .btn-basket:hover {
+    background: #9a6054;
+}
+
+.navbar .btn-basket .basket-count {
+    display: inline-grid;
+    place-items: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #fff;
+    color: #B77466;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* ---------- Panel ---------- */
+.basket-panel {
+    width: 420px;
+    max-width: 100%;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    color: #4a3b30;
+}
+
+.basket-panel .offcanvas-header {
+    padding: 20px 24px 8px;
+}
+
+.basket-panel .offcanvas-title {
+    font-family: inherit;
+    font-size: 20px;
+    font-weight: 600;
+    color: #4a3b30;
+}
+
+.basket-panel .basket-form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    margin: 0;
+}
+
+.basket-panel .offcanvas-body {
+    padding: 8px 24px 16px;
+}
+
+.basket-empty {
+    margin: 24px 0;
+    text-align: center;
+    color: #957C62;
+}
+
+/* ---------- One item: name + price on top, [-] qty [+] and trash below ---------- */
+.basket-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+        "name price"
+        "qty  remove";
+    column-gap: 14px;
+    row-gap: 10px;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid #FFE1AF;
+}
+
+/* quantity stepper */
+.basket-qty {
+    grid-area: qty;
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    height: 36px;
+    border: 2px solid #E2B59A;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.basket-qty input {
+    width: 36px;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #B77466;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.basket-qty input::-webkit-outer-spin-button,
+.basket-qty input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.basket-panel .basket-step {
+    width: 34px;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #B77466;
+    font-size: 18px;
+    line-height: 1;
+    text-shadow: none;
+    cursor: pointer;
+}
+
+.basket-panel .basket-step:hover {
+    background: #FFE1AF;
+    color: #B77466;
+}
+
+.basket-name {
+    grid-area: name;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+    word-break: break-word;
+}
+
+.basket-price {
+    grid-area: price;
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+.basket-panel .basket-remove {
+    grid-area: remove;
+    justify-self: end;
+    min-width: 0;
+    min-height: 0;
+    padding: 4px;
+    border: 0;
+    background: transparent;
+    color: #957C62;
+    font-size: 16px;
+    text-shadow: none;
+    cursor: pointer;
+}
+
+.basket-panel .basket-remove:hover {
+    background: transparent;
+    color: #B77466;
+}
+
+/* ---------- Summary card at the bottom ---------- */
+.basket-summary {
+    margin: 0 12px 12px;
+    padding: 20px 16px 16px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 -6px 20px rgba(183, 116, 102, .15);
+}
+
+.basket-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.basket-summary hr {
+    margin: 14px 0;
+    border-color: #957C62;
+    opacity: .6;
+}
+
+.basket-total {
+    margin-bottom: 16px;
+    font-size: 20px;
+}
+
+.basket-summary .basket-checkout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 8px;
+    background: #B77466;
+    color: #fff;
+    font-size: 17px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.basket-summary .basket-checkout:hover {
+    background: #9a6054;
+    color: #fff;
 }
