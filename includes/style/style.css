@@ -1,447 +1,289 @@
 /*style.css*/
-body{
-
+body {
     margin: 0px;
-    
     padding: 0px;
-    
     font-family: Georgia, "Times New Roman", Times, serif;
-    
-    }
-    
-    h1, h2, h3{
-    
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    
-    }
-    
-    
-    
-    ul.products {
-    
-    padding: 0;
-    
-    margin: 0;
-    
-    max-width: 740px;
-    
-    margin-left: auto;
-    
-    margin-right: auto;
-    
-    }
-    
-    ul.products li {
-    
-    display: inline-block;
-    
-    max-width: 200px;
-    
-    padding: 10px;
-    
-    background-color: #FFFFFF;
-    
-    margin: 10px;
-    
-    border: 1px solid #EAEAEA;  
-    
-    color: #3D3D3D;
-    
-    }
-    
-    ul.products li h3 {
-    
-    margin: -10px -10px 10px -10px;
-    
-    padding: 10px;
-    
-    text-align: center;
-    
-    background-color: #F5F5F5;
-    
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    
-    font-size: 1.1em;
-    
-    color: #5A5A5A;
-    
-    }
-    
-    ul.products li fieldset {
-    
-    border: none;
-    
-    padding: 5px 5px 5px 0px;
-    
-    margin: 0;
-    
-    }
-    
-    ul.products li fieldset label{
-    
-    display:block;
-    
-    margin-bottom: 4px;
-    
-    }
-    
-    ul.products li fieldset label span{
-    
-    width: 80px;
-    
-    float: left;
-    
-    }
-    
-    ul.products li fieldset label select{
-    
-    min-width: 100px;
-    
-    }
-    
-    
-    
-    button, .button{
-    
-    background-color: #39b3d7;
-    
-    min-width: 100px;
-    
-    border: none;
-    
-    padding: 10px;
-    
-    display: inline-block;
-    
-    text-align: center;
-    
-    cursor: pointer;
-    
-    text-decoration: none;
-    
-    color: #FFF;
-    
-    min-height: 15px;
-    
-    font: 12px/15px Arial, Helvetica, sans-serif;
-    
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.26);
-    
-    border-radius: 3px;
-    
-    }
-    
-    button:hover, .button:hover{
-    
-    background-color: #44C7ED;
-    
-    }
-    
-    
-    
-    .product-thumb{
-    
-    text-align:center;
-    
-    }
-    
-    .product-desc {
-    
-    font-style: italic;
-    
-    font-size: 0.8em;
-    
-    margin-bottom: 4px;
-    
-    height: 40px;
-    
-    overflow: hidden;
-    
-    margin-top: 5px;
-    
-    }
-    
-    
-    
-    ul.shopping-cart{
-    
-    position: fixed;
-    
-    top: 100px;
-    
-    right: 0;
-    
-    background-color: #F9F9F9;
-    
-    padding: 10px;
-    
-    min-width: 250px;
-    
-    list-style: none;
-    
-    font-size: 0.8em;
-    
-    border: 1px solid #F0F0F0;
-    
-    }
-    
-    ul.shopping-cart .cart-itm {
-    
-    margin-bottom: 10px;
-    
-    border-bottom: 1px solid #ddd;
-    
-    padding-bottom: 8px;
-    
-    }
-    
-    ul.shopping-cart .cart-itm:last-child{
-    
-    border-bottom: none;
-    
-    margin-bottom: 0px;
-    
-    }
-    
-    ul.shopping-cart .cart-itm .remove-itm{
-    
-    float: right;
-    
-    font-size: 1.5em;
-    
-    }
-    
-    ul.shopping-cart .cart-itm .remove-itm a{
-    
-    text-decoration:none;
-    
-    color:#000;
-    
-    }
-    
-    .cart-total-text a{
-    
-    float:right;
-    
-    }
-    
-    
-    
-    .cart-view-table-front{
-    
-    font-size: 0.7em;
-    
-    position: fixed;
-    
-    right: 10px;
-    
-    max-width: 350px;
-    
-    font-family: Arial
-    
-    }
-    
-    .cart-view-table-front h3{
-    
-    text-align: center;
-    
-    padding: 0;
-    
-    margin: 0px 0px 6px 0px;
-    
-    }
-    
-    .cart-view-table-front, .cart-view-table-back {
-    
-    max-width: 700px;
-    
-    background-color: #FFFFFF;
-    
-    margin-left: auto;
-    
-    margin-right: auto;
-    
-    padding: 10px;
-    
-    box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.12);
-    
-    border: 1px solid #E4E4E4;
-    
-    }
-    
-    .cart-view-table-front table th, .cart-view-table-back table th{
-    
-    text-align: left;
-    
-    }
-    
-    .cart-view-table-front table thead, .cart-view-table-back table thead{
-    
-    background-color: #9CCDFD;
-    
-    }
-    
-    .cart-view-table-front table tbody tr.even, .cart-view-table-back table tbody tr.even{
-    
-    background-color: #F7F7F7;
-    
-    }
-    
-    .cart-view-table-front table tbody tr.odd, .cart-view-table-back table tbody tr.odd{
-    
-    background-color: #EDEDED;
-    
-    }
-    
-    .cart-view-table-front button, .cart-view-table-front .button, .cart-view-table-back button, .cart-view-table-back .button{
-    
-    margin: 10px 1px;
-    
-    float: right;
-    
-    }
+}
 
-    /* ==========================================================
+h1, h2, h3 {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+
+
+/* ==========================================================
+   GENERAL BUTTONS
+   ========================================================== */
+button, .button {
+    background-color: #39b3d7;
+    min-width: 100px;
+    border: none;
+    padding: 10px;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    color: #FFF;
+    min-height: 15px;
+    font: 12px/15px Arial, Helvetica, sans-serif;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.26);
+    border-radius: 3px;
+}
+
+button:hover, .button:hover {
+    background-color: #44C7ED;
+}
+
+
+/* ==========================================================
+   SHOPPING CART
+   ========================================================== */
+ul.shopping-cart {
+    position: fixed;
+    top: 100px;
+    right: 0;
+    background-color: #F9F9F9;
+    padding: 10px;
+    min-width: 250px;
+    list-style: none;
+    font-size: 0.8em;
+    border: 1px solid #F0F0F0;
+}
+
+ul.shopping-cart .cart-itm {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 8px;
+}
+
+ul.shopping-cart .cart-itm:last-child {
+    border-bottom: none;
+    margin-bottom: 0px;
+}
+
+ul.shopping-cart .cart-itm .remove-itm {
+    float: right;
+    font-size: 1.5em;
+}
+
+ul.shopping-cart .cart-itm .remove-itm a {
+    text-decoration: none;
+    color: #000;
+}
+
+.cart-total-text a {
+    float: right;
+}
+
+.cart-view-table-front {
+    font-size: 0.7em;
+    position: fixed;
+    right: 10px;
+    max-width: 350px;
+    font-family: Arial;
+}
+
+.cart-view-table-front h3 {
+    text-align: center;
+    padding: 0;
+    margin: 0px 0px 6px 0px;
+}
+
+.cart-view-table-front, .cart-view-table-back {
+    max-width: 700px;
+    background-color: #FFFFFF;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+    box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.12);
+    border: 1px solid #E4E4E4;
+}
+
+.cart-view-table-front table th, .cart-view-table-back table th {
+    text-align: left;
+}
+
+.cart-view-table-front table thead, .cart-view-table-back table thead {
+    background-color: #9CCDFD;
+}
+
+.cart-view-table-front table tbody tr.even, .cart-view-table-back table tbody tr.even {
+    background-color: #F7F7F7;
+}
+
+.cart-view-table-front table tbody tr.odd, .cart-view-table-back table tbody tr.odd {
+    background-color: #EDEDED;
+}
+
+.cart-view-table-front button, .cart-view-table-front .button, .cart-view-table-back button, .cart-view-table-back .button {
+    margin: 10px 1px;
+    float: right;
+}
+
+
+/* ==========================================================
    SHOP PRODUCT LIST (index.php + search.php)
-   CSS only: paste at the bottom of includes/style/style.css
    2-column grid, picture on the left, name + text on the right,
    round red "+" button at the bottom right.
+   (the old ul.products template rules were removed on purpose,
+    they forced 200px boxes and a 100px-wide button)
    ========================================================== */
 
 /* ---------- Page title: left aligned ---------- */
 body > h1.text-center.my-4,
 body > h1[align="center"] {
-  max-width: 900px;
-  margin: 32px auto 20px !important;
-  padding: 0 12px;
-  text-align: left !important;
-  font-size: 22px;
-  font-weight: 600;
-  color: #222;
+    max-width: 900px;
+    margin: 32px auto 20px !important;
+    padding: 0 12px;
+    text-align: left !important;
+    font-size: 22px;
+    font-weight: 600;
+    color: #222;
 }
 
 body > h2 {
-  max-width: 900px;
-  margin: 0 auto 20px;
-  padding: 0 12px;
-  font-size: 15px;
-  font-weight: 400;
-  color: #6b6b6b;
+    max-width: 900px;
+    margin: 0 auto 20px;
+    padding: 0 12px;
+    font-size: 15px;
+    font-weight: 400;
+    color: #6b6b6b;
 }
 
 /* ---------- Grid ---------- */
-.products {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0 12px;
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  column-gap: 40px;
-  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+ul.products {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 12px;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 40px;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
 }
 
-.products .product {
-  position: relative;
-  padding: 22px 0;
-  border-bottom: 1px solid #e6e6e6;
+ul.products li.product {
+    position: relative;
+    display: block;
+    max-width: none;
+    margin: 0;
+    padding: 22px 0;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid #e6e6e6;
 }
 
-.products .product form {
-  margin: 0;
+ul.products li.product form {
+    margin: 0;
 }
 
 /* ---------- One product: picture left, text right ---------- */
-.products .product-content {
-  display: grid;
-  grid-template-columns: 108px 1fr;
-  grid-template-areas:
-    "thumb title"
-    "thumb info";
-  grid-template-rows: auto 1fr;
-  column-gap: 16px;
-  min-height: 108px;
-  align-items: start;
+ul.products .product-content {
+    display: grid;
+    grid-template-columns: 108px 1fr;
+    grid-template-areas:
+        "thumb title"
+        "thumb info";
+    grid-template-rows: auto 1fr;
+    column-gap: 16px;
+    min-height: 108px;
+    align-items: start;
 }
 
-.products .product-thumb {
-  grid-area: thumb;
+ul.products .product-thumb {
+    grid-area: thumb;
+    text-align: left;
 }
 
-.products .product-thumb img {
-  display: block;
-  width: 108px;
-  height: 108px;
-  object-fit: cover;
-  border-radius: 10px;
-  background: #eee;
+ul.products .product-thumb img {
+    display: block;
+    width: 108px;
+    height: 108px;
+    object-fit: cover;
+    border-radius: 10px;
+    background: #eee;
 }
 
-.products .product-content h3 {
-  grid-area: title;
-  margin: 0 0 6px;
-  font-size: 20px;
-  font-weight: 600;
-  color: #222;
+ul.products li.product .product-content h3 {
+    grid-area: title;
+    margin: 0 0 6px;
+    padding: 0;
+    text-align: left;
+    background: none;
+    font-size: 20px;
+    font-weight: 600;
+    color: #222;
 }
 
 /* description + price text */
-.products .product-info {
-  grid-area: info;
-  padding-right: 48px;      /* room for the + button */
-  font-size: 14px;
-  line-height: 1.5;
-  color: #6b6b6b;
+ul.products .product-info {
+    grid-area: info;
+    padding-right: 48px;      /* room for the + button */
+    font-size: 14px;
+    line-height: 1.5;
+    color: #6b6b6b;
 }
 
 /* quantity box hidden: the + button adds 1.
    Delete this rule to show the quantity box again. */
-.products .product-info fieldset {
-  display: none;
+ul.products .product-info fieldset {
+    display: none;
 }
 
 /* out of stock text */
-.products .product-info p {
-  margin: 4px 0 0;
-  font-size: 13px;
-  color: #999;
+ul.products .product-info p {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: #999;
 }
 
 /* ---------- Round red "+" button (bottom right) ---------- */
-.products .product-info div[align="center"] {
-  position: absolute;
-  right: 0;
-  bottom: 22px;
+ul.products .product-info div[align="center"] {
+    position: absolute;
+    right: 0;
+    bottom: 22px;
 }
 
-.products .add_to_cart {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: #c40000;
-  color: #fff;
-  font-size: 0;             /* hides the word "Add" */
-  cursor: pointer;
+ul.products .add_to_cart {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    width: 36px;
+    height: 36px;
+    min-width: 0;             /* cancels the 100px from the general button rule */
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #c40000;
+    color: transparent;
+    font-size: 0;             /* hides the word "Add" */
+    line-height: 0;
+    text-shadow: none;
+    cursor: pointer;
 }
 
-.products .add_to_cart::before {
-  content: "+";
-  font-size: 24px;
-  line-height: 1;
+/* the + is drawn with two lines and pinned to the exact center of the circle */
+ul.products .add_to_cart::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 14px;
+    height: 14px;
+    transform: translate(-50%, -50%);
+    background:
+        linear-gradient(#fff, #fff) center / 100% 2px no-repeat,
+        linear-gradient(#fff, #fff) center / 2px 100% no-repeat;
 }
 
-.products .add_to_cart:hover {
-  background: #9e0000;
+ul.products .add_to_cart:hover {
+    background: #9e0000;
 }
 
 /* ---------- Mobile: one column ---------- */
 @media (max-width: 767px) {
-  .products {
-    grid-template-columns: 1fr;
-  }
+    ul.products {
+        grid-template-columns: 1fr;
+    }
 }
-    
