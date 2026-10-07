@@ -172,9 +172,25 @@
   transition: background .15s, transform .15s;
 }
 
-.admin-container .admin-table tbody td:last-child a:hover {
+.admin-container .admin-table tbody td:last-child a:hover,
+.admin-container .admin-table tbody td:last-child .btn-icon-delete:hover {
   background: #E2B59A;
   transform: translateY(-1px);
+}
+
+.admin-container .admin-table tbody td:last-child .btn-icon-delete {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin: 0 4px;
+  padding: 0;
+  border: 1px solid #E2B59A;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background .15s, transform .15s;
 }
 
 /* ---------- Mobile ---------- */

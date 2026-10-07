@@ -40,7 +40,7 @@
               Items
             </a>
             <ul class="dropdown-menu">
-              <?php if ($_SESSION['role'] === 'admin') {
+              <?php if (($_SESSION['role'] ?? '') === 'admin') {
                 echo '<li><a class="dropdown-item" href="../admin_item/index.php">item</a></li>';
                 echo '<li><a class="dropdown-item" href="../admin/orders.php">Orders</a></li>';
               }
@@ -57,9 +57,13 @@
               <li></li>
                 <hr class="dropdown-divider">
               </li>
-
             </ul>
-          </li>
+
+            <?php if (($_SESSION['role'] ?? '') === 'admin'): ?>
+            <li class="nav-item">
+              <a class="nav-link" href="/InfoMan-Project/admin/categories.php">Categories</a>
+            </li>
+            <?php endif; ?>
 
         </ul>
         <form action="/InfoMan-Project/search.php" method="GET" class="d-flex">
