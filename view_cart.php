@@ -76,7 +76,7 @@ $hasItems = !empty($_SESSION["cart_products"]);
                         <a href="index.php" class="button">Add More Items</a>
 
                         <?php if ($hasItems): ?>
-                            <a href="checkout.php" class="button">checkout</a>
+                            <a href= "transaction/checkout.php" class="button">checkout</a>
                             <button type="submit">Update</button>
                         <?php endif; ?>
                     </td>
