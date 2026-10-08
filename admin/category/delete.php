@@ -7,7 +7,7 @@ if (isset($_GET['id'])) {
 
     $category_id = $_GET['id'];
 
-    // Check if the category has products
+    // check if has products
     $sql = "SELECT COUNT(*) AS product_count
             FROM tbl_products
             WHERE category_id = ?";
@@ -21,7 +21,7 @@ if (isset($_GET['id'])) {
 
     mysqli_stmt_close($stmt);
 
-    // Block deletion if products exist
+    // block deletion if it has products
     if ($row['product_count'] > 0) {
 
         $_SESSION['error'] = "Cannot delete this category because it still has products.";
@@ -29,7 +29,7 @@ if (isset($_GET['id'])) {
         exit;
     }
 
-    // Delete category
+    // delete
     $sql = "DELETE FROM tbl_categories
             WHERE category_id = ?";
 

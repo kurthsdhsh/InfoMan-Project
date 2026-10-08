@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $category_name = trim($_POST['category_name'] ?? '');
     $description = trim($_POST['description'] ?? '');
 
-    // Check if category ID is valid
+    // check if id is valid
     if ($category_id == '') {
 
         $_SESSION['error'] = "Invalid category.";
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    // Check if category name is empty
+    // check if name is empty
     if ($category_name == '') {
 
         $_SESSION['error'] = "Category name is required.";
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    // Update category
+    // update category
     $sql = "UPDATE tbl_categories
             SET category_name = ?, description = ?
             WHERE category_id = ?";
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     } else {
 
-        // Duplicate category name
+        // if name already exists or na-dup
         if (mysqli_stmt_errno($stmt) == 1062) {
 
             $_SESSION['error'] = "Category name already exists.";

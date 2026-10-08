@@ -27,7 +27,7 @@ if (isset($_POST['submit'])) {
             $_SESSION['admin_name']  = $row['admin_name'];
             $_SESSION['email']       = $row['email'];
             $_SESSION['role']        = 'admin';              // header.php reads role; tbl_admins has no role column
-            header("Location: ../admin_item/index.php");
+            header("Location: ../admin/home.php");
             exit();
         }
     } else {
