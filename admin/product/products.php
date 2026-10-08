@@ -54,7 +54,7 @@ unset($_SESSION['error']);
 
         <div class="admin-toolbar">
 
-            <h2>number of products <?= $itemCount ?></h2>
+            <h2>Products (<?= $itemCount ?>)</h2>
 
             <a href="product_form.php" class="btn-add" role="button">
                 Add product
