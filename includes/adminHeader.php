@@ -61,7 +61,7 @@
 
             <?php if (($_SESSION['role'] ?? '') === 'admin'): ?>
             <li class="nav-item">
-              <a class="nav-link" href="/InfoMan-Project/admin/categories.php">Categories</a>
+              <a class="nav-link" href="/InfoMan-Project/admin/category/categories.php">Categories</a>
             </li>
             <?php endif; ?>
 
