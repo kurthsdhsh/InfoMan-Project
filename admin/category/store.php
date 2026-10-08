@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $category_name = trim($_POST['category_name'] ?? '');
     $description = trim($_POST['description'] ?? '');
 
-    // Check if category name is empty
+    // check if name is empty
     if ($category_name == '') {
 
         $_SESSION['error'] = "Category name is required.";
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    // Insert category
+    // insert
     $sql = "INSERT INTO tbl_categories (category_name, description)
             VALUES (?, ?)";
 
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     } else {
 
-        // Duplicate category name
+        // if name already exists or na-dup
         if (mysqli_stmt_errno($stmt) == 1062) {
 
             $_SESSION['error'] = "Category name already exists.";
