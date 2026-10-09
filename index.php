@@ -8,6 +8,9 @@ $imageColumn = 'image_path';
 ?>
 <h1 class="text-center my-4">Products</h1>
 
+<?php include('./transaction/order_mode/order_mode.php'); //(Partner B) ?>
+
+
 <?php
 // ---------- Products ----------
 $sql = "SELECT * FROM tbl_products ORDER BY product_id ASC";

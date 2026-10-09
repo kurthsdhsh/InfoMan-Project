@@ -1,8 +1,8 @@
 <?php
 
 session_start();
-require_once __DIR__ . '/includes/config.php';
-require_once __DIR__ . '/includes/order_helpers.php';
+require_once __DIR__ . '/../includes/config.php';
+require_once __DIR__ . '/../includes/order_helpers.php';
 
 requireCustomer();
 
@@ -64,7 +64,7 @@ $minDate = date('Y-m-d');
 $maxDate = date('Y-m-d', strtotime('+' . MAX_DAYS_AHEAD . ' days'));
 
 // header.php prints HTML, so it comes AFTER every header("Location: ...") above
-include __DIR__ . '/includes/header.php';
+include __DIR__ . '/../includes/header.php';
 ?>
 <style>
     .method-card { border: 2px solid #E4E4E4; border-radius: 8px; padding: 14px; cursor: pointer; display: block; height: 100%; }
@@ -154,4 +154,4 @@ include __DIR__ . '/includes/header.php';
     updateMethod();
 </script>
 
-<?php include __DIR__ . '/includes/footer.php'; ?>
+<?php include __DIR__ . '/../includes/footer.php'; ?>

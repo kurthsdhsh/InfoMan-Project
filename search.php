@@ -16,6 +16,9 @@ $itemCount = mysqli_num_rows($result);
     <?= $itemCount ?> result(s) for "<?= htmlspecialchars($keyword) ?>"
 </h2>
 
+<?php include('./transaction/order_mode/order_mode.php'); // (Partner B) ?>
+
+
 <?php
 if ($itemCount > 0) {
     echo '<ul class="products">';
