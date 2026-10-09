@@ -166,7 +166,8 @@
                             </li>
 
                             <li>
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" 
+                                href="/InfoMan-Project/admin/expense/expenses.php">
                                     Expenses
                                 </a>
                             </li>
