@@ -1,8 +1,8 @@
-<?php
-session_start();
 
+<?php
 mysqli_report(MYSQLI_REPORT_OFF);
 
+include('../auth.php');
 include('../../includes/config.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -12,24 +12,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $product_name = trim($_POST['product_name'] ?? '');
     $product_description = trim($_POST['product_description'] ?? '');
     $unit_price = $_POST['unit_price'] ?? '';
-    $stock_quantity = $_POST['stock_quantity'] ?? '';
     $product_status = $_POST['product_status'] ?? 'Active';
 
-
     // Check required fields
+    // Stock quantity is intentionally excluded.
     if (
         $product_id == '' ||
         $category_id == '' ||
         $product_name == '' ||
-        $unit_price == '' ||
-        $stock_quantity == ''
+        $unit_price == ''
     ) {
-
         $_SESSION['error'] = "Please complete all required fields.";
-        header("Location: product_form.php?id=" . $product_id);
+        header("Location: product_form.php?id=" . urlencode($product_id));
         exit;
     }
-
 
     // Get current image
     $sql = "SELECT image_path
@@ -45,17 +41,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     mysqli_stmt_close($stmt);
 
-
     if (!$row) {
-
         $_SESSION['error'] = "Product not found.";
         header("Location: products.php");
         exit;
     }
 
-
     $image_path = $row['image_path'];
-
 
     // Handle new image upload
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
@@ -75,74 +67,67 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'webp'
         ];
 
-
-        if (!in_array($image_extension, $allowed_extensions)) {
-
+        if (!in_array($image_extension, $allowed_extensions, true)) {
             $_SESSION['error'] = "Invalid image type.";
-            header("Location: product_form.php?id=" . $product_id);
+            header("Location: product_form.php?id=" . urlencode($product_id));
             exit;
         }
 
-
         // Create a new unique file name
         $new_image_name = uniqid('product_') . '.' . $image_extension;
-
         $upload_path = '../../uploads/products/' . $new_image_name;
-
 
         if (move_uploaded_file($image_tmp, $upload_path)) {
 
             $image_path = 'uploads/products/' . $new_image_name;
 
-            // Delete old image
-            if (!empty($row['image_path'])) {
-
-                $old_image = '../../' . $row['image_path'];
-
-                if (file_exists($old_image)) {
-                    unlink($old_image);
-                }
-            }
-
         } else {
-
             $_SESSION['error'] = "Failed to upload product image.";
-            header("Location: product_form.php?id=" . $product_id);
+            header("Location: product_form.php?id=" . urlencode($product_id));
             exit;
         }
     }
 
-
-    // Update product
+    // Update product details WITHOUT changing stock_quantity
     $sql = "UPDATE tbl_products
             SET
                 category_id = ?,
                 product_name = ?,
                 product_description = ?,
                 unit_price = ?,
-                stock_quantity = ?,
                 image_path = ?,
                 product_status = ?
             WHERE product_id = ?";
-
 
     $stmt = mysqli_prepare($conn, $sql);
 
     mysqli_stmt_bind_param(
         $stmt,
-        "issdissi",
+        "issdssi",
         $category_id,
         $product_name,
         $product_description,
         $unit_price,
-        $stock_quantity,
         $image_path,
         $product_status,
         $product_id
     );
 
-
     if (mysqli_stmt_execute($stmt)) {
+
+        mysqli_stmt_close($stmt);
+
+        // Delete old image only after the database update succeeds
+        if (
+            isset($new_image_name) &&
+            !empty($row['image_path'])
+        ) {
+            $old_image = '../../' . $row['image_path'];
+
+            if (file_exists($old_image)) {
+                unlink($old_image);
+            }
+        }
 
         $_SESSION['success'] = "Product updated successfully.";
         header("Location: products.php");
@@ -150,11 +135,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     } else {
 
+        // Remove newly uploaded image if the database update fails
+        mysqli_stmt_close($stmt);
+
+        if (isset($new_image_name) && file_exists($upload_path)) {
+            unlink($upload_path);
+        }
+
         $_SESSION['error'] = "Failed to update product.";
-        header("Location: product_form.php?id=" . $product_id);
+        header("Location: product_form.php?id=" . urlencode($product_id));
         exit;
     }
-
-    mysqli_stmt_close($stmt);
 }
 ?>
