@@ -1,6 +1,7 @@
 <?php
 include('../auth.php');
 include('../../includes/config.php');
+include('../../includes/filter_helper.php');
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
@@ -117,9 +118,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_stock'])) {
 
     header("Location: inventory.php");
     exit;
+
 }
 
-// get products and current stock levels
+    include('../../includes/adminHeader.php');
+
+
+// Get ALL products for the stock update dropdown.
+$sql = "SELECT product_id, product_name, stock_quantity
+        FROM tbl_products
+        ORDER BY product_name ASC";
+
+$productResult = mysqli_query($conn, $sql);
+
+// Read search and stock-status filters.
+$search = adminFilterValue('search');
+$stockFilter = adminFilterValue('stock_status');
+
+$conditions = [];
+$params = [];
+$types = '';
+
+if ($search !== '') {
+    $conditions[] = 'p.product_name LIKE ?';
+    $params[] = '%' . $search . '%';
+    $types .= 's';
+}
+
+// Apply the selected stock status.
+if ($stockFilter === 'in_stock') {
+    $conditions[] = 'p.stock_quantity > p.reorder_level';
+} elseif ($stockFilter === 'low_stock') {
+    $conditions[] = 'p.stock_quantity > 0
+                     AND p.stock_quantity <= p.reorder_level';
+} elseif ($stockFilter === 'out_of_stock') {
+    $conditions[] = 'p.stock_quantity = 0';
+}
+
 $sql = "SELECT
             p.product_id,
             p.product_name,
@@ -129,13 +164,35 @@ $sql = "SELECT
             c.category_name
         FROM tbl_products p
         INNER JOIN tbl_categories c
-            ON p.category_id = c.category_id
-        ORDER BY p.product_name ASC";
+            ON p.category_id = c.category_id";
 
-$result = mysqli_query($conn, $sql);
+if (!empty($conditions)) {
+    $sql .= ' WHERE ' . implode(' AND ', $conditions);
+}
+
+$sql .= ' ORDER BY p.product_name ASC';
+
+$stmt = mysqli_prepare($conn, $sql);
+
+if (!empty($params)) {
+    $bindParams = [$types];
+
+    foreach ($params as $key => $value) {
+        $bindParams[] = &$params[$key];
+    }
+
+    call_user_func_array(
+        [$stmt, 'bind_param'],
+        $bindParams
+    );
+}
+
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+
+$itemCount = mysqli_num_rows($result);
 ?>
-
-<?php include('../../includes/adminHeader.php'); ?>
+       
 
 <div class="inventory-page">
 
@@ -175,8 +232,7 @@ $result = mysqli_query($conn, $sql);
                     <option value="">Select a product</option>
 
                     <?php
-                    mysqli_data_seek($result, 0);
-                    while ($product = mysqli_fetch_assoc($result)):
+                    while ($product = mysqli_fetch_assoc($productResult)):
                     ?>
                         <option value="<?= (int) $product['product_id'] ?>">
                             <?= htmlspecialchars($product['product_name']) ?>
@@ -235,17 +291,38 @@ $result = mysqli_query($conn, $sql);
     <div class="inventory-card">
         <div class="card-heading">
             <div>
-                <h3>Current Stock Levels</h3>
+                <h3>Current Stock Levels (<?= $itemCount ?>)</h3>
                 <p>Review available stock and reorder levels.</p>
             </div>
 
             <a
                 href="stock_history.php"
-                class="inventory-button secondary-button"
-            >
+                class="inventory-button secondary-button">
                 View Stock History
             </a>
         </div>
+
+        
+            <?php
+            renderAdminFilterForm(
+                basename($_SERVER['PHP_SELF']),
+                $search,
+                'Search product name...',
+                [
+                    [
+                        'name' => 'stock_status',
+                        'label' => 'All Stock Statuses',
+                        'options' => [
+                            'in_stock' => 'In Stock',
+                            'low_stock' => 'Low Stock',
+                            'out_of_stock' => 'Out of Stock'
+                        ],
+                        'selected' => $stockFilter
+                    ]
+                ]
+            );
+            ?>
+
 
         <div class="table-wrap">
             <table class="inventory-table">
@@ -319,5 +396,5 @@ $result = mysqli_query($conn, $sql);
     </div>
 
 </div>
-</body>
+                 
 </html>

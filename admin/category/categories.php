@@ -1,15 +1,35 @@
 <?php
 include('../auth.php');
-
 include('../../includes/adminHeader.php');
 include('../../includes/config.php');
+include('../../includes/filter_helper.php');
 
-echo '<link rel="stylesheet" href="/InfoMan-Project/includes/style/adminstyle.css?v=' . time() . '">';
+
+$search = adminFilterValue('search');
 
 $sql = "SELECT * FROM tbl_categories";
-$result = mysqli_query($conn, $sql);
+$params = [];
+$types = '';
+
+if ($search !== '') {
+    $sql .= " WHERE category_name LIKE ?";
+    $params[] = '%' . $search . '%';
+    $types .= 's';
+}
+
+$sql .= " ORDER BY category_id DESC";
+
+$stmt = mysqli_prepare($conn, $sql);
+
+if (!empty($params)) {
+    mysqli_stmt_bind_param($stmt, $types, $params[0]);
+}
+
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 
 $itemCount = mysqli_num_rows($result);
+
 
 $success = $_SESSION['success'] ?? '';
 $error = $_SESSION['error'] ?? '';
@@ -47,6 +67,14 @@ unset($_SESSION['error']);
                 Add category
             </a>
         </div>
+
+        <?php
+        renderAdminFilterForm(
+            basename($_SERVER['PHP_SELF']),
+            $search,
+            'Search category name...'
+        );
+        ?>
 
         <div class="table-card">
 
@@ -106,3 +134,5 @@ unset($_SESSION['error']);
     </div>
 
 </body>
+
+</main>

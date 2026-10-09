@@ -1,20 +1,80 @@
-
 <?php
 require_once '../auth.php';
 require_once '../../includes/config.php';
+require_once '../../includes/filter_helper.php';
 
-// Get all expenses
-$sql = "SELECT e.*, a.admin_name
-        FROM tbl_expenses e
-        LEFT JOIN tbl_admins a ON e.admin_id = a.admin_id
-        ORDER BY e.expense_date DESC, e.expense_id DESC";
 
-$result = mysqli_query($conn, $sql);
+// Read search and expense-type filters.
+$search = adminFilterValue('search');
+$typeFilter = adminFilterValue('expense_type');
 
-if (!$result) {
-    die("Error retrieving expenses: " . mysqli_error($conn));
+$conditions = [];
+$params = [];
+$types = '';
+
+if ($search !== '') {
+    $conditions[] = '(e.expense_type LIKE ? OR e.description LIKE ?)';
+
+    $searchTerm = '%' . $search . '%';
+    $params[] = $searchTerm;
+    $params[] = $searchTerm;
+    $types .= 'ss';
 }
 
+if ($typeFilter !== '') {
+    $conditions[] = 'e.expense_type = ?';
+    $params[] = $typeFilter;
+    $types .= 's';
+}
+
+$sql = "SELECT e.*, a.admin_name
+        FROM tbl_expenses e
+        LEFT JOIN tbl_admins a
+            ON e.admin_id = a.admin_id";
+
+if (!empty($conditions)) {
+    $sql .= ' WHERE ' . implode(' AND ', $conditions);
+}
+
+$sql .= ' ORDER BY e.expense_date DESC, e.expense_id DESC';
+
+$stmt = mysqli_prepare($conn, $sql);
+
+if (!empty($params)) {
+    $bindParams = [$types];
+
+    foreach ($params as $key => $value) {
+        $bindParams[] = &$params[$key];
+    }
+
+    call_user_func_array(
+        [$stmt, 'bind_param'],
+        $bindParams
+    );
+}
+
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+
+$itemCount = mysqli_num_rows($result);
+
+// Get the available expense types for the dropdown.
+$typeResult = mysqli_query(
+    $conn,
+    "SELECT DISTINCT expense_type
+     FROM tbl_expenses
+     ORDER BY expense_type ASC"
+);
+
+$typeOptions = [];
+
+while ($typeRow = mysqli_fetch_assoc($typeResult)) {
+    $type = $typeRow['expense_type'];
+    $typeOptions[$type] = $type;
+}
+?>
+
+<?php
 // Get expense summary statistics
 $summary_sql = "SELECT
                     COALESCE(SUM(amount), 0) AS total_expenses,
@@ -54,8 +114,8 @@ unset($_SESSION['success'], $_SESSION['error']);
 
 <?php require_once '../../includes/adminHeader.php'; ?>
 
-<div class="container-fluid py-4">
-
+<div class="admin-container">
+        
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2>Expense Management</h2>
@@ -160,6 +220,28 @@ unset($_SESSION['success'], $_SESSION['error']);
 
     <div class="card">
         <div class="card-body">
+
+        
+                <?php
+                renderAdminFilterForm(
+                    basename($_SERVER['PHP_SELF']),
+                    $search,
+                    'Search expense type or description...',
+                    [
+                        [
+                            'name' => 'expense_type',
+                            'label' => 'All Expense Types',
+                            'options' => $typeOptions,
+                            'selected' => $typeFilter
+                        ]
+                    ]
+                );
+                ?>
+
+                <p class="text-muted mb-3">
+                    Matching records: <?= (int)$itemCount ?>
+                </p>
+
 
             <div class="table-responsive">
                 <table class="table align-middle">
