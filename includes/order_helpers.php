@@ -6,7 +6,7 @@ date_default_timezone_set('Asia/Manila');
 const STORE_OPEN_HOUR    = 9;   // first pickup/delivery slot: 9:00 AM
 const STORE_CLOSE_HOUR   = 18;  // last slot starts before 6:00 PM
 const SLOT_MINUTES       = 30;  // one slot every 30 minutes
-const MIN_LEAD_HOURS     = 2;   // earliest choice = now + 2 hours (shop needs time to prepare)
+const MIN_LEAD_HOURS     = 1;   // earliest choice = now + 2 hours (shop needs time to prepare)
 const MAX_DAYS_AHEAD     = 7;   // latest choice = today + 7 days
 const MAX_PENDING_ORDERS = 3;   // fake-order guard: max Pending orders per customer
 
@@ -21,13 +21,11 @@ function peso($amount): string
     return '₱' . number_format((float) $amount, 2);
 }
 
-// Order number shown to the customer. It is just order_id made pretty, so nothing extra is stored.
 function orderNumber(int $orderId): string
 {
     return 'BP-' . str_pad((string) $orderId, 5, '0', STR_PAD_LEFT);
 }
 
-// Only a signed-in CUSTOMER may use the checkout pages (an admin session is refused).
 function requireCustomer(): void
 {
     if (!isset($_SESSION['customer_id']) || ($_SESSION['role'] ?? '') !== 'customer') {
@@ -37,9 +35,7 @@ function requireCustomer(): void
     }
 }
 
-// ---------- cart ----------
-// Reads the session cart (Partner A's cart_update.php fills it) but takes the REAL
-// name, price and stock from the database, so the customer is never charged a stale price.
+// cart 
 function getCartLines(mysqli $conn): array
 {
     $lines = [];
@@ -56,7 +52,7 @@ function getCartLines(mysqli $conn): array
         );
         $p = mysqli_fetch_assoc($result);
         if (!$p) {
-            continue; // product was deleted by the admin
+            continue; 
         }
         $lines[] = [
             'product_id' => (int) $p['product_id'],
@@ -65,7 +61,7 @@ function getCartLines(mysqli $conn): array
             'qty'        => $qty,
             'stock'      => (int) $p['stock_quantity'],
             'status'     => $p['product_status'],
-            'line_total' => (float) $p['unit_price'] * $qty,   // calculated, never stored
+            'line_total' => (float) $p['unit_price'] * $qty,   
         ];
     }
     return $lines;
@@ -80,7 +76,6 @@ function cartTotal(array $lines): float
     return $sum;
 }
 
-// Returns an error message if some product cannot be sold in that quantity, otherwise null.
 function cartProblem(array $lines): ?string
 {
     foreach ($lines as $l) {
@@ -94,8 +89,6 @@ function cartProblem(array $lines): ?string
     return null;
 }
 
-// ---------- pickup / delivery schedule ----------
-// ['09:00:00' => '9:00 AM', '09:30:00' => '9:30 AM', ...]
 function timeSlots(): array
 {
     $slots = [];
@@ -106,7 +99,6 @@ function timeSlots(): array
     return $slots;
 }
 
-// Returns [ 'Y-m-d H:i:s' or null, error message or null ]
 function validateSchedule(string $date, string $time): array
 {
     $d = DateTime::createFromFormat('Y-m-d', $date);
@@ -125,4 +117,67 @@ function validateSchedule(string $date, string $time): array
         return [null, 'Please choose a date within the next ' . MAX_DAYS_AHEAD . ' days.'];
     }
     return [$when->format('Y-m-d H:i:s'), null];
+}
+
+const ASAP_MINUTES = 20;   
+
+function asapText(): string
+{
+    return (ASAP_MINUTES % 20 === 0)
+        ? (ASAP_MINUTES / 20) . ((ASAP_MINUTES / 20) === 1 ? ' hour' : ' hours')
+        : ASAP_MINUTES . ' minutes';
+}
+
+function asapAvailable(): bool
+{
+    $now   = new DateTime();
+    $open  = new DateTime('today ' . sprintf('%02d:00', STORE_OPEN_HOUR));
+    $close = new DateTime('today ' . sprintf('%02d:00', STORE_CLOSE_HOUR));
+    $ready = (clone $now)->modify('+' . ASAP_MINUTES . ' minutes');
+    return $now >= $open && $ready <= $close;
+}
+
+function availableSlots(string $date): array
+{
+    $out = [];
+    foreach (timeSlots() as $key => $label) {
+        [$when, $error] = validateSchedule($date, $key);
+        if (!$error) {
+            $out[$key] = $label;
+        }
+    }
+    return $out;
+}
+
+function availableDays(): array
+{
+    $days = [];
+    for ($i = 0; $i <= MAX_DAYS_AHEAD; $i++) {
+        $date = date('Y-m-d', strtotime("+$i days"));
+        if (!availableSlots($date)) {
+            continue;
+        }
+        $name = ($i === 0) ? 'Today' : (($i === 1) ? 'Tomorrow' : date('D', strtotime($date)));
+        $days[$date] = $name . ', ' . date('M j', strtotime($date));
+    }
+    return $days;
+}
+
+function validateChoice(string $date, string $time): array
+{
+    if ($time === 'ASAP') {
+        if (!asapAvailable()) {
+            return [null, 'ASAP is not available right now. Please choose a day and time.'];
+        }
+        return [date('Y-m-d H:i:s', strtotime('+' . ASAP_MINUTES . ' minutes')), null];
+    }
+    return validateSchedule($date, $time);
+}
+
+function scheduleText(string $date, string $time): string
+{
+    if ($time === 'ASAP') {
+        return 'ASAP (ready in about ' . asapText() . ')';
+    }
+    return date('D, M j \a\t g:i A', strtotime($date . ' ' . $time));
 }
