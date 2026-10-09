@@ -1,36 +1,97 @@
 <?php
 include('../auth.php');
-
 include('../../includes/adminHeader.php');
 include('../../includes/config.php');
+include('../../includes/filter_helper.php');
 
-echo '<link rel="stylesheet" href="/InfoMan-Project/includes/style/adminstyle.css?v=' . time() . '">';
+        $search = adminFilterValue('search');
+        $categoryFilter = adminFilterValue('category_id');
+        $statusFilter = adminFilterValue('status');
 
-$sql = "SELECT 
-            p.product_id,
-            p.product_name,
-            p.product_description,
-            p.unit_price,
-            p.stock_quantity,
-            p.image_path,
-            p.product_status,
-            c.category_name
-        FROM tbl_products p
-        INNER JOIN tbl_categories c
-        ON p.category_id = c.category_id";
+        $conditions = [];
+        $params = [];
+        $types = '';
 
-$result = mysqli_query($conn, $sql);
+        if ($search !== '') {
+            $conditions[] = 'p.product_name LIKE ?';
+            $params[] = '%' . $search . '%';
+            $types .= 's';
+        }
 
-$itemCount = mysqli_num_rows($result);
+        if ($categoryFilter !== '') {
+            $conditions[] = 'p.category_id = ?';
+            $params[] = (int)$categoryFilter;
+            $types .= 'i';
+        }
 
-$success = $_SESSION['success'] ?? '';
-$error = $_SESSION['error'] ?? '';
+        if ($statusFilter !== '') {
+            $conditions[] = 'p.product_status = ?';
+            $params[] = $statusFilter;
+            $types .= 's';
+        }
 
-unset($_SESSION['success']);
-unset($_SESSION['error']);
-?>
+        $sql = "SELECT
+                    p.product_id,
+                    p.product_name,
+                    p.product_description,
+                    p.unit_price,
+                    p.stock_quantity,
+                    p.image_path,
+                    p.product_status,
+                    c.category_name
+                FROM tbl_products p
+                INNER JOIN tbl_categories c
+                    ON p.category_id = c.category_id";
 
-<body>
+        if (!empty($conditions)) {
+            $sql .= ' WHERE ' . implode(' AND ', $conditions);
+        }
+
+        $sql .= ' ORDER BY p.product_id DESC';
+
+        $stmt = mysqli_prepare($conn, $sql);
+
+        if (!empty($params)) {
+            $bindParams = [$types];
+
+            foreach ($params as $key => $value) {
+                $bindParams[] = &$params[$key];
+            }
+
+            call_user_func_array(
+                [$stmt, 'bind_param'],
+                $bindParams
+            );
+        }
+
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        $itemCount = mysqli_num_rows($result);
+
+        // Load categories for the dropdown.
+        $categoryResult = mysqli_query(
+            $conn,
+            "SELECT category_id, category_name
+            FROM tbl_categories
+            ORDER BY category_name"
+        );
+
+        $categoryOptions = [];
+
+        while ($category = mysqli_fetch_assoc($categoryResult)) {
+            $categoryOptions[$category['category_id']] =
+                $category['category_name'];
+        }
+
+
+        $success = $_SESSION['success'] ?? '';
+        $error = $_SESSION['error'] ?? '';
+
+        unset($_SESSION['success']);
+        unset($_SESSION['error']);
+        ?>
+
 
     <div class="admin-container">
 
@@ -61,6 +122,33 @@ unset($_SESSION['error']);
             </a>
 
         </div>
+
+
+        
+        <?php
+        renderAdminFilterForm(
+            basename($_SERVER['PHP_SELF']),
+            $search,
+            'Search product name...',
+            [
+                [
+                    'name' => 'category_id',
+                    'label' => 'All Categories',
+                    'options' => $categoryOptions,
+                    'selected' => $categoryFilter
+                ],
+                [
+                    'name' => 'status',
+                    'label' => 'All Statuses',
+                    'options' => [
+                        'Active' => 'Active',
+                        'Inactive' => 'Inactive'
+                    ],
+                    'selected' => $statusFilter
+                ]
+            ]
+        );
+        ?>
 
 
         <div class="table-card">
@@ -113,9 +201,9 @@ unset($_SESSION['error']);
 
                         echo "<td>" . htmlspecialchars($row['product_name']) . "</td>";
 
-                        echo "<td>" . htmlspecialchars($row['product_description'] ?? '') . "</td>";
-
                         echo "<td>" . htmlspecialchars($row['category_name']) . "</td>";
+
+                        echo "<td>" . htmlspecialchars($row['product_description'] ?? '') . "</td>";
 
                         echo "<td>₱" . number_format($row['unit_price'], 2) . "</td>";
 
@@ -150,5 +238,5 @@ unset($_SESSION['error']);
         </div>
 
     </div>
-
-</body>
+    
+    </main>

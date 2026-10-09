@@ -1,10 +1,48 @@
 <?php
 include('../auth.php');
 include('../../includes/config.php');
+include('../../includes/filter_helper.php');
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-// read stock movement history
+
+// Read the search and movement-type filters.
+$search = adminFilterValue('search');
+$movementFilter = adminFilterValue('movement_type');
+
+$conditions = [];
+$params = [];
+$types = '';
+
+if ($search !== '') {
+    $conditions[] = "(
+        p.product_name LIKE ?
+        OR sm.reason LIKE ?
+        OR a.admin_name LIKE ?
+    )";
+
+    $searchTerm = '%' . $search . '%';
+
+    $params[] = $searchTerm;
+    $params[] = $searchTerm;
+    $params[] = $searchTerm;
+
+    $types .= 'sss';
+}
+
+$allowedMovements = [
+    'Restock',
+    'Adjustment',
+    'Order Placed',
+    'Order Cancelled'
+];
+
+if (in_array($movementFilter, $allowedMovements, true)) {
+    $conditions[] = 'sm.movement_type = ?';
+    $params[] = $movementFilter;
+    $types .= 's';
+}
+
 $sql = "SELECT
             sm.movement_id,
             p.product_name,
@@ -17,11 +55,35 @@ $sql = "SELECT
         INNER JOIN tbl_products p
             ON sm.product_id = p.product_id
         LEFT JOIN tbl_admins a
-            ON sm.admin_id = a.admin_id
-        ORDER BY sm.movement_date DESC, sm.movement_id DESC";
+            ON sm.admin_id = a.admin_id";
 
-$result = mysqli_query($conn, $sql);
+if (!empty($conditions)) {
+    $sql .= ' WHERE ' . implode(' AND ', $conditions);
+}
+
+$sql .= ' ORDER BY sm.movement_date DESC, sm.movement_id DESC';
+
+$stmt = mysqli_prepare($conn, $sql);
+
+if (!empty($params)) {
+    $bindParams = [$types];
+
+    foreach ($params as $key => $value) {
+        $bindParams[] = &$params[$key];
+    }
+
+    call_user_func_array(
+        [$stmt, 'bind_param'],
+        $bindParams
+    );
+}
+
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+
+$itemCount = mysqli_num_rows($result);
 ?>
+
 
 <?php include('../../includes/adminHeader.php'); ?>
 
@@ -58,9 +120,32 @@ $result = mysqli_query($conn, $sql);
 
         <div class="card-heading">
             <div>
-                <h3>Movement Records</h3>
+                <h3>Movement Records (<?= $itemCount ?>)</h3>
             </div>
         </div>
+
+        
+            <?php
+            renderAdminFilterForm(
+                basename($_SERVER['PHP_SELF']),
+                $search,
+                'Search product, reason, or admin...',
+                [
+                    [
+                        'name' => 'movement_type',
+                        'label' => 'All Movement Types',
+                        'options' => [
+                            'Restock' => 'Restock',
+                            'Adjustment' => 'Adjustment',
+                            'Order Placed' => 'Order Placed',
+                            'Order Cancelled' => 'Order Cancelled'
+                        ],
+                        'selected' => $movementFilter
+                    ]
+                ]
+            );
+            ?>
+
 
         <div class="table-wrap">
             <table class="inventory-table">
