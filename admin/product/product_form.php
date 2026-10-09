@@ -11,7 +11,6 @@ $category_id = '';
 $product_name = '';
 $product_description = '';
 $unit_price = '';
-$stock_quantity = '';
 $image_path = '';
 $product_status = 'Active';
 
@@ -40,7 +39,6 @@ if (isset($_GET['id'])) {
         $product_name = $row['product_name'];
         $product_description = $row['product_description'];
         $unit_price = $row['unit_price'];
-        $stock_quantity = $row['stock_quantity'];
         $image_path = $row['image_path'];
         $product_status = $row['product_status'];
 
@@ -187,26 +185,6 @@ $category_result = mysqli_query($conn, $sql);
                         value="<?php echo htmlspecialchars($unit_price); ?>"
                         min="0"
                         step="0.01"
-                        required>
-
-                </div>
-
-
-                <!-- Stock -->
-
-                <div class="mb-3">
-
-                    <label for="stock_quantity" class="form-label">
-                        Stock Quantity
-                    </label>
-
-                    <input
-                        type="number"
-                        class="form-control"
-                        id="stock_quantity"
-                        name="stock_quantity"
-                        value="<?php echo htmlspecialchars($stock_quantity); ?>"
-                        min="0"
                         required>
 
                 </div>

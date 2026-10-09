@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <link rel="stylesheet" href="/InfoMan-Project/includes/style/adminstyle.css">
 
     <meta charset="UTF-8">
 
@@ -76,72 +77,107 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
 
-                    <!-- Home -->
 
+                    <!-- Dashboard -->
                     <li class="nav-item">
-
-                        <a
-                            class="nav-link active"
-                            aria-current="page"
-                            href="/InfoMan-Project/admin/home.php">
-
-                            Home
-
+                        <a class="nav-link"
+                        href="/InfoMan-Project/admin/home.php">
+                            Dashboard
                         </a>
-
                     </li>
 
-
-                    <!-- User -->
-
-                    <li class="nav-item">
-
-                        <a
-                            class="nav-link"
-                            href="#">
-
-                            User
-
+                    <!-- Product Catalog Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"
+                        href="#"
+                        id="catalogDropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                            Product Catalog
                         </a>
 
-                    </li>
+                        <ul class="dropdown-menu"
+                            aria-labelledby="catalogDropdown">
 
-
-                    <?php if (($_SESSION['role'] ?? '') === 'admin'): ?>
-
-
-                        <!-- Categories -->
-
-                        <li class="nav-item">
-
-                            <a
-                                class="nav-link"
+                            <li>
+                                <a class="dropdown-item"
                                 href="/InfoMan-Project/admin/category/categories.php">
+                                    Categories
+                                </a>
+                            </li>
 
-                                Categories
-
-                            </a>
-
-                        </li>
-
-
-                        <!-- Products -->
-
-                        <li class="nav-item">
-
-                            <a
-                                class="nav-link"
+                            <li>
+                                <a class="dropdown-item"
                                 href="/InfoMan-Project/admin/product/products.php">
+                                    Products
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
-                                Products
+                    <!-- Inventory Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"
+                        href="#"
+                        id="inventoryDropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                            Inventory
+                        </a>
 
-                            </a>
+                        <ul class="dropdown-menu"
+                            aria-labelledby="inventoryDropdown">
 
-                        </li>
+                            <li>
+                                <a class="dropdown-item"
+                                href="/InfoMan-Project/admin/inventory/inventory.php">
+                                    Stock Management
+                                </a>
+                            </li>
 
+                            <li>
+                                <a class="dropdown-item"
+                                href="/InfoMan-Project/admin/inventory/stock_history.php">
+                                    Stock History
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
-                    <?php endif; ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"
+                        href="#"
+                        id="reportsDropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                            Sales &amp; Reports
+                        </a>
 
+                        <ul class="dropdown-menu"
+                            aria-labelledby="reportsDropdown">
+
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    Orders
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    Expenses
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    Business Reports
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
                 </ul>
 

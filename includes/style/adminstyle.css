@@ -1,197 +1,679 @@
-/* ==========================================================
-   ADMIN PRODUCT LIST (admin_item/index.php)
-   Bigger, colored, bordered and centered.
-   Same green as the login/register pages.
-   ========================================================== */
+
+   /* ADMIN STYLE */
+
+   /* GLOBAL STYLES */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #4a3b30;
+    background-color: #FFF8EE;
+}
+
+a {
+    color: #B77466;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #957C62;
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+}
+
+   /* ADMIN CONTAINER */
 
 .admin-container {
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 0 20px;
-  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
-  font-size: 16px;
-  color: #4a3b30;
-  text-align: center;
+    width: calc(100% - 40px);
+    max-width: 1250px;
+    margin: 35px auto;
+    color: #4a3b30;
 }
 
-/* ---------- Top: title + Add item button, centered ---------- */
-.admin-container .admin-toolbar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 18px;
-  margin-bottom: 28px;
+.admin-container h1,
+.admin-container h2,
+.admin-container h3 {
+    color: #4a3b30;
 }
 
-.admin-container .admin-toolbar h2 {
-  margin: 0;
-  font-family: inherit;
-  font-size: 30px;
-  font-weight: 700;
-  color: #4a3b30;
+.admin-container h1 {
+    margin-bottom: 10px;
+    font-size: 28px;
 }
 
-/* ---------- Add item button ---------- */
-.admin-container .btn-add {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 32px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #B77466, #957C62);
-  color: #fff;
-  font-size: 18px;
-  font-weight: 600;
-  text-decoration: none;
-  box-shadow: 0 6px 16px rgba(183, 116, 102, .35);
-  transition: transform .15s, box-shadow .15s;
+.admin-container p {
+    color: #957C62;
+    line-height: 1.6;
 }
 
-.admin-container .btn-add::before {
-  content: "+";
-  font-size: 26px;
-  line-height: 1;
+   /* ADMIN TOOLBAR */
+
+.admin-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 22px;
 }
 
-.admin-container .btn-add:hover {
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(183, 116, 102, .45);
+.admin-toolbar h1,
+.admin-toolbar h2 {
+    margin: 0;
 }
 
-/* ---------- Table card with a colored border ---------- */
-.admin-container .table-card {
-  background: #fff;
-  border: 2px solid #B77466;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(183, 116, 102, .15);
-  overflow-x: auto;
+.admin-toolbar p {
+    margin: 6px 0 0;
 }
 
-.admin-container .admin-table {
-  width: 100%;
-  margin: 0;
-  border-collapse: collapse;
-  font-size: 16px;
+   /* BUTTONS */
+
+.btn-add,
+.btn-primary,
+.btn-save,
+.btn-update,
+.btn-submit {
+    display: inline-block;
+    padding: 11px 18px;
+    border: 1px solid #B77466;
+    border-radius: 8px;
+    background: #B77466;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease,
+                border-color 0.2s ease;
 }
 
-/* colored header row */
-.admin-container .admin-table thead th {
-  padding: 18px 16px;
-  background: linear-gradient(135deg, #B77466, #957C62);
-  border: 1px solid #9a6054;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  color: #fff;
-  white-space: nowrap;
+.btn-add:hover,
+.btn-primary:hover,
+.btn-save:hover,
+.btn-update:hover,
+.btn-submit:hover {
+    background: #957C62;
+    border-color: #957C62;
+    color: #FFFFFF;
 }
 
-/* cells with visible borders, centered */
-.admin-container .admin-table tbody td {
-  padding: 18px 16px;
-  border: 1px solid #E2B59A;
-  text-align: center;
-  vertical-align: middle;
+.btn-secondary,
+.btn-cancel,
+.btn-back {
+    display: inline-block;
+    padding: 10px 16px;
+    border: 1px solid #E2B59A;
+    border-radius: 8px;
+    background: #FFF3DC;
+    color: #4a3b30;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
 }
 
-/* striped rows in a light green */
-.admin-container .admin-table tbody tr:nth-child(even) {
-  background: #FFF3DC;
+.btn-secondary:hover,
+.btn-cancel:hover,
+.btn-back:hover {
+    background: #FFE1AF;
+    color: #4a3b30;
 }
 
-.admin-container .admin-table tbody tr:hover {
-  background: #FFE1AF;
+.btn-edit,
+.btn-delete,
+.btn-view {
+    display: inline-block;
+    padding: 7px 11px;
+    margin: 2px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
 }
 
-/* product picture: bigger, centered */
-.admin-container .admin-table td img {
-  display: block;
-  width: 96px;
-  height: 96px;
-  margin: 0 auto;
-  object-fit: cover;
-  border-radius: 12px;
-  border: 2px solid #E2B59A;
-  background: #FFF3DC;
+.btn-edit {
+    background: #FFF3DC;
+    color: #795B3F;
+    border: 1px solid #E2B59A;
 }
 
-/* name bold */
-.admin-container .admin-table tbody td:nth-child(3) {
-  font-weight: 700;
-  color: #4a3b30;
+.btn-edit:hover {
+    background: #FFE1AF;
+    color: #4a3b30;
 }
 
-/* description muted */
-.admin-container .admin-table tbody td:nth-child(4) {
-  max-width: 280px;
-  color: #957C62;
+.btn-delete {
+    background: #FBE8E3;
+    color: #9A463A;
+    border: 1px solid #E6B8AE;
 }
 
-/* ---------- Status badge ---------- */
-.admin-container .status {
-  display: inline-block;
-  padding: 6px 16px;
-  border-radius: 999px;
-  background: #FFF3DC;
-  color: #957C62;
-  font-size: 14px;
-  font-weight: 700;
+.btn-delete:hover {
+    background: #F3D2C9;
+    color: #78372E;
 }
 
-.admin-container .status-active {
-  background: #FFE1AF;
-  color: #6b5240;
-  border: 1px solid #E2B59A;
+.btn-view {
+    background: #F2E9DF;
+    color: #795B3F;
+    border: 1px solid #D9C4B0;
 }
 
-.admin-container .status-inactive {
-  background: #F6DDD8;
-  color: #9a4a3c;
-  border: 1px solid #E2B59A;
+.btn-view:hover {
+    background: #E8D8C7;
+    color: #4a3b30;
 }
 
-/* ---------- Edit / delete icons ---------- */
-.admin-container .admin-table tbody td:last-child {
-  white-space: nowrap;
+   /* TABLE CONTAINERS
+   Categories and Products */
+
+.table-card,
+.inventory-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    background: #FFFFFF;
+    border: 1px solid #E2B59A;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(74, 59, 48, 0.04);
 }
 
-.admin-container .admin-table tbody td:last-child a {
-  display: inline-grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  margin: 0 4px;
-  border: 1px solid #E2B59A;
-  border-radius: 10px;
-  background: #fff;
-  font-size: 18px;
-  text-decoration: none;
-  transition: background .15s, transform .15s;
+   /* ADMIN TABLES
+   Categories and Products */
+
+.admin-table,
+.inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #FFFFFF;
+    color: #4a3b30;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 14px;
 }
 
-.admin-container .admin-table tbody td:last-child a:hover,
-.admin-container .admin-table tbody td:last-child .btn-icon-delete:hover {
-  background: #E2B59A;
-  transform: translateY(-1px);
+.admin-table thead th,
+.inventory-table thead th {
+    padding: 14px 16px;
+    background: #B77466;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid #A76659;
 }
 
-.admin-container .admin-table tbody td:last-child .btn-icon-delete {
-  display: inline-grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  margin: 0 4px;
-  padding: 0;
-  border: 1px solid #E2B59A;
-  border-radius: 10px;
-  background: #fff;
-  font-size: 18px;
-  cursor: pointer;
-  transition: background .15s, transform .15s;
+.admin-table tbody tr,
+.admin-table tbody tr:nth-child(even),
+.admin-table tbody tr:nth-child(odd),
+.inventory-table tbody tr,
+.inventory-table tbody tr:nth-child(even),
+.inventory-table tbody tr:nth-child(odd) {
+    background: #FFFFFF;
 }
+
+.admin-table tbody td,
+.admin-table tbody tr:nth-child(even) td,
+.admin-table tbody tr:nth-child(odd) td,
+.inventory-table tbody td,
+.inventory-table tbody tr:nth-child(even) td,
+.inventory-table tbody tr:nth-child(odd) td {
+    padding: 13px 16px;
+    background: #FFFFFF;
+    color: #4a3b30;
+    border-bottom: 1px solid #F0E2D6;
+    vertical-align: middle;
+}
+
+.admin-table tbody tr:hover td,
+.inventory-table tbody tr:hover td {
+    background: #FFF8EE;
+    transition: background-color 0.15s ease;
+}
+
+.admin-table tbody tr:last-child td,
+.inventory-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-table td img,
+.inventory-table td img {
+    max-width: 75px;
+    max-height: 75px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.admin-table td:last-child,
+.inventory-table td:last-child {
+    white-space: nowrap;
+}
+
+.empty-message,
+.admin-table .empty-message,
+.inventory-table .empty-message {
+    padding: 25px;
+    color: #957C62;
+    text-align: center;
+}
+
+   /* ADMIN FORMS */
+
+.admin-form,
+.form-card {
+    padding: 25px;
+    background: #FFFFFF;
+    border: 1px solid #E2B59A;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(74, 59, 48, 0.05);
+}
+
+.admin-form .form-group,
+.form-card .form-group {
+    margin-bottom: 18px;
+}
+
+.admin-form label,
+.form-card label {
+    display: block;
+    margin-bottom: 7px;
+    color: #4a3b30;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.admin-form input,
+.admin-form select,
+.admin-form textarea,
+.form-card input,
+.form-card select,
+.form-card textarea {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #E2B59A;
+    border-radius: 7px;
+    background: #FFFFFF;
+    color: #4a3b30;
+    font-size: 14px;
+    outline: none;
+}
+
+.admin-form input:focus,
+.admin-form select:focus,
+.admin-form textarea:focus,
+.form-card input:focus,
+.form-card select:focus,
+.form-card textarea:focus {
+    border-color: #B77466;
+    box-shadow: 0 0 0 3px rgba(183, 116, 102, 0.13);
+}
+
+.admin-form textarea,
+.form-card textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+   /* STATUS BADGES */
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-active {
+    background: #E8F1E5;
+    color: #426344;
+}
+
+.status-inactive {
+    background: #FBE8E3;
+    color: #9A463A;
+}
+
+.status-low {
+    background: #FFF0CC;
+    color: #8A6224;
+}
+
+.status-out {
+    background: #FBE8E3;
+    color: #9A463A;
+}
+
+   /* ALERT MESSAGES */
+
+.alert {
+    padding: 13px 16px;
+    margin-bottom: 18px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.alert-success {
+    background: #EDF5E9;
+    border-color: #C9DFC0;
+    color: #426344;
+}
+
+.alert-error,
+.alert-danger {
+    background: #FBE8E3;
+    border-color: #E6B8AE;
+    color: #9A463A;
+}
+
+.alert-warning {
+    background: #FFF3DC;
+    border-color: #E8D09B;
+    color: #795B3F;
+}
+
+.alert-info {
+    background: #F2E9DF;
+    border-color: #D9C4B0;
+    color: #795B3F;
+}
+
+   /* INVENTORY MANAGEMENT */
+
+.inventory-page {
+    width: calc(100% - 40px);
+    max-width: 1250px;
+    margin: 35px auto;
+    color: #4a3b30;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.inventory-page h1 {
+    margin: 0 0 8px;
+    color: #4a3b30;
+    font-size: 28px;
+    text-align: center;
+}
+
+.inventory-page .page-subtitle {
+    margin: 0 0 25px;
+    color: #957C62;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.inventory-card {
+    margin-bottom: 25px;
+    padding: 24px;
+    background: #FFFFFF;
+    border: 2px solid #B77466;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(74, 59, 48, 0.06);
+}
+
+.inventory-card h2 {
+    margin: 0 0 18px;
+    color: #4a3b30;
+    font-size: 20px;
+}
+
+/* Inventory form */
+
+.stock-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.stock-form .form-group {
+    min-width: 0;
+}
+
+.stock-form .form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.stock-form label {
+    display: block;
+    margin-bottom: 7px;
+    color: #4a3b30;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.stock-form input,
+.stock-form select,
+.stock-form textarea {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #E2B59A;
+    border-radius: 7px;
+    background: #FFFFFF;
+    color: #4a3b30;
+    font-size: 14px;
+    outline: none;
+}
+
+.stock-form input:focus,
+.stock-form select:focus,
+.stock-form textarea:focus {
+    border-color: #B77466;
+    box-shadow: 0 0 0 3px rgba(183, 116, 102, 0.13);
+}
+
+.stock-form textarea {
+    min-height: 85px;
+    resize: vertical;
+}
+
+.stock-form button {
+    grid-column: 1 / -1;
+    justify-self: start;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 8px;
+    background: #B77466;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.stock-form button:hover {
+    background: #957C62;
+}
+
+   /* STOCK HISTORY */
+
+.movement-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.movement-restock {
+    background: #E8F1E5;
+    color: #426344;
+}
+
+.movement-adjustment {
+    background: #FFF0CC;
+    color: #8A6224;
+}
+
+.movement-order-placed {
+    background: #FBE8E3;
+    color: #9A463A;
+}
+
+.movement-order-cancelled {
+    background: #F2E9DF;
+    color: #795B3F;
+}
+
+.quantity-positive {
+    color: #426344;
+    font-weight: 700;
+}
+
+.quantity-negative {
+    color: #9A463A;
+    font-weight: 700;
+}
+
+/* Inventory and Stock History back button */
+
+.inventory-back {
+    display: inline-block;
+    margin-bottom: 18px;
+    padding: 9px 14px;
+    border: 1px solid #E2B59A;
+    border-radius: 8px;
+    background: #FFF3DC;
+    color: #4a3b30;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.inventory-back:hover {
+    background: #FFE1AF;
+    color: #4a3b30;
+}
+
+   /* RESPONSIVE DESIGN */
+
+@media (max-width: 768px) {
+    .admin-container,
+    .inventory-page {
+        width: calc(100% - 24px);
+        margin: 22px auto;
+    }
+
+    .admin-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .admin-container h1,
+    .inventory-page h1 {
+        font-size: 24px;
+    }
+
+    .stock-form {
+        grid-template-columns: 1fr;
+    }
+
+    .stock-form .form-group.full-width,
+    .stock-form button {
+        grid-column: auto;
+    }
+
+    .inventory-card,
+    .admin-form,
+    .form-card {
+        padding: 16px;
+    }
+
+    .admin-table,
+    .inventory-table {
+        font-size: 13px;
+    }
+
+    .admin-table thead th,
+    .admin-table tbody td,
+    .inventory-table thead th,
+    .inventory-table tbody td {
+        padding: 10px 12px;
+    }
+
+    .btn-add,
+    .btn-primary,
+    .btn-save,
+    .btn-update,
+    .btn-submit {
+        max-width: 100%;
+    }
+}
+
+
+   /* ADMIN NAVBAR DROPDOWNS */
+
+.navbar {
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.navbar .navbar-brand {
+    color: #4a3b30;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.navbar .nav-link {
+    color: #4a3b30;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+    color: #B77466;
+}
+
+.navbar .dropdown-menu {
+    min-width: 190px;
+    padding: 7px;
+    margin-top: 8px;
+    background: #FFFFFF;
+    border: 1px solid #E8D8C7;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(74, 59, 48, 0.10);
+}
+
+.navbar .dropdown-item {
+    padding: 10px 12px;
+    border-radius: 6px;
+    color: #4a3b30;
+    font-size: 14px;
+    transition: background-color 0.15s ease,
+                color 0.15s ease;
+}
+
+.navbar .dropdown-item:hover,
+.navbar .dropdown-item:focus {
+    background: #FFF3DC;
+    color: #995D50;
+}
+
+.navbar .dropdown-item:active {
+    background: #B77466;
+    color: #FFFFFF;
+}
+
 
 /* ---------- Mobile ---------- */
 @media (max-width: 767px) {
