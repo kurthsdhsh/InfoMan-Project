@@ -27,8 +27,12 @@ if (isset($_POST['submit'])) {
             $_SESSION['first_name']  = $row['first_name'];
             $_SESSION['email']       = $row['email'];
             $_SESSION['role']        = 'customer';           // header.php reads role; tbl_customers has no role column
-            header("Location: ../index.php");
+            // (Partner B)
+            $goTo = $_SESSION['return_to'] ?? '../index.php';
+            unset($_SESSION['return_to']);
+            header("Location: " . $goTo);
             exit();
+
         }
     } else {
         $error = 'wrong email or password';

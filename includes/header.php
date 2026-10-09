@@ -142,7 +142,7 @@ $total = $subtotal + $serviceFee;
           <?php endif; ?>
           <hr>
           <div class="basket-row basket-total"><span>Total</span><span>₱<?php echo number_format($total, 2); ?></span></div>
-          <a href="/InfoMan-Project/view_cart.php" class="basket-checkout">
+          <a href="/InfoMan-Project/transaction/checkout/checkout.php" class="basket-checkout">
             <i class="fa-solid fa-cart-shopping"></i> Checkout
           </a>
         </div>
