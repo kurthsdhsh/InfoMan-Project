@@ -3,6 +3,22 @@ session_start();
 // no header.php here: this file shows nothing, it only updates the cart and redirects
 include('./includes/config.php');
 
+// (Partner B)
+if (isset($_GET['resume']) && !empty($_SESSION['pending_add']) && !empty($_SESSION['checkout']['method'])) {
+    $_POST = $_SESSION['pending_add'];
+    unset($_SESSION['pending_add']);
+}
+
+if (isset($_POST['type']) && $_POST['type'] == 'add' && empty($_SESSION['checkout']['method'])) {
+    $_SESSION['pending_add'] = [
+        'type'     => 'add',
+        'item_id'  => (int) ($_POST['item_id'] ?? 0),
+        'item_qty' => max(1, (int) ($_POST['item_qty'] ?? 1)),
+    ];
+    header('Location: /InfoMan-Project/index.php?om=1');
+    exit();
+}
+
 if (isset($_POST["type"]) && $_POST["type"] == 'add' && $_POST["item_qty"] > 0) {
     // var_dump($_POST);
     $new_product = [];
