@@ -100,7 +100,9 @@ include('../../includes/header.php');
             <div><span>Payment</span><span><?= $delivery ? 'Cash on Delivery' : 'Cash on Pickup' ?> - <?= h($order['payment_status'] ?? 'Unpaid') ?></span></div>
         </div>
     </div>
-    <a id="osHome" href="/InfoMan-Project/index.php">Continue shopping</a>
+    <a id="osHome" href="/InfoMan-Project/user/myorders.php">View my orders</a>
+    <a id="osHome2" href="/InfoMan-Project/index.php">Continue shopping</a>
+
 </div>
 
 <?php include('../../includes/footer.php'); ?>
