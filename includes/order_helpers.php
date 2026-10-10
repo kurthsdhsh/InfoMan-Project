@@ -181,3 +181,15 @@ function scheduleText(string $date, string $time): string
     }
     return date('D, M j \a\t g:i A', strtotime($date . ' ' . $time));
 }
+
+//delivery
+function areaList(mysqli $conn): array
+{
+    $list = [];
+    $result = mysqli_query($conn, "SELECT area_id, area_name, delivery_fee FROM tbl_delivery_areas ORDER BY delivery_fee, area_name");
+    while ($row = mysqli_fetch_assoc($result)) {
+        $list[(int) $row['area_id']] = ['name' => $row['area_name'], 'fee' => (float) $row['delivery_fee']];
+    }
+    return $list;
+}
+

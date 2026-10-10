@@ -11,6 +11,7 @@ $omText = [
     'delivery_desc'  => 'Our driver brings it to you. Pay cash on delivery.',
 ];
 
+
 $omHome    = $omHome ?? '/InfoMan-Project/index.php';
 $omReturn  = $omReturn ?? '';
 $omHideBar = $omHideBar ?? false;
@@ -20,12 +21,23 @@ if (isset($_GET['edit'])) {
     unset($_SESSION['pending_add']);
 }
 
+if (!isset($conn)) {
+    include __DIR__ . '/../../includes/config.php';
+}
+$omAreas = areaList($conn);   
+
 $om       = $_SESSION['checkout'] ?? null;
 $omChosen = $om && in_array($om['method'] ?? '', ['Pickup', 'Delivery'], true);
-$omOld    = false;  
+$omOld    = false;   
+$omOldMsg = 'This time can no longer be used. Please press Edit and choose a new one.';
 if ($omChosen) {
     [$omWhen, $omErr] = validateChoice($om['date'] ?? '', $om['time'] ?? '');
     $omOld = (bool) $omErr;
+    
+    if (!$omOld && $om['method'] === 'Delivery' && !isset($omAreas[(int) ($om['area_id'] ?? 0)])) {
+        $omOld    = true;
+        $omOldMsg = 'Please press Edit and choose your delivery city.';
+    }
 }
 
 $omStep   = 0;
@@ -42,23 +54,23 @@ $omErrors = $_SESSION['om_errors'] ?? [];
 $omForm   = $_SESSION['om_form'] ?? null;
 unset($_SESSION['om_errors'], $_SESSION['om_form']);
 
-$omVal = ['address' => '', 'date' => '', 'time' => ''];
+$omVal = ['address' => '', 'area_id' => '', 'date' => '', 'time' => ''];
 if ($omForm) {
     $omVal = array_merge($omVal, $omForm);
 } elseif ($omChosen && $om['method'] === $omMethod) {
-    $omVal = ['address' => $om['address'] ?? '', 'date' => $om['date'] ?? '', 'time' => $om['time'] ?? ''];
+    $omVal = ['address' => $om['address'] ?? '', 'area_id' => $om['area_id'] ?? '', 'date' => $om['date'] ?? '', 'time' => $om['time'] ?? ''];
 }
 
 $omDays = availableDays();                       
-$omDay  = $omVal['date'];                        
+$omDay  = $omVal['date'];                       
 if (!isset($omDays[$omDay])) {
     $omDay = (string) array_key_first($omDays);  
 }
-$omSlots    = availableSlots($omDay);           
+$omSlots    = availableSlots($omDay);            
 $omAsap     = ($omDay === date('Y-m-d')) && asapAvailable();   
 $omTimeSel  = $omVal['time'];                    
 if (!isset($omSlots[$omTimeSel]) && !($omTimeSel === 'ASAP' && $omAsap)) {
-    $omTimeSel = $omAsap ? 'ASAP' : '';         
+    $omTimeSel = $omAsap ? 'ASAP' : '';          
 }
 ?>
 
@@ -103,10 +115,10 @@ if (!isset($omSlots[$omTimeSel]) && !($omTimeSel === 'ASAP' && $omAsap)) {
             <strong><?= $om['method'] === 'Delivery' ? 'Delivery' : 'Pick-up' ?></strong>
             - <?= h(scheduleText($om['date'] ?? '', $om['time'] ?? '')) ?>
             <?php if ($om['method'] === 'Delivery' && ($om['address'] ?? '') !== ''): ?>
-                <br>Address: <?= h($om['address']) ?>
+                <br>Address: <?= h($om['address']) ?><?= isset($omAreas[(int) ($om['area_id'] ?? 0)]) ? ', ' . h($omAreas[(int) $om['area_id']]['name']) : '' ?>
             <?php endif; ?>
             <?php if ($omOld): ?>
-                <br><strong>This time can no longer be used. Please press Edit and choose a new one.</strong>
+                <br><strong><?= h($omOldMsg) ?></strong>
             <?php endif; ?>
             <br>
             <a id="omEdit" href="<?= $omHome ?>?om=2&amp;method=<?= h($om['method']) ?>&amp;edit=1">Edit</a>
@@ -141,9 +153,18 @@ if (!isset($omSlots[$omTimeSel]) && !($omTimeSel === 'ASAP' && $omAsap)) {
 
                 <?php if ($omMethod === 'Delivery'): ?>
                     <p>
-                        <label for="omAddress">Delivery address</label><br>
+                        <label for="omArea">City (we deliver within Metro Manila only)</label><br>
+                        <select id="omArea" name="area_id" required>
+                            <option value="">Choose your city</option>
+                            <?php foreach ($omAreas as $aid => $a): ?>
+                                <option value="<?= $aid ?>" <?= (string) $omVal['area_id'] === (string) $aid ? 'selected' : '' ?>><?= h($a['name']) ?> - delivery fee <?= peso($a['fee']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="omAddress">Street address</label><br>
                         <textarea id="omAddress" name="address" rows="2" cols="40" maxlength="255" required
-                            placeholder="House/Unit no., Street, Barangay, City"><?= h($omVal['address']) ?></textarea>
+                            placeholder="House/Unit no., Street, Barangay"><?= h($omVal['address']) ?></textarea>
                     </p>
                 <?php endif; ?>
 
