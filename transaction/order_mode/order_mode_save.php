@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+include('../../includes/config.php');
 require_once __DIR__ . '/../../includes/order_helpers.php';
 
 $home = '/InfoMan-Project/index.php';
@@ -23,6 +24,7 @@ $method  = $_POST['method'] ?? '';
 $address = trim($_POST['address'] ?? '');
 $date    = trim($_POST['date'] ?? '');
 $time    = trim($_POST['time'] ?? '');
+$areaId  = (int) ($_POST['area_id'] ?? 0);
 
 if (!in_array($method, ['Pickup', 'Delivery'], true)) {
     header('Location: ' . $back . '?om=1');
@@ -30,7 +32,7 @@ if (!in_array($method, ['Pickup', 'Delivery'], true)) {
 }
 
 if (isset($_POST['day'])) {
-    $_SESSION['om_form'] = ['address' => $address, 'date' => trim($_POST['day']), 'time' => ''];
+    $_SESSION['om_form'] = ['address' => $address, 'area_id' => $areaId ?: '', 'date' => trim($_POST['day']), 'time' => ''];
     header('Location: ' . $back . '?om=2&method=' . $method);
     exit();
 }
@@ -41,13 +43,17 @@ if ($time === 'ASAP') {
 
 $errors = [];
 if ($method === 'Delivery') {
+    if (!isset(areaList($conn)[$areaId])) {
+        $errors[] = 'Please choose your city. We deliver within Metro Manila only.';
+    }
     if (strlen($address) < 10) {
-        $errors[] = 'Please enter your full delivery address (house/street, barangay, city).';
+        $errors[] = 'Please enter your street address (house/street and barangay).';
     } elseif (strlen($address) > 255) {
         $errors[] = 'The delivery address is too long (255 characters max).';
     }
 } else {
-    $address = '';   // pick-up has no address
+    $address = '';   
+    $areaId  = 0;    
 }
 
 [$when, $scheduleError] = validateChoice($date, $time);
@@ -57,7 +63,7 @@ if ($scheduleError) {
 
 if ($errors) {
     $_SESSION['om_errors'] = $errors;
-    $_SESSION['om_form']   = ['address' => $address, 'date' => $date, 'time' => $time];
+    $_SESSION['om_form']   = ['address' => $address, 'area_id' => $areaId ?: '', 'date' => $date, 'time' => $time];
     header('Location: ' . $back . '?om=2&method=' . $method);
     exit();
 }
@@ -65,9 +71,10 @@ if ($errors) {
 $_SESSION['checkout'] = [
     'method'  => $method,
     'address' => $address,
+    'area_id' => $areaId ?: null,
     'date'    => $date,
     'time'    => $time,
-    'note'    => $_SESSION['checkout']['note'] ?? '',  
+    'note'    => $_SESSION['checkout']['note'] ?? '',   
 ];
 
 if (!$isCheckout && !empty($_SESSION['pending_add'])) {
