@@ -160,7 +160,7 @@
                             aria-labelledby="reportsDropdown">
 
                             <li>
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="/InfoMan-Project/admin/order/orders.php">
                                     Orders
                                 </a>
                             </li>
