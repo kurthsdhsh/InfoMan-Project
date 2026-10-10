@@ -193,3 +193,43 @@ function areaList(mysqli $conn): array
     return $list;
 }
 
+function nextOrderStep(string $status, string $method): ?array
+{
+    switch ($status) {
+        case 'Pending':
+            return ['Confirmed', 'Confirm order'];
+        case 'Confirmed':
+            return ['Preparing', 'Start preparing'];
+        case 'Preparing':
+            return $method === 'Delivery'
+                ? ['Out for Delivery', 'Send out for delivery']
+                : ['Ready', 'Mark ready for pick-up'];
+    }
+    return null;
+}
+
+
+function storeCanCancel(string $status): bool
+{
+    return $status !== 'Completed' && $status !== 'Cancelled';
+}
+
+
+// order status
+function orderBadgeClass(string $status): string
+{
+    switch ($status) {
+        case 'Pending':
+            return 'text-bg-warning';
+        case 'Confirmed':
+        case 'Preparing':
+            return 'text-bg-info';
+        case 'Ready':
+        case 'Out for Delivery':
+            return 'text-bg-primary';
+        case 'Completed':
+            return 'text-bg-success';
+        default:
+            return 'text-bg-secondary';  
+    }
+}

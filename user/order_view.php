@@ -10,7 +10,7 @@ $orderId = (int) ($_GET['id'] ?? 0);
 $res = mysqli_execute_query(
     $conn,
     "SELECT o.order_id, o.order_date, o.order_status, o.fulfillment_method, o.scheduled_at,
-            o.recipient_name, o.recipient_phone, o.customer_note,
+            o.recipient_name, o.recipient_phone, o.customer_note, o.cancel_reason,
             d.delivery_address, d.delivery_fee, a.area_name,
             p.payment_method, p.payment_status
      FROM tbl_orders o
@@ -94,6 +94,8 @@ include('../includes/header.php');
 #ovKeep { background: #fff; color: #4a3b30; border: 2px solid #E2B59A; }
 #ovConfirm { background: #FBE9E7; border: 2px solid #E0A8A0; border-radius: 10px; padding: 16px; }
 #ovConfirm form { display: inline; }
+#ovReason { text-align: center; background: #FBE9E7; border: 1px solid #E0A8A0; color: #8A3B3B; border-radius: 8px; padding: 8px 12px; margin: 0 0 16px; }
+
 </style>
 
 <div id="ovWrap">
@@ -106,6 +108,11 @@ include('../includes/header.php');
         <div id="ovNumber"><?= h(orderNumber((int) $order['order_id'])) ?></div>
         <div id="ovStatus"><span class="ovBadge ovSt-<?= h(str_replace(' ', '', $order['order_status'])) ?>"><?= h($order['order_status']) ?></span></div>
         <div id="ovMeaning"><?= h($ovMeaning[$order['order_status']] ?? '') ?></div>
+        
+        <?php if ($order['order_status'] === 'Cancelled' && !empty($order['cancel_reason'])): ?>
+        <div id="ovReason">Reason from the store: <?= h($order['cancel_reason']) ?></div>
+        <?php endif; ?>
+
 
         <div id="ovBox">
             Placed on: <?= h(date('M j, Y g:i A', strtotime($order['order_date']))) ?><br>

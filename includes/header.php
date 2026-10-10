@@ -55,7 +55,7 @@ $total = $subtotal + $serviceFee;
             <ul class="dropdown-menu">
               <?php if (($_SESSION['role'] ?? '') === 'admin') {
                 echo '<li><a class="dropdown-item" href="/InfoMan-Project/admin_item/index.php">item</a></li>';
-                echo '<li><a class="dropdown-item" href="/InfoMan-Project/admin/orders.php">Orders</a></li>';
+                echo '<li><a class="dropdown-item" href="/InfoMan-Project/admin/order/orders.php">Orders</a></li>';
               }
 
               ?>
