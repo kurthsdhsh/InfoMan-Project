@@ -210,7 +210,6 @@ unset($_SESSION['success'], $_SESSION['error'], $_SESSION['ao_form']);
                                 Cash received - complete order
                             </button>
                         </form>
-                        <small class="text-muted">Press this only after you are holding the <?= peso($ordTotal) ?>.</small>
 
                     <?php elseif ($ordStatus === 'Completed'): ?>
                         <span class="text-muted">This order is completed and paid.</span>

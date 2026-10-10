@@ -166,6 +166,13 @@
                             </li>
 
                             <li>
+                                <a class="dropdown-item" href="/InfoMan-Project/admin/order/payments.php">
+                                    Payments
+                                </a>
+                            </li>
+
+
+                            <li>
                                 <a class="dropdown-item" 
                                 href="/InfoMan-Project/admin/expense/expenses.php">
                                     Expenses

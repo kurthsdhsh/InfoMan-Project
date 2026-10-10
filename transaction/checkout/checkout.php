@@ -67,47 +67,6 @@ $coCanPay   = $omChosen && !$omOld;
 include('../../includes/header.php');
 ?>
 
-<style>
-#coWrap { max-width: 1100px; margin: 0 auto; padding: 0 12px 40px; display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; color: #4a3b30; }
-#coLeft { flex: 1 1 480px; min-width: 0; }
-#coRight { flex: 1 1 340px; min-width: 0; border: 3px solid #4a3b30; border-radius: 14px; padding: 20px; background: #fff; }
-#coWrap h2 { font-size: 20px; font-weight: 800; letter-spacing: .5px; margin: 0 0 12px; padding-bottom: 8px; border-bottom: 3px solid #E2B59A; }
-.coBox { margin-bottom: 28px; }
-.coBox p { margin: 0 0 8px; }
-.coRow { display: flex; flex-wrap: wrap; gap: 12px; }
-.coRow > div { flex: 1 1 180px; }
-.coLabel { display: block; font-weight: 600; margin-bottom: 4px; }
-.coText { padding: 8px 12px; background: #FFF3DC; border: 1px solid #E2B59A; border-radius: 10px; }
-#coWrap input[type=text], #coWrap textarea { width: 100%; padding: 8px 10px; border: 2px solid #E2B59A; border-radius: 10px; font: inherit; }
-#coWrap input:focus, #coWrap textarea:focus { outline: none; border-color: #B77466; }
-.coLink { color: #B77466; font-weight: 600; }
-.coWarn { color: #B3382A; font-weight: 700; }
-#coSame:checked ~ #coRecipient { display: none; }
-#coRecipient { margin-top: 10px; }
-#coCart { width: 100%; border-collapse: collapse; }
-#coCart th { text-align: left; font-size: 13px; letter-spacing: .5px; color: #957C62; padding: 6px 4px; border-bottom: 3px solid #E2B59A; }
-#coCart td { padding: 8px 4px; border-bottom: 1px solid #FFE3B0; vertical-align: middle; }
-#coCart { table-layout: fixed; }
-#coCart th:nth-child(2), #coCart td:nth-child(2) { width: 112px; }
-#coCart th:nth-child(3), #coCart td:nth-child(3) { width: 84px; }
-#coCart th:nth-child(4), #coCart td:nth-child(4) { width: 32px; }
-#coCart .coQty { white-space: nowrap; }
-#coCart .coQty span { display: inline-block; min-width: 26px; text-align: center; font-weight: 700; }
-#coCart .coQty button { width: 28px; min-width: 0; height: 28px; min-height: 0; padding: 0; border: 2px solid #E2B59A; border-radius: 50%; background: #fff; color: #B77466; font: 700 16px/1 Arial, sans-serif; text-shadow: none; cursor: pointer; }
-#coCart .coQty button:hover:not(:disabled) { background: #FFF3DC; }
-#coCart .coQty button:disabled { opacity: .35; cursor: not-allowed; }
-#coCart .coTrash { width: 28px; min-width: 0; min-height: 0; padding: 0; border: 0; background: none; color: #957C62; font: 24px/1 Arial, sans-serif; text-shadow: none; cursor: pointer; }
-#coCart .coTrash:hover { background: none; color: #B3382A; }
-.coHidden { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-.coRight { text-align: right; }
-#coTotals { margin: 14px 0; }
-#coTotals div { display: flex; justify-content: space-between; padding: 4px 0; }
-#coTotals .coGrand { font-size: 20px; font-weight: 800; border-top: 3px solid #E2B59A; margin-top: 6px; padding-top: 8px; }
-#coPay { display: block; width: 100%; margin-top: 14px; padding: 12px; border: 0; border-radius: 30px; background: #B77466; color: #fff; font-weight: 700; letter-spacing: .5px; }
-#coPay:disabled { background: #cfc3bd; cursor: not-allowed; }
-.coSmall { font-size: 13px; color: #957C62; }
-</style>
-
 <h1 class="text-center my-4">Checkout</h1>
 
 <?php foreach (array_merge($coErrors, $notices) as $n): ?>

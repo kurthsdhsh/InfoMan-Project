@@ -44,21 +44,6 @@ $delivery = $order['fulfillment_method'] === 'Delivery';
 include('../../includes/header.php');
 ?>
 
-<style>
-#osWrap { max-width: 640px; margin: 0 auto 40px; padding: 0 12px; color: #4a3b30; }
-#osCard { border: 3px solid #4a3b30; border-radius: 14px; padding: 24px; background: #fff; }
-#osNumber { font-size: 34px; font-weight: 800; letter-spacing: 1px; color: #B77466; text-align: center; margin: 4px 0 2px; }
-#osNote { text-align: center; color: #957C62; margin-bottom: 16px; }
-#osBox { background: #FFF3DC; border: 1px solid #E2B59A; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; }
-#osItems { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
-#osItems th { text-align: left; font-size: 13px; color: #957C62; padding: 6px 4px; border-bottom: 3px solid #E2B59A; }
-#osItems td { padding: 6px 4px; border-bottom: 1px solid #FFE3B0; }
-#osItems .osR { text-align: right; }
-#osTotals div { display: flex; justify-content: space-between; padding: 3px 0; }
-#osTotals .osGrand { font-size: 20px; font-weight: 800; border-top: 3px solid #E2B59A; margin-top: 6px; padding-top: 8px; }
-#osHome { display: block; margin: 18px auto 0; text-align: center; color: #B77466; font-weight: 600; }
-</style>
-
 <div id="osWrap">
     <h1 class="text-center my-4">Order placed!</h1>
     <div id="osCard">
