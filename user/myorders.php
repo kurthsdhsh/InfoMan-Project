@@ -35,25 +35,6 @@ $orders = mysqli_fetch_all($res, MYSQLI_ASSOC);
 include('../includes/header.php');
 ?>
 
-<style>
-#moWrap { max-width: 900px; margin: 0 auto 40px; padding: 0 12px; color: #4a3b30; }
-#moTabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
-#moTabs a { padding: 6px 16px; border: 2px solid #E2B59A; border-radius: 999px; color: #4a3b30; text-decoration: none; }
-#moTabs a.moOn { background: #B77466; border-color: #B77466; color: #fff; }
-#moTable { width: 100%; border-collapse: collapse; background: #fff; }
-#moTable th { text-align: left; font-size: 13px; color: #957C62; padding: 8px 6px; border-bottom: 3px solid #E2B59A; }
-#moTable td { padding: 10px 6px; border-bottom: 1px solid #FFE3B0; vertical-align: middle; }
-#moTable .moR { text-align: right; }
-.moBadge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; background: #FFE3B0; color: #4a3b30; }
-.moBadge.moSt-Pending { background: #FFE3B0; }
-.moBadge.moSt-Confirmed, .moBadge.moSt-Preparing { background: #DCE9F7; }
-.moBadge.moSt-Ready, .moBadge.moSt-OutforDelivery { background: #D8EFD3; }
-.moBadge.moSt-Completed { background: #B9E2B1; }
-.moBadge.moSt-Cancelled { background: #EBD6D6; color: #8A3B3B; }
-#moTable a.moView { color: #B77466; font-weight: 700; }
-#moEmpty { text-align: center; padding: 40px 10px; color: #957C62; }
-</style>
-
 <div id="moWrap">
     <h1 class="text-center my-4">My Orders</h1>
 

@@ -65,39 +65,6 @@ unset($_SESSION['mo_message'], $_SESSION['mo_error']);
 include('../includes/header.php');
 ?>
 
-<style>
-#ovWrap { max-width: 680px; margin: 0 auto 40px; padding: 0 12px; color: #4a3b30; }
-#ovBack { display: inline-block; margin-bottom: 8px; color: #B77466; font-weight: 600; }
-#ovCard { border: 3px solid #4a3b30; border-radius: 14px; padding: 24px; background: #fff; }
-#ovNumber { font-size: 30px; font-weight: 800; color: #B77466; text-align: center; }
-#ovStatus { text-align: center; margin: 6px 0 2px; }
-#ovMeaning { text-align: center; color: #957C62; margin-bottom: 16px; }
-.ovBadge { display: inline-block; padding: 3px 14px; border-radius: 999px; font-weight: 700; background: #FFE3B0; }
-.ovBadge.ovSt-Confirmed, .ovBadge.ovSt-Preparing { background: #DCE9F7; }
-.ovBadge.ovSt-Ready, .ovBadge.ovSt-OutforDelivery { background: #D8EFD3; }
-.ovBadge.ovSt-Completed { background: #B9E2B1; }
-.ovBadge.ovSt-Cancelled { background: #EBD6D6; color: #8A3B3B; }
-#ovBox { background: #FFF3DC; border: 1px solid #E2B59A; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; }
-#ovItems { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
-#ovItems th { text-align: left; font-size: 13px; color: #957C62; padding: 6px 4px; border-bottom: 3px solid #E2B59A; }
-#ovItems td { padding: 6px 4px; border-bottom: 1px solid #FFE3B0; }
-#ovItems .ovR { text-align: right; }
-#ovTotals div { display: flex; justify-content: space-between; padding: 3px 0; }
-#ovTotals .ovGrand { font-size: 20px; font-weight: 800; border-top: 3px solid #E2B59A; margin-top: 6px; padding-top: 8px; }
-#ovOk { background: #E6F4E2; border: 1px solid #A9D4A0; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; text-align: center; }
-#ovErr { background: #FBE9E7; border: 1px solid #E0A8A0; color: #8A3B3B; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; text-align: center; }
-#ovCancelArea { margin-top: 18px; text-align: center; }
-#ovCancelArea .ovHint { color: #957C62; font-size: 14px; margin-top: 8px; }
-#ovCancelStart, #ovCancelYes, #ovKeep { display: inline-block; min-width: 0; font-size: 16px; font-family: inherit; line-height: 1.4; padding: 10px 22px; border-radius: 999px; font-weight: 700; text-decoration: none; cursor: pointer; text-shadow: none; }
-#ovCancelStart { background: #fff; color: #8A3B3B; border: 2px solid #8A3B3B; }
-#ovCancelYes { background: #8A3B3B; color: #fff; border: 2px solid #8A3B3B; }
-#ovKeep { background: #fff; color: #4a3b30; border: 2px solid #E2B59A; }
-#ovConfirm { background: #FBE9E7; border: 2px solid #E0A8A0; border-radius: 10px; padding: 16px; }
-#ovConfirm form { display: inline; }
-#ovReason { text-align: center; background: #FBE9E7; border: 1px solid #E0A8A0; color: #8A3B3B; border-radius: 8px; padding: 8px 12px; margin: 0 0 16px; }
-
-</style>
-
 <div id="ovWrap">
     <a id="ovBack" href="myorders.php">&larr; Back to My Orders</a>
 
