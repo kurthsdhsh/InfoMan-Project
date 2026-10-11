@@ -113,7 +113,7 @@ if (!function_exists('sidebarActive')) {
 
         </nav>
 
-        <a class="sidebar-link sidebar-logout" href="/InfoMan-Project/user/logout.php">
+        <a class="sidebar-link sidebar-logout" href="/InfoMan-Project/includes/logout.php">
             <i class="fa-solid fa-right-from-bracket"></i> Logout
         </a>
 
