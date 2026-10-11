@@ -201,7 +201,7 @@ $itemCount = mysqli_num_rows($result);
                                 </td>
 
                                 <td>
-                                    <?= htmlspecialchars($row['admin_name'] ?? 'System / Unknown') ?>
+                                    <?= htmlspecialchars($row['admin_name'] ?? 'System') ?>
                                 </td>
 
                                 <td class="date-cell">
