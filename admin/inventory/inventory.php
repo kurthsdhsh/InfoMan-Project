@@ -331,7 +331,6 @@ $itemCount = mysqli_num_rows($result);
                         <th>Product</th>
                         <th>Category</th>
                         <th>Current Stock</th>
-                        <th>Reorder Level</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -373,7 +372,6 @@ $itemCount = mysqli_num_rows($result);
                                 </span>
                             </td>
 
-                            <td><?= $reorder ?></td>
 
                             <td>
                                 <span class="stock-status <?= $stock_class ?>">
@@ -385,7 +383,7 @@ $itemCount = mysqli_num_rows($result);
 
                     <?php if (!$has_products): ?>
                         <tr>
-                            <td colspan="5" class="empty-state">
+                            <td colspan="4" class="empty-state">
                                 No products found. Add a product first.
                             </td>
                         </tr>
