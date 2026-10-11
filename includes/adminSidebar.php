@@ -64,6 +64,13 @@ if (!function_exists('sidebarActive')) {
                 <i class="fa-solid fa-house"></i> Dashboard
             </a>
 
+            <div class="sidebar-section">Customer Management</div>
+
+            <a class="sidebar-link <?php echo sidebarActive(['/chk_user/']); ?>"
+                href="/InfoMan-Project/admin/chk_user/user.php">
+                <i class="fa-solid fa-table-cells-large"></i> Customers
+            </a>
+
             <div class="sidebar-section">Product Catalog</div>
 
             <a class="sidebar-link <?php echo sidebarActive(['/category/']); ?>"
