@@ -1,10 +1,8 @@
 <?php
-session_start();
-
-include('../../includes/adminHeader.php');
+include('../auth.php');
+$pageTitle = 'Category';
+include('../../includes/adminSidebar.php');
 include('../../includes/config.php');
-
-echo '<link rel="stylesheet" href="/InfoMan-Project/includes/style/adminstyle.css?v=' . time() . '">';
 
 $category_id = '';
 $category_name = '';
@@ -14,7 +12,7 @@ $isEdit = false;
 
 if (isset($_GET['id'])) {
 
-    $category_id = $_GET['id'];
+    $category_id = (int)$_GET['id'];
     $isEdit = true;
 
     $sql = "SELECT * FROM tbl_categories WHERE category_id = ?";
@@ -105,7 +103,7 @@ if (isset($_GET['id'])) {
                     id="description"
                     name="description"
                     maxlength="255"
-                    rows="4"><?php echo htmlspecialchars($description); ?></textarea>
+                    rows="4"><?php echo htmlspecialchars($description ?? ''); ?></textarea>
 
             </div>
 
@@ -138,3 +136,8 @@ if (isset($_GET['id'])) {
     </div>
 
 </div>
+
+</main>
+</body>
+
+</html>

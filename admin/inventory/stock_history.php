@@ -85,7 +85,7 @@ $itemCount = mysqli_num_rows($result);
 ?>
 
 
-<?php include('../../includes/adminHeader.php'); ?>
+<?php include('../../includes/adminSidebar.php'); ?>
 
 <div class="inventory-page">
 

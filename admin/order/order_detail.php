@@ -61,7 +61,7 @@ $ordOld = $_SESSION['ao_form'] ?? [];
 unset($_SESSION['success'], $_SESSION['error'], $_SESSION['ao_form']);
 ?>
 
-<?php require_once '../../includes/adminHeader.php'; ?>
+<?php require_once '../../includes/adminSidebar.php'; ?>
 
 <div class="admin-container">
 
