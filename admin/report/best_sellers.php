@@ -72,7 +72,7 @@ if (isset($_GET['pdf'])) {
 $pdfLink = 'best_sellers.php?from=' . urlencode($from) . '&to=' . urlencode($to) . '&pdf=1';
 ?>
 
-<?php require_once '../../includes/adminHeader.php'; ?>
+<?php require_once '../../includes/adminSidebar.php'; ?>
 
 <div class="admin-container">
 

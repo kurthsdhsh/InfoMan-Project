@@ -22,6 +22,9 @@ if (isset($_POST['submit'])) {
             $error = 'this account is not active';
         } else {
             session_regenerate_id(true);
+            // remove any customer data left in the session from a customer login
+            unset($_SESSION['customer_id'], $_SESSION['first_name'], $_SESSION['cart_products']);
+
             $_SESSION['user_id']     = $row['admin_id'];     // header.php checks user_id
             $_SESSION['admin_id']    = $row['admin_id'];
             $_SESSION['admin_name']  = $row['admin_name'];
@@ -40,7 +43,7 @@ include("../includes/header.php");
 
 ?>
 <div class="row col-md-8 mx-auto ">
-    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+    <form action="" method="POST">
 
         <?php if ($success): ?>
             <div class="alert alert-success" role="alert"><?php echo htmlspecialchars($success); ?></div>

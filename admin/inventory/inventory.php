@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_stock'])) {
 
 }
 
-    include('../../includes/adminHeader.php');
+    include('../../includes/adminSidebar.php');
 
 
 // Get ALL products for the stock update dropdown.
@@ -215,78 +215,6 @@ $itemCount = mysqli_num_rows($result);
         </div>
         <?php unset($_SESSION['error']); ?>
     <?php endif; ?>
-
-    <div class="inventory-card">
-        <div class="card-heading">
-            <div>
-                <h3>Update Product Stock</h3>
-                <p>Restock a product or make a stock adjustment.</p>
-            </div>
-        </div>
-
-        <form method="POST" action="inventory.php" class="stock-form">
-
-            <div class="form-field">
-                <label for="product_id">Product</label>
-                <select name="product_id" id="product_id" required>
-                    <option value="">Select a product</option>
-
-                    <?php
-                    while ($product = mysqli_fetch_assoc($productResult)):
-                    ?>
-                        <option value="<?= (int) $product['product_id'] ?>">
-                            <?= htmlspecialchars($product['product_name']) ?>
-                            — Stock: <?= (int) $product['stock_quantity'] ?>
-                        </option>
-                    <?php endwhile; ?>
-                </select>
-            </div>
-
-            <div class="form-field">
-                <label for="movement_type">Movement Type</label>
-                <select name="movement_type" id="movement_type" required>
-                    <option value="">Select movement type</option>
-                    <option value="Restock">Restock</option>
-                    <option value="Adjustment">Adjustment</option>
-                </select>
-                <small>
-                    Use a positive quantity to add stock or a negative quantity
-                    for a stock reduction.
-                </small>
-            </div>
-
-            <div class="form-field">
-                <label for="quantity">Quantity Change</label>
-                <input
-                    type="number"
-                    name="quantity"
-                    id="quantity"
-                    step="1"
-                    required
-                    placeholder="Example: 10 or -2"
-                >
-            </div>
-
-            <div class="form-field">
-                <label for="reason">Reason</label>
-                <input
-                    type="text"
-                    name="reason"
-                    id="reason"
-                    maxlength="255"
-                    required
-                    placeholder="Example: New delivery received"
-                >
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" name="update_stock" value="1">
-                    Save Stock Change
-                </button>
-            </div>
-
-        </form>
-    </div>
 
     <div class="inventory-card">
         <div class="card-heading">
@@ -391,6 +319,78 @@ $itemCount = mysqli_num_rows($result);
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <div class="inventory-card">
+        <div class="card-heading">
+            <div>
+                <h3>Update Product Stock</h3>
+                <p>Restock a product or make a stock adjustment.</p>
+            </div>
+        </div>
+
+        <form method="POST" action="inventory.php" class="stock-form">
+
+            <div class="form-field">
+                <label for="product_id">Product</label>
+                <select name="product_id" id="product_id" required>
+                    <option value="">Select a product</option>
+
+                    <?php
+                    while ($product = mysqli_fetch_assoc($productResult)):
+                    ?>
+                        <option value="<?= (int) $product['product_id'] ?>">
+                            <?= htmlspecialchars($product['product_name']) ?>
+                            — Stock: <?= (int) $product['stock_quantity'] ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label for="movement_type">Movement Type</label>
+                <select name="movement_type" id="movement_type" required>
+                    <option value="">Select movement type</option>
+                    <option value="Restock">Restock</option>
+                    <option value="Adjustment">Adjustment</option>
+                </select>
+                <small>
+                    Use a positive quantity to add stock or a negative quantity
+                    for a stock reduction.
+                </small>
+            </div>
+
+            <div class="form-field">
+                <label for="quantity">Quantity Change</label>
+                <input
+                    type="number"
+                    name="quantity"
+                    id="quantity"
+                    step="1"
+                    required
+                    placeholder="Example: 10 or -2"
+                >
+            </div>
+
+            <div class="form-field">
+                <label for="reason">Reason</label>
+                <input
+                    type="text"
+                    name="reason"
+                    id="reason"
+                    maxlength="255"
+                    required
+                    placeholder="Example: New delivery received"
+                >
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" name="update_stock" value="1">
+                    Save Stock Change
+                </button>
+            </div>
+
+        </form>
     </div>
 
 </div>

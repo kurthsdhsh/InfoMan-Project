@@ -1,0 +1,610 @@
+/* ==========================================================
+   ADMIN SIDEBAR LAYOUT
+   Palette: #B77466 terracotta, #FFE1AF cream, #E2B59A sand, #957C62 brown
+   ========================================================== */
+
+body.admin-body {
+  margin: 0;
+  min-height: 100vh;
+  background: #FFF6E8;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  color: #7a5240;
+}
+
+/* ---------- Sidebar ---------- */
+.admin-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1030;
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  padding: 22px 12px 14px;
+  background: linear-gradient(180deg, #FFE1AF 0%, #F9D3A5 100%);
+  border-right: 1px solid #E2B59A;
+  overflow-y: auto;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px 20px;
+  color: #B77466;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  text-decoration: none;
+}
+
+.sidebar-brand i {
+  font-size: 26px;
+}
+
+.sidebar-brand:hover {
+  color: #B77466;
+}
+
+/* ---------- Links ---------- */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  color: #7a5240;
+  font-size: 16px;
+  text-decoration: none;
+  transition: background .15s;
+}
+
+.sidebar-link i {
+  width: 22px;
+  text-align: center;
+  font-size: 18px;
+  color: #B77466;
+}
+
+.sidebar-link:hover {
+  background: rgba(183, 116, 102, .12);
+  color: #7a5240;
+}
+
+.sidebar-link.active {
+  background: rgba(183, 116, 102, .22);
+  font-weight: 500;
+}
+
+/* section titles: PRODUCT CATALOG, INVENTORY ... */
+.sidebar-section {
+  margin: 22px 0 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #957C62;
+}
+
+/* logout pinned to the bottom */
+.sidebar-logout {
+  margin-top: auto;
+  border-top: 1px solid rgba(149, 124, 98, .3);
+  border-radius: 0 0 10px 10px;
+  padding-top: 16px;
+}
+
+/* ---------- Content ---------- */
+.admin-content {
+  margin-left: 260px;
+  min-height: 100vh;
+  padding: 24px 28px;
+}
+
+.admin-content .page-title {
+  margin: 0 0 20px;
+  font-family: inherit;
+  font-size: 28px;
+  font-weight: 500;
+  color: #7a5240;
+}
+
+/* ---------- Top bar (small screens only) ---------- */
+.admin-topbar {
+  display: none;
+}
+
+@media (max-width: 991px) {
+  .admin-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #FFE1AF;
+    border-bottom: 1px solid #E2B59A;
+    color: #B77466;
+    font-weight: 700;
+  }
+
+  .admin-menu-btn {
+    border: 0;
+    background: transparent;
+    color: #B77466;
+    font-size: 22px;
+    cursor: pointer;
+  }
+
+  .admin-sidebar {
+    transform: translateX(-100%);
+    transition: transform .2s;
+    box-shadow: 0 0 30px rgba(0, 0, 0, .2);
+  }
+
+  .admin-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .admin-content {
+    margin-left: 0;
+    padding: 20px 16px;
+  }
+}
+
+/* ==========================================================
+   ADMIN PRODUCT LIST (admin_item/index.php)
+   Bigger, colored, bordered and centered.
+   Same green as the login/register pages.
+   ========================================================== */
+
+.admin-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  font-size: 16px;
+  color: #4a3b30;
+  text-align: center;
+}
+
+/* ---------- Top: title + Add item button, centered ---------- */
+.admin-container .admin-toolbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.admin-container .admin-toolbar h2 {
+  margin: 0;
+  font-family: inherit;
+  font-size: 30px;
+  font-weight: 700;
+  color: #4a3b30;
+}
+
+/* ---------- Add item button ---------- */
+.admin-container .btn-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #B77466, #957C62);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 6px 16px rgba(183, 116, 102, .35);
+  transition: transform .15s, box-shadow .15s;
+}
+
+.admin-container .btn-add::before {
+  content: "+";
+  font-size: 26px;
+  line-height: 1;
+}
+
+.admin-container .btn-add:hover {
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(183, 116, 102, .45);
+}
+
+/* ---------- Table card with a colored border ---------- */
+.admin-container .table-card {
+  background: #fff;
+  border: 2px solid #B77466;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(183, 116, 102, .15);
+  overflow-x: auto;
+}
+
+.admin-container .admin-table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: 16px;
+}
+
+/* colored header row */
+.admin-container .admin-table thead th {
+  padding: 18px 16px;
+  background: linear-gradient(135deg, #B77466, #957C62);
+  border: 1px solid #9a6054;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap;
+}
+
+/* cells with visible borders, centered */
+.admin-container .admin-table tbody td {
+  padding: 18px 16px;
+  border: 1px solid #E2B59A;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* striped rows in a light green */
+.admin-container .admin-table tbody tr:nth-child(even) {
+  background: #FFF3DC;
+}
+
+.admin-container .admin-table tbody tr:hover {
+  background: #FFE1AF;
+}
+
+/* product picture: bigger, centered */
+.admin-container .admin-table td img {
+  display: block;
+  width: 96px;
+  height: 96px;
+  margin: 0 auto;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid #E2B59A;
+  background: #FFF3DC;
+}
+
+/* name bold */
+.admin-container .admin-table tbody td:nth-child(3) {
+  font-weight: 700;
+  color: #4a3b30;
+}
+
+/* description muted */
+.admin-container .admin-table tbody td:nth-child(4) {
+  max-width: 280px;
+  color: #957C62;
+}
+
+/* ---------- Status badge ---------- */
+.admin-container .status {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: #FFF3DC;
+  color: #957C62;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.admin-container .status-active {
+  background: #FFE1AF;
+  color: #6b5240;
+  border: 1px solid #E2B59A;
+}
+
+.admin-container .status-inactive {
+  background: #F6DDD8;
+  color: #9a4a3c;
+  border: 1px solid #E2B59A;
+}
+
+/* ---------- Edit / delete icons ---------- */
+.admin-container .admin-table tbody td:last-child {
+  white-space: nowrap;
+}
+
+.admin-container .admin-table tbody td:last-child a {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin: 0 4px;
+  border: 1px solid #E2B59A;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 18px;
+  text-decoration: none;
+  transition: background .15s, transform .15s;
+}
+
+.admin-container .admin-table tbody td:last-child a:hover {
+  background: #E2B59A;
+  transform: translateY(-1px);
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 767px) {
+  .admin-container .admin-toolbar h2 {
+    font-size: 24px;
+  }
+}
+
+
+/* ==========================================================
+   FILTER FORM (search box, dropdowns, Search button, Reset link)
+   Styles the form printed by renderAdminFilterForm()
+   ========================================================== */
+.admin-container > form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 0 0 24px;
+}
+
+.admin-container > form input[type="text"],
+.admin-container > form input[type="search"],
+.admin-container > form select {
+  min-width: 200px;
+  padding: 10px 14px;
+  border: 1px solid #E2B59A;
+  border-radius: 10px;
+  background: #fff;
+  color: #4a3b30;
+  font-family: inherit;
+  font-size: 15px;
+}
+
+.admin-container > form input:focus,
+.admin-container > form select:focus {
+  outline: 0;
+  border-color: #B77466;
+  box-shadow: 0 0 0 3px rgba(183, 116, 102, .2);
+}
+
+.admin-container > form button,
+.admin-container > form input[type="submit"] {
+  padding: 10px 22px;
+  border: 0;
+  border-radius: 10px;
+  background: #B77466;
+  color: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-container > form button:hover,
+.admin-container > form input[type="submit"]:hover {
+  background: #9a6054;
+}
+
+.admin-container > form a {
+  color: #B77466;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.admin-container > form a:hover {
+  text-decoration: underline;
+}
+
+
+/* ==========================================================
+   COLUMN TWEAKS for the products and categories tables
+   (the rules above were written for admin_item/index.php)
+   ========================================================== */
+
+/* categories: ID | Name | Description | Actions */
+.admin-container .categories-table tbody td:nth-child(2) {
+  font-weight: 700;
+  color: #4a3b30;
+}
+
+.admin-container .categories-table tbody td:nth-child(3) {
+  max-width: 360px;
+  font-weight: 400;
+  color: #957C62;
+}
+
+.admin-container .categories-table tbody td:nth-child(4) {
+  max-width: none;
+  color: inherit;
+}
+
+/* products: ID | Image | Name | Category | Description | Price | Stock | Status | Actions */
+.admin-container .products-table tbody td:nth-child(4) {
+  max-width: none;
+  color: inherit;
+}
+
+.admin-container .products-table tbody td:nth-child(5) {
+  max-width: 260px;
+  color: #957C62;
+}
+
+
+/* ==========================================================
+   ADD / EDIT FORM (product_form.php, category_form.php)
+   ========================================================== */
+.admin-container .table-card form {
+  text-align: left;
+}
+
+.admin-container .table-card .form-label {
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #957C62;
+}
+
+.admin-container .table-card .form-control,
+.admin-container .table-card .form-select {
+  padding: 10px 14px;
+  border: 1px solid #E2B59A;
+  border-radius: 10px;
+  color: #4a3b30;
+}
+
+.admin-container .table-card .form-control:focus,
+.admin-container .table-card .form-select:focus {
+  border-color: #B77466;
+  box-shadow: 0 0 0 3px rgba(183, 116, 102, .2);
+}
+
+.admin-container .table-card .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 14px 28px;
+  border: 1px solid #E2B59A;
+  border-radius: 12px;
+  background: #FFE1AF;
+  color: #957C62;
+  font-weight: 600;
+}
+
+.admin-container .table-card .btn-secondary:hover {
+  background: #E2B59A;
+  color: #4a3b30;
+}
+
+
+/* ==========================================================
+   DASHBOARD CARDS (admin/home.php)
+   ========================================================== */
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  margin-bottom: 36px;
+}
+
+.dash-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 22px;
+  background: #fff;
+  border: 1px solid #E2B59A;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(183, 116, 102, .10);
+  color: #4a3b30;
+  text-decoration: none;
+  transition: transform .15s, box-shadow .15s;
+}
+
+.dash-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(183, 116, 102, .22);
+  color: #4a3b30;
+}
+
+.dash-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: #FFE1AF;
+  color: #B77466;
+  font-size: 24px;
+}
+
+.dash-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.dash-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: #957C62;
+}
+
+.dash-value {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #4a3b30;
+}
+
+.dash-note {
+  font-size: 13px;
+  color: #957C62;
+}
+
+/* the low stock table uses the .admin-container styles, but sits full width */
+.admin-container.dash-section {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* ==========================================================
+   CUSTOMERS PAGE (admin/chk_user/user.php)
+   ========================================================== */
+
+/* the enable/disable and delete buttons look like the edit link */
+.admin-container .admin-table .inline-form {
+  display: inline;
+  margin: 0;
+}
+
+.admin-container .admin-table .icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin: 0 4px;
+  padding: 0;
+  border: 1px solid #E2B59A;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background .15s, transform .15s;
+}
+
+.admin-container .admin-table .icon-btn:hover {
+  background: #E2B59A;
+  transform: translateY(-1px);
+}
+
+/* customers: ID | Name | Email | Contact | Orders | Status | Actions */
+.admin-container .customers-table tbody td:nth-child(2) {
+  font-weight: 700;
+  color: #4a3b30;
+}
+
+.admin-container .customers-table tbody td:nth-child(3) {
+  font-weight: 400;
+  color: #4a3b30;
+}
+
+.admin-container .customers-table tbody td:nth-child(4) {
+  max-width: none;
+  color: inherit;
+}

@@ -27,7 +27,7 @@ $expenseCount = (int)$expense['expense_count'];
 $netIncome = $totalIncome - $totalExpenses;
 ?>
 
-<?php require_once '../../includes/adminHeader.php'; ?>
+<?php require_once '../../includes/adminSidebar.php'; ?>
 
 <div class="admin-container">
 

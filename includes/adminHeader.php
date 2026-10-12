@@ -224,7 +224,7 @@
                         <div class='navbar-nav ms-auto'>
 
                             <a
-                                href='/InfoMan-Project/user/logout.php'
+                                href='/InfoMan-Project/includes/logout.php'
                                 class='nav-item nav-link'>
 
                                 Logout

@@ -1,6 +1,7 @@
 <?php
 include('../auth.php');
-include('../../includes/adminHeader.php');
+$pageTitle = 'Categories';
+include('../../includes/adminSidebar.php');
 include('../../includes/config.php');
 include('../../includes/filter_helper.php');
 
@@ -38,11 +39,9 @@ unset($_SESSION['success']);
 unset($_SESSION['error']);
 ?>
 
-<body>
+<div class="admin-container">
 
-    <div class="admin-container">
-        
-        <?php if ($success != ''): ?>
+    <?php if ($success != ''): ?>
 
         <div class="alert alert-success">
             <?= htmlspecialchars($success) ?>
@@ -51,88 +50,89 @@ unset($_SESSION['error']);
     <?php endif; ?>
 
 
-        <?php if ($error != ''): ?>
+    <?php if ($error != ''): ?>
 
-            <div class="alert alert-danger">
-                <?= htmlspecialchars($error) ?>
-            </div>
-
-        <?php endif; ?>
-        
-
-        <div class="admin-toolbar">
-            <h2>Categories (<?= $itemCount ?>)</h2>
-
-            <a href="category_form.php" class="btn-add" role="button">
-                Add category
-            </a>
+        <div class="alert alert-danger">
+            <?= htmlspecialchars($error) ?>
         </div>
 
-        <?php
-        renderAdminFilterForm(
-            basename($_SERVER['PHP_SELF']),
-            $search,
-            'Search category name...'
-        );
-        ?>
+    <?php endif; ?>
 
-        <div class="table-card">
 
-            <table class="admin-table">
+    <div class="admin-toolbar">
+        <h2>Categories (<?= $itemCount ?>)</h2>
 
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
+        <a href="category_form.php" class="btn-add" role="button">
+            Add category
+        </a>
+    </div>
 
-                <tbody>
+    <?php
+    renderAdminFilterForm(
+        basename($_SERVER['PHP_SELF']),
+        $search,
+        'Search category name...'
+    );
+    ?>
 
-                    <?php
+    <div class="table-card">
 
-                    while ($row = mysqli_fetch_assoc($result)) {
+        <table class="admin-table categories-table">
 
-                        echo "<tr>";
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
 
-                        echo "<td>{$row['category_id']}</td>";
+            <tbody>
 
-                        echo "<td>" .
-                            htmlspecialchars($row['category_name']) .
-                            "</td>";
+                <?php
 
-                        echo "<td>" .
-                            htmlspecialchars($row['description'] ?? '') .
-                            "</td>";
+                while ($row = mysqli_fetch_assoc($result)) {
 
-                        echo "<td>";
+                    echo "<tr>";
 
-                        echo "<a href='category_form.php?id={$row['category_id']}'>
-                                <i class='fa-regular fa-pen-to-square' style='color: blue'></i>
-                              </a>";
+                    echo "<td>{$row['category_id']}</td>";
 
-                        echo "<a href='delete.php?id={$row['category_id']}'
-                                 onclick=\"return confirm('Are you sure you want to delete this category?');\">
-                                <i class='fa-solid fa-trash' style='color: red'></i>
-                              </a>";
+                    echo "<td>" .
+                        htmlspecialchars($row['category_name']) .
+                        "</td>";
 
-                        echo "</td>";
+                    echo "<td>" .
+                        htmlspecialchars($row['description'] ?? '') .
+                        "</td>";
 
-                        echo "</tr>";
-                    }
+                    echo "<td>";
 
-                    ?>
+                    echo "<a href='category_form.php?id={$row['category_id']}'>
+                            <i class='fa-regular fa-pen-to-square' style='color: blue'></i>
+                          </a>";
 
-                </tbody>
+                    echo "<a href='delete.php?id={$row['category_id']}'
+                             onclick=\"return confirm('Are you sure you want to delete this category?');\">
+                            <i class='fa-solid fa-trash' style='color: red'></i>
+                          </a>";
 
-            </table>
+                    echo "</td>";
 
-        </div>
+                    echo "</tr>";
+                }
+
+                ?>
+
+            </tbody>
+
+        </table>
 
     </div>
 
-</body>
+</div>
 
 </main>
+</body>
+
+</html>

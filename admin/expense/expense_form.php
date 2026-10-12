@@ -61,7 +61,7 @@ $error = $_SESSION['error'] ?? '';
 unset($_SESSION['success'], $_SESSION['error']);
 ?>
 
-<?php require_once '../../includes/adminHeader.php'; ?>
+<?php require_once '../../includes/adminSidebar.php'; ?>
 
 <div class="container-fluid py-4">
 

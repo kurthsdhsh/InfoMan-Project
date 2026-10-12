@@ -95,7 +95,7 @@ $total = $subtotal + $serviceFee;
           } else {
             echo "<div class='navbar-nav'>
                         <a href='http://{$_SERVER['SERVER_NAME']}/InfoMan-Project/user/profile.php' class='nav-item nav-link'>Profile</a>
-                        <a href='http://{$_SERVER['SERVER_NAME']}/InfoMan-Project/user/logout.php' class='nav-item nav-link'>Logout</a></div>";
+                        <a href='http://{$_SERVER['SERVER_NAME']}/InfoMan-Project/includes/logout.php' class='nav-item nav-link'>Logout</a></div>";
           }
           ?>
         </div>
