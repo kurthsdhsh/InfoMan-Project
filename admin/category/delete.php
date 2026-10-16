@@ -1,7 +1,9 @@
 <?php
 session_start();
 
+include('../auth.php');
 include('../../includes/config.php');
+
 
 if (isset($_GET['id'])) {
 

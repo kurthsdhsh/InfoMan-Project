@@ -5,8 +5,12 @@ include('./includes/header.php');
 
 $keyword = trim($_GET['search'] ?? '');
 
-$sql = "SELECT * FROM tbl_products WHERE product_name LIKE ? OR product_description LIKE ?";
-$result = mysqli_execute_query($conn, $sql, ["%{$keyword}%", "%{$keyword}%"]);
+$sql = "SELECT p.* FROM tbl_products p
+        LEFT JOIN tbl_categories c ON p.category_id = c.category_id
+        WHERE p.product_status = 'Active'
+          AND (p.product_name LIKE ? OR p.product_description LIKE ? OR c.category_name LIKE ?)";
+$like = "%{$keyword}%";
+$result = mysqli_execute_query($conn, $sql, [$like, $like, $like]);
 
 $itemCount = mysqli_num_rows($result);
 
@@ -34,7 +38,7 @@ if ($itemCount > 0) {
         <li class="product">
             <form method="POST" action="cart_update.php">
                 <div class="product-content">
-                    <h3><?php echo $name; ?></h3>
+                    <h3><a href="/InfoMan-Project/product.php?id=<?php echo $id; ?>"><?php echo $name; ?></a></h3>
                     <div class="product-thumb">
                         <img src="./admin_item/<?php echo $img; ?>" width="50" height="50" alt="<?php echo $name; ?>">
                     </div>
@@ -63,5 +67,5 @@ if ($itemCount > 0) {
 
     echo '</ul>';
 } else {
-    echo '<p align="center">No products found.</p>';
+    echo '<p align="center">No products matched "' . htmlspecialchars($keyword) . '". Try another word or a category name.</p>';
 }

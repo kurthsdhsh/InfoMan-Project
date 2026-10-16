@@ -137,6 +137,11 @@ if (!function_exists('sidebarActive')) {
 
         </nav>
 
+
+        <a class="sidebar-link" href="/InfoMan-Project/user/profile.php">
+            <i class="fa-solid fa-circle-user"></i> My Profile
+        </a>
+
         <a class="sidebar-link sidebar-logout" href="/InfoMan-Project/includes/logout.php">
             <i class="fa-solid fa-right-from-bracket"></i> Logout
         </a>

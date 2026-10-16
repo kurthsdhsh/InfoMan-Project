@@ -3,7 +3,9 @@ session_start();
 
 mysqli_report(MYSQLI_REPORT_OFF);
 
+include('../auth.php');
 include('../../includes/config.php');
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 

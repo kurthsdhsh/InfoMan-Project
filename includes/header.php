@@ -7,7 +7,7 @@ foreach ($cart as $cartItem) {
   $subtotal += $cartItem['item_price'] * $cartItem['item_qty'];
   $cartCount += $cartItem['item_qty'];
 }
-$serviceFeeRate = 0.05;                        // 5% service fee. Set to 0 to hide the Service fee row.
+$serviceFeeRate = 0;                        // 5% service fee. Set to 0 to hide the Service fee row.
 $serviceFee = round($subtotal * $serviceFeeRate, 2);
 $total = $subtotal + $serviceFee;
 ?>
@@ -55,7 +55,7 @@ $total = $subtotal + $serviceFee;
             </a>
             <ul class="dropdown-menu">
               <?php if (($_SESSION['role'] ?? '') === 'admin') {
-                echo '<li><a class="dropdown-item" href="/InfoMan-Project/admin_item/index.php">item</a></li>';
+                echo '<li><a class="dropdown-item" href="/InfoMan-Project/admin/product/products.php">Products</a></li>';
                 echo '<li><a class="dropdown-item" href="/InfoMan-Project/admin/order/orders.php">Orders</a></li>';
               }
 
@@ -73,7 +73,7 @@ $total = $subtotal + $serviceFee;
         </ul>
         <form action="/InfoMan-Project/search.php" method="GET" class="d-flex">
           <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"
-            name="search">
+          name="search" value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
 

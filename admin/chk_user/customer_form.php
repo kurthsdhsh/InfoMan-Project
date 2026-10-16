@@ -11,8 +11,8 @@ $customer_id = (int)($_GET['id'] ?? $_POST['customer_id'] ?? 0);
 // ---------- load the customer ----------
 $result = mysqli_execute_query(
     $conn,
-    "SELECT customer_id, first_name, last_name, email, contact_number, account_status
-     FROM tbl_customers WHERE customer_id = ? LIMIT 1",
+    "SELECT customer_id, first_name, last_name, email, contact_number, account_status, role
+    FROM tbl_customers WHERE customer_id = ? LIMIT 1",
     [$customer_id]
 );
 $customer = mysqli_fetch_assoc($result);
@@ -44,6 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Contact number should look like 09123456789.';
     } elseif (!in_array($account_status, ['Active', 'Inactive'], true)) {
         $error = 'Invalid account status.';
+    } elseif (!in_array($role, ['customer', 'admin'], true)) {
+        $error = 'Invalid role.';
+    } elseif ($customer_id === (int)$_SESSION['admin_id']
+              && ($role !== $customer['role'] || $account_status !== 'Active')) {
+        $error = 'You cannot change your own role or deactivate yourself.';
     } else {
         try {
             // email already used by another customer?
@@ -59,9 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 mysqli_execute_query(
                     $conn,
                     "UPDATE tbl_customers
-                     SET first_name = ?, last_name = ?, email = ?, contact_number = ?, account_status = ?
-                     WHERE customer_id = ?",
-                    [$first_name, $last_name, $email, $contact_number, $account_status, $customer_id]
+                    SET first_name = ?, last_name = ?, email = ?, contact_number = ?, account_status = ?, role = ?
+                    WHERE customer_id = ?",
+                    [$first_name, $last_name, $email, $contact_number, $account_status, $role, $customer_id]
                 );
 
                 $_SESSION['success'] = 'Customer details updated.';
@@ -81,6 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $customer['email']          = $email;
     $customer['contact_number'] = $contact_number;
     $customer['account_status'] = $account_status;
+     $customer['role']           = $role;
 }
 
 $pageTitle = 'Edit customer';
@@ -142,6 +148,18 @@ include('../../includes/adminSidebar.php');
                     <?php endforeach; ?>
                 </select>
                 <div class="form-text">Inactive customers cannot sign in.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="role" class="form-label">Role</label>
+                <select class="form-select" id="role" name="role">
+                    <?php foreach (['customer', 'admin'] as $option): ?>
+                        <option value="<?= $option ?>" <?= $customer['role'] === $option ? 'selected' : '' ?>>
+                            <?= ucfirst($option) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <div class="form-text">Admins can open the admin pages. You cannot change your own role.</div>
             </div>
 
             <div class="d-flex gap-2">

@@ -12,13 +12,13 @@ $res = mysqli_execute_query(
             o.recipient_name, o.recipient_phone, o.customer_note, o.cancel_reason,
             c.first_name, c.last_name, c.email, c.contact_number,
             d.delivery_address, d.delivery_fee, a.area_name,
-            p.payment_method, p.payment_status, p.amount_paid, p.payment_date, ad.admin_name AS confirmed_name
+            p.payment_method, p.payment_status, p.amount_paid, p.payment_date, ad.first_name AS confirmed_name
      FROM tbl_orders o
      INNER JOIN tbl_customers c ON c.customer_id = o.customer_id
      LEFT JOIN tbl_deliveries d ON d.order_id = o.order_id
      LEFT JOIN tbl_delivery_areas a ON a.area_id = d.area_id
      LEFT JOIN tbl_payments p ON p.order_id = o.order_id
-     LEFT JOIN tbl_admins ad ON ad.admin_id = p.confirmed_by
+     LEFT JOIN tbl_customers ad ON ad.customer_id = p.confirmed_by
      WHERE o.order_id = ? LIMIT 1",
     [$orderId]
 );
