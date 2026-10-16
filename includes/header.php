@@ -28,7 +28,7 @@ $total = $subtotal + $serviceFee;
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
   </script>
-  <title>shop </title>
+  <title>Baguio Pasalubong Shop </title>
 </head>
 
 <body>
@@ -45,30 +45,22 @@ $total = $subtotal + $serviceFee;
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/InfoMan-Project/index.php">Home</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false">
-              Dropdown
-            </a>
-            <ul class="dropdown-menu">
-              <?php if (($_SESSION['role'] ?? '') === 'admin') {
-                echo '<li><a class="dropdown-item" href="/InfoMan-Project/admin/product/products.php">Products</a></li>';
-                echo '<li><a class="dropdown-item" href="/InfoMan-Project/admin/order/orders.php">Orders</a></li>';
-              }
-
-              ?>
-
-              <li><a class="dropdown-item" href="/InfoMan-Project/user/myorders.php">My Orders</a></li>
-              <li><a class="dropdown-item" href="/InfoMan-Project/user/profile.php">My Profile</a></li>
-              <li>
-                <hr class="dropdown-divider">
-              </li>
-
-            </ul>
-          </li>
+         <?php
+          $navCats = mysqli_query($conn,
+            "SELECT DISTINCT c.category_id, c.category_name
+             FROM tbl_categories c
+             JOIN tbl_products p ON p.category_id = c.category_id
+             WHERE p.product_status = 'Active'
+             ORDER BY c.category_name");
+          while ($c = mysqli_fetch_assoc($navCats)):
+          ?>
+            <li class="nav-item">
+              <a class="nav-link" href="/InfoMan-Project/index.php?category=<?php echo (int) $c['category_id']; ?>">
+                <?php echo htmlspecialchars($c['category_name']); ?>
+              </a>
+            </li>
+          <?php endwhile; ?>
+          
 
         </ul>
         <form action="/InfoMan-Project/search.php" method="GET" class="d-flex">
@@ -90,12 +82,31 @@ $total = $subtotal + $serviceFee;
           <?php
           if (!isset($_SESSION['user_id'])) {
             echo "<div class='navbar-nav'>
-                        <a href='http://{$_SERVER['SERVER_NAME']}/InfoMan-Project/admin/adminlogin.php' class='nav-item nav-link'>Admin</a>
                         <a href='http://{$_SERVER['SERVER_NAME']}/InfoMan-Project/user/login.php' class='nav-item nav-link'>Login</a></div>";
-          } else {
-            echo "<div class='navbar-nav'>
-                        <a href='http://{$_SERVER['SERVER_NAME']}/InfoMan-Project/user/profile.php' class='nav-item nav-link'>Profile</a>
-                        <a href='http://{$_SERVER['SERVER_NAME']}/InfoMan-Project/includes/logout.php' class='nav-item nav-link'>Logout</a></div>";
+           } else {
+            $u = mysqli_fetch_assoc(mysqli_execute_query($conn,
+              "SELECT first_name, last_name, profile_photo FROM tbl_customers WHERE customer_id = ?",
+              [$_SESSION['user_id']]));
+            $photo = !empty($u['profile_photo']) ? '/InfoMan-Project/' . $u['profile_photo'] : '';
+          ?>
+            <div class="dropdown">
+              <button class="btn dropdown-toggle d-flex align-items-center gap-2" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <?php if ($photo): ?>
+                  <img src="<?php echo htmlspecialchars($photo); ?>" class="rounded-circle" width="36" height="36" style="object-fit:cover" alt="">
+                <?php else: ?>
+                  <i class="fa-solid fa-circle-user fa-2x"></i>
+                <?php endif; ?>
+                <?php echo htmlspecialchars($u['first_name'] . ' ' . $u['last_name']); ?>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="/InfoMan-Project/user/profile.php">Profile</a></li>
+                <li><a class="dropdown-item" href="/InfoMan-Project/user/myorders.php">My Orders</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="/InfoMan-Project/includes/logout.php">Log out</a></li>
+              </ul>
+            </div>
+          <?php
           }
           ?>
         </div>

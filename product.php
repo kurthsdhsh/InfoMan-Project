@@ -16,7 +16,7 @@ $result = mysqli_execute_query(
 $product = mysqli_fetch_assoc($result);
 
 if (!$product) {
-    echo '<p class="text-center my-5">Product not found. <a href="/InfoMan-Project/index.php">Back to the shop</a></p>';
+        echo '<p class="text-center my-5">Product not found. <a href="/InfoMan-Project/index.php" class="text-reset text-decoration-none">Back to the shop</a></p>';
     exit();
 }
 
@@ -26,7 +26,7 @@ $img  = $product['image_path'] ?? '';
 ?>
 
 <div class="container my-4">
-    <a href="/InfoMan-Project/index.php">&larr; Back to products</a>
+    <a href="/InfoMan-Project/index.php" class="text-reset text-decoration-none">&larr; Back to products</a>
 
     <div class="row mt-3">
 

@@ -40,7 +40,9 @@ if ($itemCount > 0) {
                 <div class="product-content">
                     <h3><a href="/InfoMan-Project/product.php?id=<?php echo $id; ?>"><?php echo $name; ?></a></h3>
                     <div class="product-thumb">
-                        <img src="./admin_item/<?php echo $img; ?>" width="50" height="50" alt="<?php echo $name; ?>">
+                       <?php if ($img !== ''): ?>
+                            <img src="/InfoMan-Project/<?php echo $img; ?>" width="50" height="50" alt="<?php echo $name; ?>">
+                        <?php endif; ?>
                     </div>
                     <div class="product-info">
                         <?php echo $desc; ?><br>
