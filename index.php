@@ -13,7 +13,11 @@ $imageColumn = 'image_path';
 
 <?php
 // ---------- Products ----------
-$sql = "SELECT * FROM tbl_products ORDER BY product_id ASC";
+$sql = "SELECT * FROM tbl_products WHERE product_status = 'Active'";
+if (!empty($_GET['category'])) {
+    $sql .= " AND category_id = " . (int) $_GET['category'];
+}
+$sql .= " ORDER BY product_id ASC";
 
 $results = mysqli_query($conn, $sql);
 if ($results) {
@@ -30,9 +34,13 @@ if ($results) {
         <li class="product">
             <form method="POST" action="cart_update.php">
                 <div class="product-content">
-                    <h3><?php echo $name; ?></h3>
+                   <h3><a href="/InfoMan-Project/product.php?id=<?php echo $id; ?>" class="text-reset text-decoration-none"><?php echo $name; ?></a></h3>
                     <div class="product-thumb">
-                        <img src="./admin_item/<?php echo $img; ?>" width="50" height="50" alt="<?php echo $name; ?>">
+                        <?php if ($img !== ''): ?>
+                            <?php if ($img !== ''): ?>
+                                <img src="/InfoMan-Project/<?php echo $img; ?>" width="50" height="50" alt="<?php echo $name; ?>">
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </div>
                     <div class="product-info">
                         <?php echo $desc; ?><br>

@@ -93,7 +93,7 @@ if (!function_exists('sidebarActive')) {
                 <i class="fa-solid fa-clock-rotate-left"></i> Stock History
             </a>
 
-            <div class="sidebar-section">Sales &amp; Reports</div>
+            <div class="sidebar-section">Sales &amp; Finance</div>
 
             <a class="sidebar-link <?php echo sidebarActive(['/order/orders.php']); ?>"
                 href="/InfoMan-Project/admin/order/orders.php">
@@ -107,11 +107,40 @@ if (!function_exists('sidebarActive')) {
                 href="/InfoMan-Project/admin/expense/expenses.php">
                 <i class="fa-solid fa-money-bill-1"></i> Expenses
             </a>
-            <a class="sidebar-link" href="#">
-                <i class="fa-solid fa-chart-simple"></i> Business Reports
+
+           <div class="sidebar-section"> Reports </div>
+
+            <a class="sidebar-link <?php echo sidebarActive(['/report/sales.php']); ?>"
+                href="/InfoMan-Project/admin/report/sales.php">
+                <i class="fa-solid fa-chart-line"></i> Sales Report
+            </a>
+
+            <a class="sidebar-link <?php echo sidebarActive(['/report/best_sellers.php']); ?>"
+                href="/InfoMan-Project/admin/report/best_sellers.php">
+                <i class="fa-solid fa-trophy"></i> Best Selling Products
+            </a>
+
+            <a class="sidebar-link <?php echo sidebarActive(['/report/inventory_report.php']); ?>"
+                href="/InfoMan-Project/admin/report/inventory_report.php">
+                <i class="fa-solid fa-boxes-stacked"></i> Inventory and Low Stock
+            </a>
+
+            <a class="sidebar-link <?php echo sidebarActive(['/report/expense_report.php']); ?>"
+                href="/InfoMan-Project/admin/report/expense_report.php">
+                <i class="fa-solid fa-receipt"></i> Expenses Summary
+            </a>
+
+            <a class="sidebar-link <?php echo sidebarActive(['/report/income.php']); ?>"
+                href="/InfoMan-Project/admin/report/income.php">
+                <i class="fa-solid fa-coins"></i> Income
             </a>
 
         </nav>
+
+
+        <a class="sidebar-link" href="/InfoMan-Project/user/profile.php">
+            <i class="fa-solid fa-circle-user"></i> My Profile
+        </a>
 
         <a class="sidebar-link sidebar-logout" href="/InfoMan-Project/includes/logout.php">
             <i class="fa-solid fa-right-from-bracket"></i> Logout

@@ -27,10 +27,10 @@ if ($typeFilter !== '') {
     $types .= 's';
 }
 
-$sql = "SELECT e.*, a.admin_name
+$sql = "SELECT e.*, a.first_name AS admin_name
         FROM tbl_expenses e
-        LEFT JOIN tbl_admins a
-            ON e.admin_id = a.admin_id";
+        LEFT JOIN tbl_customers a
+        ON e.admin_id = a.customer_id";
 
 if (!empty($conditions)) {
     $sql .= ' WHERE ' . implode(' AND ', $conditions);

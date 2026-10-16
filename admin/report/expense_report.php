@@ -9,9 +9,9 @@ require_once '../../includes/report_helpers.php';
 $sql = "SELECT e.expense_type,
                COUNT(e.expense_id) AS entries,
                SUM(e.amount) AS total_amount,
-               GROUP_CONCAT(DISTINCT a.admin_name ORDER BY a.admin_name SEPARATOR ', ') AS recorded_by
+               GROUP_CONCAT(DISTINCT a.first_name ORDER BY a.first_name SEPARATOR ', ') AS recorded_by
         FROM tbl_expenses e
-        INNER JOIN tbl_admins a ON e.admin_id = a.admin_id
+        INNER JOIN tbl_customers a ON e.admin_id = a.customer_id
         WHERE e.expense_date BETWEEN ? AND ?
         GROUP BY e.expense_type
         ORDER BY total_amount DESC, e.expense_type ASC";

@@ -32,6 +32,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($id <= 0) {
 
         $_SESSION['error'] = 'Customer not found.';
+    
+    } elseif ($id === (int)$_SESSION['admin_id'] && in_array($action, ['toggle', 'delete'], true)) {
+
+        $_SESSION['error'] = 'You cannot deactivate or delete your own account.';
+
+    } elseif ($action === 'delete' && mysqli_num_rows(mysqli_execute_query($conn,
+            "SELECT 1 FROM tbl_customers WHERE customer_id = ? AND role = 'admin'", [$id])) > 0) {
+
+        $_SESSION['error'] = 'Admins cannot be deleted. Deactivate the account instead.';
 
     } elseif ($action === 'toggle') {
 
@@ -97,7 +106,7 @@ if ($statusFilter !== '') {
     $params[] = $statusFilter;
 }
 
-$sql = "SELECT customer_id, first_name, last_name, email, contact_number, account_status
+$sql = "SELECT customer_id, first_name, last_name, email, contact_number, account_status, role
         FROM tbl_customers";
 
 if (!empty($conditions)) {
@@ -141,7 +150,8 @@ include('../../includes/adminSidebar.php');
 
 
     <div class="admin-toolbar">
-        <h2>Customers (<?= $itemCount ?>)</h2>
+    <h2>Customers (<?= $itemCount ?>)</h2>
+    <a href="user_add.php" class="btn-add" role="button">Add user</a>
     </div>
 
     <?php
@@ -173,6 +183,7 @@ include('../../includes/adminSidebar.php');
                     <th>ID</th>
                     <th>Name</th>
                     <th>Email</th>
+                    <th>Role</th>
                     <th>Contact</th>
                     <th>Orders</th>
                     <th>Status</th>
@@ -184,7 +195,7 @@ include('../../includes/adminSidebar.php');
 
                 <?php if ($itemCount === 0): ?>
                     <tr>
-                        <td colspan="7">No customers found.</td>
+                        <td colspan="8">No customers found.</td>
                     </tr>
                 <?php endif; ?>
 
@@ -205,6 +216,7 @@ include('../../includes/adminSidebar.php');
                         <td><?= $id ?></td>
                         <td><?= htmlspecialchars($fullName) ?></td>
                         <td><?= htmlspecialchars($row['email']) ?></td>
+                        <td><?= htmlspecialchars($row['role']) ?></td>
                         <td><?= htmlspecialchars($row['contact_number'] ?? '') ?></td>
                         <td><?= $ordersKnown ? $orders : '—' ?></td>
                         <td><span class="status <?= $statusClass ?>"><?= htmlspecialchars($row['account_status']) ?></span></td>
@@ -231,6 +243,7 @@ include('../../includes/adminSidebar.php');
                             </form>
 
                             <!-- hard delete (with the warning) -->
+                            <?php if ($row['role'] !== 'admin'): ?>
                             <form method="POST" action="user.php" class="inline-form"
                                 onsubmit='return confirm(<?= htmlspecialchars(json_encode($warning), ENT_QUOTES) ?>);'>
                                 <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
@@ -238,9 +251,9 @@ include('../../includes/adminSidebar.php');
                                 <input type="hidden" name="customer_id" value="<?= $id ?>">
                                 <button type="submit" class="icon-btn" title="Delete customer">
                                     <i class="fa-solid fa-trash" style="color: red"></i>
-                                </button>
+                                </button>   
                             </form>
-
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endwhile; ?>

@@ -18,7 +18,7 @@ if ($search !== '') {
     $conditions[] = "(
         p.product_name LIKE ?
         OR sm.reason LIKE ?
-        OR a.admin_name LIKE ?
+        OR a.first_name LIKE ?
     )";
 
     $searchTerm = '%' . $search . '%';
@@ -49,13 +49,13 @@ $sql = "SELECT
             sm.movement_type,
             sm.quantity_change,
             sm.reason,
-            a.admin_name,
+            a.first_name AS admin_name,
             sm.movement_date
         FROM tbl_stock_movements sm
         INNER JOIN tbl_products p
             ON sm.product_id = p.product_id
-        LEFT JOIN tbl_admins a
-            ON sm.admin_id = a.admin_id";
+        LEFT JOIN tbl_customers a
+            ON sm.admin_id = a.customer_id";
 
 if (!empty($conditions)) {
     $sql .= ' WHERE ' . implode(' AND ', $conditions);

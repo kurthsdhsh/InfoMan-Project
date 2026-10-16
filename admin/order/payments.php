@@ -14,7 +14,7 @@ $params = [];
 
 if ($search !== '') {
     $digits = preg_replace('/\D/', '', $search);
-    $conditions[] = "(CONCAT(c.first_name, ' ', c.last_name) LIKE ? OR ad.admin_name LIKE ?" . ($digits !== '' ? ' OR o.order_id = ?' : '') . ')';
+    $conditions[] = "(CONCAT(c.first_name, ' ', c.last_name) LIKE ? OR ad.first_name LIKE ?" . ($digits !== '' ? ' OR o.order_id = ?' : '') . ')';
     $params[] = '%' . $search . '%';
     $params[] = '%' . $search . '%';
     if ($digits !== '') {
@@ -35,14 +35,14 @@ if ($methodFilter === 'Cash on Pickup' || $methodFilter === 'Cash on Delivery') 
 $sql = "SELECT p.payment_id, p.payment_method, p.payment_status, p.amount_paid, p.payment_date,
                o.order_id, o.order_status,
                CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
-               ad.admin_name,
+                              ad.first_name AS admin_name,
                (SELECT COALESCE(SUM(i.quantity * i.unit_price), 0) FROM tbl_order_items i WHERE i.order_id = o.order_id)
                  + COALESCE(d.delivery_fee, 0) AS to_collect
         FROM tbl_payments p
         INNER JOIN tbl_orders o ON o.order_id = p.order_id
         INNER JOIN tbl_customers c ON c.customer_id = o.customer_id
         LEFT JOIN tbl_deliveries d ON d.order_id = o.order_id
-        LEFT JOIN tbl_admins ad ON ad.admin_id = p.confirmed_by";
+        LEFT JOIN tbl_customers ad ON ad.customer_id = p.confirmed_by";
 
 if (!empty($conditions)) {
     $sql .= ' WHERE ' . implode(' AND ', $conditions);
