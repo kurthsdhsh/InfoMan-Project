@@ -94,6 +94,13 @@ include("../includes/header.php");
             <label class="form-label" for="form2Example2">Password</label>
         </div>
 
+        
+            <p class="form-outline mb-4">
+                <a href="forgot_password.php" style="font-size: 12px;">Forgot Password?</a>
+            </p>
+
+        
+
         <!-- Submit button -->
         <button type="submit" class="btn btn-primary btn-block mb-4" name="submit">Sign in</button>
 
