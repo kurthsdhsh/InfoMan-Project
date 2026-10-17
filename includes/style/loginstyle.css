@@ -504,3 +504,46 @@ body:has(.container-fluid.container-lg) {
     height: auto;
   }
 }
+
+/* "Already have an account? Sign In" pill in the green panel (register) */
+.container-fluid.container-lg .text-center {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + 85px);
+  width: 50%;
+  text-align: center;
+}
+
+.container-fluid.container-lg .text-center p {
+  display: inline-block;
+  margin: 0;
+  padding: 10px 28px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .18);
+  color: #fff;
+  font-size: 12px;
+}
+
+.container-fluid.container-lg .text-center a {
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.container-fluid.container-lg .text-center a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 767px) {
+  .container-fluid.container-lg .text-center {
+    position: static;
+    width: 100%;
+    padding: 12px 0 20px;
+  }
+  .container-fluid.container-lg .text-center p {
+    background: none;
+    color: #4a3b30;
+    padding: 0;
+  }
+  .container-fluid.container-lg .text-center a { color: #B77466; }
+}
