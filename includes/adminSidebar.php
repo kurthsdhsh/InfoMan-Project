@@ -64,11 +64,16 @@ if (!function_exists('sidebarActive')) {
                 <i class="fa-solid fa-house"></i> Dashboard
             </a>
 
+            <a class="sidebar-link <?php echo sidebarActive(['/index.php']); ?>"
+                href="/InfoMan-Project/index.php">
+                <i class="fa-solid fa-shop"></i> Shop
+            </a>
+
             <div class="sidebar-section">Customer Management</div>
 
             <a class="sidebar-link <?php echo sidebarActive(['/chk_user/']); ?>"
                 href="/InfoMan-Project/admin/chk_user/user.php">
-                <i class="fa-solid fa-table-cells-large"></i> Customers
+                <i class="fa-solid fa-users"></i> Customers
             </a>
 
             <div class="sidebar-section">Product Catalog</div>

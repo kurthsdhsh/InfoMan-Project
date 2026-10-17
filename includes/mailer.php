@@ -27,6 +27,7 @@ function sendMail($toEmail, $subject, $htmlBody)
         $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body    = $htmlBody;
+        $mail->AltBody = strip_tags($htmlBody);
         $mail->send();
         return true;
     } catch (\Exception $e) {

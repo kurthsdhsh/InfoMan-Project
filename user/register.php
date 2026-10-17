@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("../includes/header.php");
+include("../includes/head.php");
 
 $error  = $_SESSION['message'] ?? null;
 $errors = $_SESSION['errors'] ?? [];
@@ -63,5 +63,9 @@ unset($_SESSION['message'], $_SESSION['errors'], $_SESSION['old']);
         </div>
 
         <button type="submit" class="btn btn-primary">Register</button>
+
+        <div class="text-center">
+            <p>Already have an account? <a href="login.php">Sign In</a></p>
+        </div>
     </form>
 </div>

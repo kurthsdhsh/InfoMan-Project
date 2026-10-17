@@ -66,7 +66,7 @@ if (isset($_POST['submit'])) {
 }
 
 // header.php outputs HTML, so it must come AFTER any header("Location: ...")
-include("../includes/header.php");
+include("../includes/head.php");
 
 ?>
 <div class="row col-md-8 mx-auto ">

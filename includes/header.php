@@ -1,4 +1,8 @@
 <?php
+if (!isset($conn)) {
+  include_once __DIR__ . '/config.php';
+}
+
 // ---- basket numbers (used by the Basket button and the basket panel below) ----
 $cart = $_SESSION['cart_products'] ?? [];
 $subtotal = 0;
@@ -101,7 +105,11 @@ $total = $subtotal + $serviceFee;
               </button>
               <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item" href="/InfoMan-Project/user/profile.php">Profile</a></li>
-                <li><a class="dropdown-item" href="/InfoMan-Project/user/myorders.php">My Orders</a></li>
+                <?php if (($_SESSION['role'] ?? '') === 'admin'): ?>
+                  <li><a class="dropdown-item" href="/InfoMan-Project/admin/home.php">Dashboard</a></li>
+                <?php else: ?>
+                  <li><a class="dropdown-item" href="/InfoMan-Project/user/myorders.php">My Orders</a></li>
+                <?php endif; ?>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item text-danger" href="/InfoMan-Project/includes/logout.php">Log out</a></li>
               </ul>
