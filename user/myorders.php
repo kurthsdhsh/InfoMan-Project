@@ -73,5 +73,3 @@ include('../includes/header.php');
         </table>
     <?php endif; ?>
 </div>
-
-<?php include('../includes/footer.php'); ?>
