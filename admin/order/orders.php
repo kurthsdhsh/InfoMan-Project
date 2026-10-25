@@ -7,7 +7,7 @@ require_once '../../includes/order_helpers.php';
 
 $search       = adminFilterValue('search');
 $statusFilter = adminFilterValue('status');
-$typeFilter   = adminFilterValue('type');
+$typeFilter     = adminFilterValue('type');
 
 $statuses = ['Pending', 'Confirmed', 'Preparing', 'Ready', 'Out for Delivery', 'Completed', 'Cancelled'];
 
@@ -16,7 +16,7 @@ $params = [];
 
 if ($search !== '') {
     $digits = preg_replace('/\D/', '', $search);
-    $conditions[] = "(CONCAT(c.first_name, ' ', c.last_name) LIKE ?" . ($digits !== '' ? ' OR o.order_id = ?' : '') . ')';
+    $conditions[] = "(o.customer_name LIKE ?" . ($digits !== '' ? ' OR o.order_id = ?' : '') . ')';
     $params[] = '%' . $search . '%';
     if ($digits !== '') {
         $params[] = (int) $digits;
@@ -36,13 +36,9 @@ if ($typeFilter === 'Pickup' || $typeFilter === 'Delivery') {
 }
 
 $sql = "SELECT o.order_id, o.order_status, o.fulfillment_method, o.scheduled_at,
-               CONCAT(c.first_name, ' ', c.last_name) AS customer_name, p.payment_status,
-               (SELECT COALESCE(SUM(i.quantity * i.unit_price), 0) FROM tbl_order_items i WHERE i.order_id = o.order_id)
-                 + COALESCE(d.delivery_fee, 0) AS grand_total
-        FROM tbl_orders o
-        INNER JOIN tbl_customers c ON c.customer_id = o.customer_id
-        LEFT JOIN tbl_deliveries d ON d.order_id = o.order_id
-        LEFT JOIN tbl_payments p ON p.order_id = o.order_id";
+               o.customer_name, o.payment_status, o.grand_total
+        FROM v_order_summary o";
+
 
 if (!empty($conditions)) {
     $sql .= ' WHERE ' . implode(' AND ', $conditions);

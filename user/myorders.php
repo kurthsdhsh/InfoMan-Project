@@ -20,14 +20,11 @@ if (!isset($filters[$show])) {
 
 $res = mysqli_execute_query(
     $conn,
-    "SELECT o.order_id, o.order_date, o.order_status, o.fulfillment_method, o.scheduled_at, p.payment_status,
-            (SELECT COALESCE(SUM(i.quantity * i.unit_price), 0) FROM tbl_order_items i WHERE i.order_id = o.order_id)
-              + COALESCE(d.delivery_fee, 0) AS grand_total
-     FROM tbl_orders o
-     LEFT JOIN tbl_deliveries d ON d.order_id = o.order_id
-     LEFT JOIN tbl_payments p ON p.order_id = o.order_id
+        "SELECT order_id, order_date, order_status, fulfillment_method, scheduled_at, payment_status, grand_total
+     FROM v_order_summary o
      WHERE o.customer_id = ?" . $filters[$show][1] . "
      ORDER BY o.order_id DESC",
+
     [$customerId]
 );
 $orders = mysqli_fetch_all($res, MYSQLI_ASSOC);

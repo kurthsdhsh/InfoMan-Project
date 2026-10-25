@@ -8,18 +8,7 @@ $orderId = (int) ($_GET['id'] ?? 0);
 
 $res = mysqli_execute_query(
     $conn,
-    "SELECT o.order_id, o.order_date, o.order_status, o.fulfillment_method, o.scheduled_at,
-            o.recipient_name, o.recipient_phone, o.customer_note, o.cancel_reason,
-            c.first_name, c.last_name, c.email, c.contact_number,
-            d.delivery_address, d.delivery_fee, a.area_name,
-            p.payment_method, p.payment_status, p.amount_paid, p.payment_date, ad.first_name AS confirmed_name
-     FROM tbl_orders o
-     INNER JOIN tbl_customers c ON c.customer_id = o.customer_id
-     LEFT JOIN tbl_deliveries d ON d.order_id = o.order_id
-     LEFT JOIN tbl_delivery_areas a ON a.area_id = d.area_id
-     LEFT JOIN tbl_payments p ON p.order_id = o.order_id
-     LEFT JOIN tbl_customers ad ON ad.customer_id = p.confirmed_by
-     WHERE o.order_id = ? LIMIT 1",
+    "SELECT * FROM v_order_summary WHERE order_id = ? LIMIT 1",
     [$orderId]
 );
 $order = mysqli_fetch_assoc($res);
@@ -31,21 +20,19 @@ if (!$order) {
 
 $res = mysqli_execute_query(
     $conn,
-    "SELECT pr.product_name, i.quantity, i.unit_price
-     FROM tbl_order_items i INNER JOIN tbl_products pr ON pr.product_id = i.product_id
-     WHERE i.order_id = ? ORDER BY pr.product_name",
+    "SELECT product_name, quantity, unit_price, line_total
+     FROM v_order_details WHERE order_id = ? ORDER BY product_name",
     [$orderId]
 );
 $rows = mysqli_fetch_all($res, MYSQLI_ASSOC);
 
-$ordSubtotal = 0.0;
-foreach ($rows as $r) {
-    $ordSubtotal += $r['quantity'] * $r['unit_price'];
-}
-$ordFee      = (float) ($order['delivery_fee'] ?? 0);
-$ordTotal    = $ordSubtotal + $ordFee;
+// the view already calculated these
+$ordSubtotal = (float) $order['items_total'];
+$ordFee      = (float) $order['delivery_fee'];
+$ordTotal    = (float) $order['grand_total'];
 $ordDelivery = $order['fulfillment_method'] === 'Delivery';
 $ordStatus   = $order['order_status'];
+
 
 $ordNext      = nextOrderStep($ordStatus, $order['fulfillment_method']);   // [new status, button words] or null
 $ordCanPay    = $ordStatus === 'Ready' || $ordStatus === 'Out for Delivery'; // last step: cash received
