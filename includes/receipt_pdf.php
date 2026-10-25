@@ -78,13 +78,13 @@ function receiptDraw(array $order, array $items, float $pageHeight): array
     }
     $rule();
 
-    // totals (all numbers come from the views)
+    // totals 
     $total = (float) $order['grand_total'];
     $paid  = isset($order['amount_paid']) ? (float) $order['amount_paid'] : $total;
     $line(receiptRow('Subtotal', pdfMoney($order['items_total'])));
     $line(receiptRow('Delivery fee', pdfMoney($order['delivery_fee'])));
     $rule('=');
-    $line(receiptRow('TOTAL', pdfMoney($total)), 'L', 'B', 10);
+    $line(receiptRow('TOTAL', pdfMoney($total)), 'L', 'B', 9);
     $rule('=');
     $line(receiptRow('Cash', pdfMoney($paid)));
     $line(receiptRow('Change', pdfMoney(max(0, $paid - $total))));
@@ -102,6 +102,7 @@ function receiptDraw(array $order, array $items, float $pageHeight): array
 
 function buildReceiptPdf(array $order, array $items): string
 {
-    [$pdf]    = receiptDraw($order, $items, max(100, $endY + 8));
+    [, $endY] = receiptDraw($order, $items, 400);                  
+    [$pdf]    = receiptDraw($order, $items, max(100, $endY + 8));  
     return $pdf->Output('S');
 }

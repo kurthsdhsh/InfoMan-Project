@@ -7,8 +7,8 @@ function badWordList(): array
         'fuck', 'fucking', 'fucker', 'shit', 'bullshit', 'bitch', 'asshole', 'bastard', 'damn',
         'crap', 'dick', 'piss', 'slut', 'whore', 'idiot', 'stupid', 'moron',
         // Filipino
-        'putang ina', 'putangina', 'nakakatangina', 'puta', 'tangina', 'tang ina', 'gago', 'gaga', 'tanga', 'bobo',
-        'ulol', 'tarantado', 'leche', 'punyeta', 'pakyu', 'pakshet', 'siraulo', 'buwisit',
+        'esmiringhoy','putang ina', 'putangina', 'nakakatangina', 'puta', 'tangina', 'tang ina', 'gago', 'gaga', 'tanga', 'bobo',
+        'ulol', 'tarantado', 'letse', 'punyeta', 'pakyu', 'pakshet', 'siraulo', 'buwisit',
         'bwisit', 'lintik', 'inutil', 'hayop ka', 'peste', 'pesteng yawa', 'animal ka', 'burat', 'pukinang ina',
     ];
 }
@@ -52,4 +52,5 @@ function maskBadWords(string $text): string
         },
         $text
     );
-    return $masked ?? $text;   
+    return $masked ?? $text;
+} 
