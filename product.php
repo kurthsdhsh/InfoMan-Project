@@ -62,8 +62,7 @@ $img  = $product['image_path'] ?? '';
 
     <hr class="my-4">
 
-    <!-- REVIEWS AREA: Member B's review list, average rating and review form go here later -->
-    <h4>Reviews</h4>
+    <?php include __DIR__ . '/includes/review_section.php'; ?>
     <p class="text-muted">No reviews yet.</p>
 
 </div>

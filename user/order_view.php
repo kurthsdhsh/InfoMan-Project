@@ -20,7 +20,7 @@ if (!$order) {
 
 $items = mysqli_execute_query(
     $conn,
-    "SELECT product_name, quantity, unit_price, line_total
+    "SELECT product_id, product_name, quantity, unit_price, line_total
      FROM v_order_details WHERE order_id = ? ORDER BY product_name",
     [$orderId]
 );
@@ -89,7 +89,12 @@ include('../includes/header.php');
             <tbody>
             <?php foreach ($rows as $r): ?>
                 <tr>
-                    <td><?= h($r['product_name']) ?></td>
+                       <td>
+                            <?= h($r['product_name']) ?>
+                            <?php if ($order['order_status'] === 'Completed'): ?>
+                                <br><a href="/InfoMan-Project/product.php?id=<?= (int) $r['product_id'] ?>#reviews">Write a review</a>
+                            <?php endif; ?>
+                        </td>
                     <td class="ovR"><?= peso($r['unit_price']) ?></td>
                     <td class="ovR"><?= (int) $r['quantity'] ?></td>
                     <td class="ovR"><?= peso($r['quantity'] * $r['unit_price']) ?></td>
