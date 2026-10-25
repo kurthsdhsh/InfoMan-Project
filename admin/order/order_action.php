@@ -3,6 +3,7 @@
 require_once '../auth.php';
 require_once '../../includes/config.php';
 require_once '../../includes/order_helpers.php';
+require_once '../../includes/email_templates.php';
 
 class StoreRuleError extends Exception
 {
@@ -30,7 +31,9 @@ if ($saved === '' || !hash_equals($saved, (string) ($_POST['token'] ?? ''))) {
 
 $reason  = trim((string) ($_POST['reason'] ?? ''));
 $restock = isset($_POST['restock']);
+$newStatus = null;   // set only after a successful commit, so we know an email is due
 
+$pendingStatus = null;
 try {
     mysqli_begin_transaction($conn);
 
@@ -55,6 +58,7 @@ try {
         }
         mysqli_execute_query($conn, "UPDATE tbl_orders SET order_status = ? WHERE order_id = ?", [$step[0], $orderId]);
         $done = orderNumber($orderId) . ' is now ' . $step[0] . '.';
+        $pendingStatus = $step[0];
 
     } elseif ($do === 'complete') {
         if ($status !== 'Ready' && $status !== 'Out for Delivery') {
@@ -80,6 +84,7 @@ try {
         }
         mysqli_execute_query($conn, "UPDATE tbl_orders SET order_status = 'Completed' WHERE order_id = ?", [$orderId]);
         $done = orderNumber($orderId) . ' is completed. Cash received: ' . peso($total) . '.';
+        $pendingStatus = 'Completed';
 
     } else {   // cancel
         if (!storeCanCancel($status)) {
@@ -115,10 +120,12 @@ try {
             [mb_substr($reason, 0, 255), $orderId]
         );
         $done = orderNumber($orderId) . ' was cancelled' . ($restock ? ' and the items went back to stock.' : '. Stock was not changed.');
+        $pendingStatus = 'Cancelled';
     }
 
     mysqli_commit($conn);
     $_SESSION['success'] = $done;
+    $newStatus = $pendingStatus;   // the change is saved for good
 
 } catch (StoreRuleError $e) {
     mysqli_rollback($conn);
@@ -130,6 +137,16 @@ try {
     mysqli_rollback($conn);                                      
     error_log('order_action failed: ' . $e->getMessage());
     $_SESSION['error'] = 'Something went wrong and nothing was changed. Please try again.';
+}
+
+// Email the customer. This is OUTSIDE the transaction on purpose:
+// the status is already saved, and a mail error must never undo it.
+if ($newStatus !== null) {
+    if (sendOrderStatusEmail($conn, $orderId)) {
+        $_SESSION['success'] .= ' An email was sent to the customer.';
+    } else {
+        $_SESSION['success'] .= ' (The email to the customer could not be sent.)';
+    }
 }
 
 header('Location: ' . $back);

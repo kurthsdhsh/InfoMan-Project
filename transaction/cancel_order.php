@@ -3,6 +3,7 @@
 session_start();
 include('../includes/config.php');
 require_once __DIR__ . '/../includes/order_helpers.php';
+require_once __DIR__ . '/../includes/email_templates.php';
 
 class CancelRuleError extends Exception
 {
@@ -12,6 +13,7 @@ requireCustomer();
 $customerId = (int) $_SESSION['customer_id'];
 $orderId    = (int) ($_POST['order_id'] ?? 0);
 $viewPage   = '/InfoMan-Project/user/order_view.php?id=' . $orderId;
+$cancelled  = false;   // becomes true only after the cancel is saved
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || $orderId < 1) {
     header('Location: /InfoMan-Project/user/myorders.php');
@@ -66,14 +68,20 @@ try {
     mysqli_execute_query($conn, "UPDATE tbl_orders SET order_status = 'Cancelled' WHERE order_id = ?", [$orderId]);
 
     mysqli_commit($conn);
+    $cancelled = true;
     $_SESSION['mo_message'] = 'Your order ' . orderNumber($orderId) . ' was cancelled.';
 } catch (CancelRuleError $e) {
     mysqli_rollback($conn);
     $_SESSION['mo_error'] = $e->getMessage();
 } catch (Throwable $e) {
-    mysqli_rollback($conn);                                   // nothing was saved
+    mysqli_rollback($conn);                                  
     error_log('cancel_order failed: ' . $e->getMessage());
     $_SESSION['mo_error'] = 'Something went wrong and your order was NOT cancelled. Please try again.';
+}
+
+
+if ($cancelled) {
+    sendOrderStatusEmail($conn, $orderId);
 }
 
 header('Location: ' . $viewPage);

@@ -3,6 +3,7 @@
 session_start();
 include('../../includes/config.php');
 require_once __DIR__ . '/../../includes/order_helpers.php';
+require_once __DIR__ . '/../../includes/email_templates.php';
 
 class OrderRuleError extends Exception
 {
@@ -177,5 +178,8 @@ try {
 
 unset($_SESSION['cart_products'], $_SESSION['checkout'], $_SESSION['pending_add']);
 $_SESSION['last_order_id'] = $orderId;
+
+sendOrderStatusEmail($conn, $orderId);
+
 header('Location: ' . $successPage . '?id=' . $orderId);
 exit();
