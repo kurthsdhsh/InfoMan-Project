@@ -9,15 +9,7 @@ $orderId = (int) ($_GET['id'] ?? 0);
 
 $res = mysqli_execute_query(
     $conn,
-    "SELECT o.order_id, o.order_date, o.order_status, o.fulfillment_method, o.scheduled_at,
-            o.recipient_name, o.recipient_phone, o.customer_note, o.cancel_reason,
-            d.delivery_address, d.delivery_fee, a.area_name,
-            p.payment_method, p.payment_status
-     FROM tbl_orders o
-     LEFT JOIN tbl_deliveries d ON d.order_id = o.order_id
-     LEFT JOIN tbl_delivery_areas a ON a.area_id = d.area_id
-     LEFT JOIN tbl_payments p ON p.order_id = o.order_id
-     WHERE o.order_id = ? AND o.customer_id = ? LIMIT 1",
+    "SELECT * FROM v_order_summary WHERE order_id = ? AND customer_id = ? LIMIT 1",
     [$orderId, (int) $_SESSION['customer_id']]
 );
 $order = mysqli_fetch_assoc($res);
@@ -28,20 +20,18 @@ if (!$order) {
 
 $items = mysqli_execute_query(
     $conn,
-    "SELECT pr.product_name, i.quantity, i.unit_price
-     FROM tbl_order_items i JOIN tbl_products pr ON pr.product_id = i.product_id
-     WHERE i.order_id = ? ORDER BY pr.product_name",
+    "SELECT product_name, quantity, unit_price, line_total
+     FROM v_order_details WHERE order_id = ? ORDER BY product_name",
     [$orderId]
 );
 $rows = mysqli_fetch_all($items, MYSQLI_ASSOC);
 
-$ovSubtotal = 0.0;
-foreach ($rows as $r) {
-    $ovSubtotal += $r['quantity'] * $r['unit_price'];
-}
-$ovFee      = (float) ($order['delivery_fee'] ?? 0);
-$ovTotal    = $ovSubtotal + $ovFee;
+// the view already calculated these
+$ovSubtotal = (float) $order['items_total'];
+$ovFee      = (float) $order['delivery_fee'];
+$ovTotal    = (float) $order['grand_total'];
 $ovDelivery = $order['fulfillment_method'] === 'Delivery';
+
 
 $ovMeaning = [
     'Pending'          => 'Waiting for the store to confirm your order.',

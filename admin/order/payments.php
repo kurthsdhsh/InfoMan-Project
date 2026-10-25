@@ -14,7 +14,7 @@ $params = [];
 
 if ($search !== '') {
     $digits = preg_replace('/\D/', '', $search);
-    $conditions[] = "(CONCAT(c.first_name, ' ', c.last_name) LIKE ? OR ad.first_name LIKE ?" . ($digits !== '' ? ' OR o.order_id = ?' : '') . ')';
+    $conditions[] = "(o.customer_name LIKE ? OR o.confirmed_name LIKE ?" . ($digits !== '' ? ' OR o.order_id = ?' : '') . ')';
     $params[] = '%' . $search . '%';
     $params[] = '%' . $search . '%';
     if ($digits !== '') {
@@ -23,32 +23,26 @@ if ($search !== '') {
 }
 
 if ($statusFilter === 'Paid' || $statusFilter === 'Unpaid') {
-    $conditions[] = 'p.payment_status = ?';
+    $conditions[] = 'o.payment_status = ?';
     $params[] = $statusFilter;
 }
 
 if ($methodFilter === 'Cash on Pickup' || $methodFilter === 'Cash on Delivery') {
-    $conditions[] = 'p.payment_method = ?';
+    $conditions[] = 'o.payment_method = ?';
     $params[] = $methodFilter;
 }
 
-$sql = "SELECT p.payment_id, p.payment_method, p.payment_status, p.amount_paid, p.payment_date,
-               o.order_id, o.order_status,
-               CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
-                              ad.first_name AS admin_name,
-               (SELECT COALESCE(SUM(i.quantity * i.unit_price), 0) FROM tbl_order_items i WHERE i.order_id = o.order_id)
-                 + COALESCE(d.delivery_fee, 0) AS to_collect
-        FROM tbl_payments p
-        INNER JOIN tbl_orders o ON o.order_id = p.order_id
-        INNER JOIN tbl_customers c ON c.customer_id = o.customer_id
-        LEFT JOIN tbl_deliveries d ON d.order_id = o.order_id
-        LEFT JOIN tbl_customers ad ON ad.customer_id = p.confirmed_by";
+$sql = "SELECT o.payment_method, o.payment_status, o.amount_paid, o.payment_date,
+               o.order_id, o.order_status, o.customer_name,
+               o.confirmed_name AS admin_name,
+               o.grand_total AS to_collect
+        FROM v_order_summary o";
 
 if (!empty($conditions)) {
     $sql .= ' WHERE ' . implode(' AND ', $conditions);
 }
 
-$sql .= " ORDER BY (p.payment_status = 'Paid') ASC, COALESCE(p.payment_date, o.order_date) DESC, o.order_id DESC
+$sql .= " ORDER BY (o.payment_status = 'Paid') ASC, COALESCE(o.payment_date, o.order_date) DESC, o.order_id DESC
           LIMIT 300";
 
 $result = mysqli_execute_query($conn, $sql, $params);
@@ -58,16 +52,12 @@ $itemCount = count($payments);
 $summary = mysqli_fetch_assoc(mysqli_query(
     $conn,
     "SELECT
-        COALESCE(SUM(CASE WHEN p.payment_status = 'Paid' THEN p.amount_paid END), 0) AS total_collected,
-        COALESCE(SUM(CASE WHEN p.payment_status = 'Paid' AND DATE(p.payment_date) = CURDATE() THEN p.amount_paid END), 0) AS today_collected,
-        COALESCE(SUM(p.payment_status = 'Paid'), 0) AS paid_count,
-        COALESCE(SUM(CASE WHEN p.payment_status = 'Unpaid' AND o.order_status <> 'Cancelled' THEN
-            (SELECT COALESCE(SUM(i.quantity * i.unit_price), 0) FROM tbl_order_items i WHERE i.order_id = o.order_id)
-            + COALESCE((SELECT d2.delivery_fee FROM tbl_deliveries d2 WHERE d2.order_id = o.order_id), 0)
-        END), 0) AS still_to_collect,
-        COALESCE(SUM(p.payment_status = 'Unpaid' AND o.order_status <> 'Cancelled'), 0) AS unpaid_count
-     FROM tbl_payments p
-     INNER JOIN tbl_orders o ON o.order_id = p.order_id"
+        COALESCE(SUM(CASE WHEN payment_status = 'Paid' THEN amount_paid END), 0) AS total_collected,
+        COALESCE(SUM(CASE WHEN payment_status = 'Paid' AND DATE(payment_date) = CURDATE() THEN amount_paid END), 0) AS today_collected,
+        COALESCE(SUM(payment_status = 'Paid'), 0) AS paid_count,
+        COALESCE(SUM(CASE WHEN payment_status = 'Unpaid' AND order_status <> 'Cancelled' THEN grand_total END), 0) AS still_to_collect,
+        COALESCE(SUM(payment_status = 'Unpaid' AND order_status <> 'Cancelled'), 0) AS unpaid_count
+     FROM v_order_summary"
 ));
 
 $success = $_SESSION['success'] ?? '';
