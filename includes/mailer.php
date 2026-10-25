@@ -17,10 +17,10 @@ define('BASE_URL',  'http://localhost/InfoMan-Project');
         $mail->isSMTP();
         $mail->Host       = 'sandbox.smtp.mailtrap.io';
         $mail->SMTPAuth   = true;
-        // $mail->Username   = '78e3dc74e9f7cf';
-        // $mail->Password   = '08f7d417c4ffcc';
-        $mail->Username   = 'c6936cafdcc61a';
-        $mail->Password   = '77682cc3ef3793';
+        $mail->Username   = '78e3dc74e9f7cf';
+        $mail->Password   = '08f7d417c4ffcc';
+        // $mail->Username   = 'c6936cafdcc61a';
+        // $mail->Password   = '77682cc3ef3793';
         $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 2525;
 
