@@ -3,6 +3,7 @@ include('../auth.php');
 $pageTitle = 'Product';
 include('../../includes/adminSidebar.php');
 include('../../includes/config.php');
+include('../../includes/product_validation.php');
 
 $product_id = '';
 $category_id = '';
@@ -15,7 +16,6 @@ $product_status = 'Active';
 $isEdit = false;
 
 
-// Check if editing
 if (isset($_GET['id'])) {
 
     $product_id = (int)$_GET['id'];
@@ -51,7 +51,24 @@ if (isset($_GET['id'])) {
 }
 
 
-// Get categories for dropdown
+$errors = $_SESSION['form_errors'] ?? [];
+$old = $_SESSION['form_old'] ?? [];
+$error = $_SESSION['error'] ?? '';
+
+unset($_SESSION['form_errors'], $_SESSION['form_old'], $_SESSION['error']);
+
+if (!empty($old)) {
+    $category_id = $old['category_id'];
+    $product_name = $old['product_name'];
+    $product_description = $old['product_description'];
+    $unit_price = $old['unit_price'];
+    $product_status = $old['product_status'];
+}
+
+
+$gallery = $isEdit ? getGallery($conn, (int)$product_id) : [];
+
+
 $sql = "SELECT * FROM tbl_categories ORDER BY category_name ASC";
 $category_result = mysqli_query($conn, $sql);
 
@@ -74,12 +91,31 @@ $category_result = mysqli_query($conn, $sql);
     </div>
 
 
+    <?php if ($error != ''): ?>
+
+        <div class="alert alert-danger">
+            <?php echo htmlspecialchars($error); ?>
+        </div>
+
+    <?php endif; ?>
+
+
+    <?php if (!empty($errors)): ?>
+
+        <div class="alert alert-danger">
+            Please correct the errors below.
+        </div>
+
+    <?php endif; ?>
+
+
     <div class="table-card" style="padding: 30px;">
 
         <form
             action="<?php echo $isEdit ? 'update.php' : 'store.php'; ?>"
             method="POST"
-            enctype="multipart/form-data">
+            enctype="multipart/form-data"
+            novalidate>
 
 
             <?php if ($isEdit): ?>
@@ -103,8 +139,7 @@ $category_result = mysqli_query($conn, $sql);
                 <select
                     class="form-select"
                     id="category_id"
-                    name="category_id"
-                    required>
+                    name="category_id">
 
                     <option value="">Select category</option>
 
@@ -126,6 +161,12 @@ $category_result = mysqli_query($conn, $sql);
 
                 </select>
 
+                <?php if (isset($errors['category'])): ?>
+                    <small class="text-danger">
+                        <?php echo htmlspecialchars($errors['category']); ?>
+                    </small>
+                <?php endif; ?>
+
             </div>
 
 
@@ -142,8 +183,13 @@ $category_result = mysqli_query($conn, $sql);
                     class="form-control"
                     id="product_name"
                     name="product_name"
-                    value="<?php echo htmlspecialchars($product_name); ?>"
-                    required>
+                    value="<?php echo htmlspecialchars($product_name); ?>">
+
+                <?php if (isset($errors['name'])): ?>
+                    <small class="text-danger">
+                        <?php echo htmlspecialchars($errors['name']); ?>
+                    </small>
+                <?php endif; ?>
 
             </div>
 
@@ -162,6 +208,12 @@ $category_result = mysqli_query($conn, $sql);
                     name="product_description"
                     rows="4"><?php echo htmlspecialchars($product_description ?? ''); ?></textarea>
 
+                <?php if (isset($errors['description'])): ?>
+                    <small class="text-danger">
+                        <?php echo htmlspecialchars($errors['description']); ?>
+                    </small>
+                <?php endif; ?>
+
             </div>
 
 
@@ -174,14 +226,17 @@ $category_result = mysqli_query($conn, $sql);
                 </label>
 
                 <input
-                    type="number"
+                    type="text"
                     class="form-control"
                     id="unit_price"
                     name="unit_price"
-                    value="<?php echo htmlspecialchars($unit_price); ?>"
-                    min="0"
-                    step="0.01"
-                    required>
+                    value="<?php echo htmlspecialchars($unit_price); ?>">
+
+                <?php if (isset($errors['price'])): ?>
+                    <small class="text-danger">
+                        <?php echo htmlspecialchars($errors['price']); ?>
+                    </small>
+                <?php endif; ?>
 
             </div>
 
@@ -198,8 +253,13 @@ $category_result = mysqli_query($conn, $sql);
                     type="file"
                     class="form-control"
                     id="image"
-                    name="image"
-                    accept="image/*">
+                    name="image">
+
+                <?php if (isset($errors['image'])): ?>
+                    <small class="text-danger">
+                        <?php echo htmlspecialchars($errors['image']); ?>
+                    </small>
+                <?php endif; ?>
 
                 <?php if (!empty($image_path)): ?>
 
@@ -220,6 +280,74 @@ $category_result = mysqli_query($conn, $sql);
             </div>
 
 
+            <!-- Additional photos (gallery) -->
+
+            <div class="mb-3">
+
+                <label for="photos" class="form-label">
+                    Additional Photos
+                </label>
+
+                <input
+                    type="file"
+                    class="form-control"
+                    id="photos"
+                    name="photos[]"
+                    multiple>
+
+                <small class="text-muted">
+                    You can add up to <?php echo MAX_GALLERY_PHOTOS; ?> additional photos
+                    (JPG, PNG, GIF or WEBP, 2 MB each). Hold Ctrl to choose many files.
+                </small>
+
+                <?php if (isset($errors['photos'])): ?>
+                    <br>
+                    <small class="text-danger">
+                        <?php echo htmlspecialchars($errors['photos']); ?>
+                    </small>
+                <?php endif; ?>
+
+                <?php if (!empty($gallery)): ?>
+
+                    <div class="mt-2">
+
+                        <p class="mb-1">Current additional photos (tick to remove):</p>
+
+                        <div class="d-flex flex-wrap gap-3">
+
+                            <?php foreach ($gallery as $photo): ?>
+
+                                <div class="text-center">
+
+                                    <img
+                                        src="/InfoMan-Project/<?php echo htmlspecialchars($photo['image_path']); ?>"
+                                        width="90"
+                                        height="90"
+                                        style="object-fit: cover; border-radius: 8px;">
+
+                                    <div>
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                name="remove_photos[]"
+                                                value="<?php echo (int)$photo['image_id']; ?>">
+                                            Remove
+                                        </label>
+                                    </div>
+
+                                </div>
+
+                            <?php endforeach; ?>
+
+                        </div>
+
+                    </div>
+
+                <?php endif; ?>
+
+            </div>
+
+
             <!-- Status -->
 
             <div class="mb-3">
@@ -231,8 +359,7 @@ $category_result = mysqli_query($conn, $sql);
                 <select
                     class="form-select"
                     id="product_status"
-                    name="product_status"
-                    required>
+                    name="product_status">
 
                     <option
                         value="Active"
@@ -255,6 +382,12 @@ $category_result = mysqli_query($conn, $sql);
                     </option>
 
                 </select>
+
+                <?php if (isset($errors['status'])): ?>
+                    <small class="text-danger">
+                        <?php echo htmlspecialchars($errors['status']); ?>
+                    </small>
+                <?php endif; ?>
 
             </div>
 

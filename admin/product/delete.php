@@ -1,4 +1,3 @@
-
 <?php
 mysqli_report(MYSQLI_REPORT_OFF);
 
@@ -18,7 +17,6 @@ if (isset($_GET['id'])) {
         exit;
     }
 
-    // Get the product and its image path
     $sql = "SELECT image_path
             FROM tbl_products
             WHERE product_id = ?";
@@ -38,7 +36,6 @@ if (isset($_GET['id'])) {
         exit;
     }
 
-    // Check whether the product has stock movement history
     $sql = "SELECT movement_id
             FROM tbl_stock_movements
             WHERE product_id = ?
@@ -62,9 +59,6 @@ if (isset($_GET['id'])) {
         exit;
     }
 
-    // Check whether the product is referenced by an order item
-    // NOTE: Replace tbl_order_items and product_id below if your
-    // actual order-items table uses different names.
     $sql = "SELECT 1
             FROM tbl_order_items
             WHERE product_id = ?
@@ -98,7 +92,22 @@ if (isset($_GET['id'])) {
         exit;
     }
 
-    // Delete product only if it has no related history
+    $gallery_paths = [];
+
+    $stmt = mysqli_prepare($conn, "SELECT image_path FROM tbl_product_images WHERE product_id = ?");
+
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "i", $product_id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        while ($photo = mysqli_fetch_assoc($result)) {
+            $gallery_paths[] = $photo['image_path'];
+        }
+
+        mysqli_stmt_close($stmt);
+    }
+
     $sql = "DELETE FROM tbl_products
             WHERE product_id = ?";
 
@@ -109,13 +118,21 @@ if (isset($_GET['id'])) {
 
         mysqli_stmt_close($stmt);
 
-        // Delete the image only after successful database deletion
         if (!empty($row['image_path'])) {
 
             $image_file = '../../' . $row['image_path'];
 
             if (file_exists($image_file)) {
                 unlink($image_file);
+            }
+        }
+
+        foreach ($gallery_paths as $path) {
+
+            $photo_file = '../../' . $path;
+
+            if (file_exists($photo_file)) {
+                unlink($photo_file);
             }
         }
 

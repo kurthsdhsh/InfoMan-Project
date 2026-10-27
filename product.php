@@ -23,7 +23,28 @@ if (!$product) {
 $name = htmlspecialchars($product['product_name']);
 $qty  = (int) $product['stock_quantity'];
 $img  = $product['image_path'] ?? '';
+
+
+
+$slides = [];
+ 
+if ($img !== '') {
+    $slides[] = $img;
+}
+ 
+$galleryResult = mysqli_execute_query(
+    $conn,
+    "SELECT image_path FROM tbl_product_images WHERE product_id = ? ORDER BY image_id ASC",
+    [$id]
+);
+ 
+while ($photo = mysqli_fetch_assoc($galleryResult)) {
+    $slides[] = $photo['image_path'];
+}
+ 
+$slideCount = count($slides);
 ?>
+
 
 <div class="container my-4">
     <a href="/InfoMan-Project/index.php" class="text-reset text-decoration-none">&larr; Back to products</a>
@@ -31,10 +52,43 @@ $img  = $product['image_path'] ?? '';
     <div class="row mt-3">
 
         <div class="col-md-5">
-            <!-- PHOTO AREA: Member C's tbl_product_images gallery goes here later -->
-            <?php if ($img !== ''): ?>
-                <img src="/InfoMan-Project/<?php echo htmlspecialchars($img); ?>" class="img-fluid rounded"
-                    alt="<?php echo $name; ?>">
+              <?php if ($slideCount > 0): ?>
+ 
+                <div class="slideshow">
+ 
+                    <?php foreach ($slides as $i => $path): ?>
+                        <img src="/InfoMan-Project/<?php echo htmlspecialchars($path); ?>"
+                            class="slide <?php echo $i === 0 ? 'active' : ''; ?>"
+                            alt="<?php echo $name; ?> photo <?php echo $i + 1; ?>">
+                    <?php endforeach; ?>
+ 
+                    <?php if ($slideCount > 1): ?>
+                        <button type="button" class="slide-btn slide-prev" onclick="changeSlide(-1)"
+                            aria-label="Previous photo">&#10094;</button>
+                        <button type="button" class="slide-btn slide-next" onclick="changeSlide(1)"
+                            aria-label="Next photo">&#10095;</button>
+                        <span class="slide-count" id="slideCount">1 / <?php echo $slideCount; ?></span>
+                    <?php endif; ?>
+ 
+                </div>
+
+                    <?php if ($slideCount > 1): ?>
+                    <script>
+                        var currentSlide = 0;
+ 
+                        function changeSlide(step) {
+                            var slides = document.querySelectorAll('.slideshow .slide');
+ 
+                            slides[currentSlide].classList.remove('active');
+                            currentSlide = (currentSlide + step + slides.length) % slides.length;
+                            slides[currentSlide].classList.add('active');
+ 
+                            document.getElementById('slideCount').textContent =
+                                (currentSlide + 1) + ' / ' + slides.length;
+                        }
+                    </script>
+                <?php endif; ?>
+ 
             <?php else: ?>
                 <p class="text-muted">No photo yet.</p>
             <?php endif; ?>

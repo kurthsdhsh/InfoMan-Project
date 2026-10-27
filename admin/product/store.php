@@ -1,109 +1,128 @@
-
 <?php
 mysqli_report(MYSQLI_REPORT_OFF);
 
 include('../auth.php');
 include('../../includes/config.php');
+include('../../includes/product_validation.php');
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+    header("Location: products.php");
+    exit;
+}
 
-    $category_id = $_POST['category_id'] ?? '';
-    $product_name = trim($_POST['product_name'] ?? '');
-    $product_description = trim($_POST['product_description'] ?? '');
-    $unit_price = $_POST['unit_price'] ?? '';
-    $product_status = $_POST['product_status'] ?? 'Active';
+$category_id = productInput('category_id');
+$product_name = productInput('product_name');
+$product_description = productInput('product_description');
+$unit_price = productInput('unit_price');
+$product_status = productInput('product_status');
+$imageFile = $_FILES['image'] ?? ['error' => UPLOAD_ERR_NO_FILE];
+$photos = productPhotos();
 
-    // Check required fields
-    // Stock quantity is no longer required from the form.
-    if (
-        $category_id == '' ||
-        $product_name == '' ||
-        $unit_price == ''
-    ) {
-        $_SESSION['error'] = "Please complete all required fields.";
-        header("Location: product_form.php");
-        exit;
-    }
+$old = [
+    'category_id' => $category_id,
+    'product_name' => $product_name,
+    'product_description' => $product_description,
+    'unit_price' => $unit_price,
+    'product_status' => $product_status
+];
 
-    // Handle image upload
-    $image_path = '';
+$errors = validateProduct(
+    $conn,
+    $category_id,
+    $product_name,
+    $product_description,
+    $unit_price,
+    $product_status,
+    $imageFile
+);
 
-    if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+$errors = array_merge($errors, validatePhotos($photos, 0));
 
-        $image_name = $_FILES['image']['name'];
-        $image_tmp = $_FILES['image']['tmp_name'];
+if (!empty($errors)) {
+    $_SESSION['form_errors'] = $errors;
+    $_SESSION['form_old'] = $old;
+    header("Location: product_form.php");
+    exit;
+}
 
-        $image_extension = strtolower(
-            pathinfo($image_name, PATHINFO_EXTENSION)
-        );
+$image_path = '';
 
-        $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+if ($imageFile['error'] == UPLOAD_ERR_OK) {
 
-        if (!in_array($image_extension, $allowed_extensions)) {
-
-            $_SESSION['error'] = "Invalid image type.";
-            header("Location: product_form.php");
-            exit;
-        }
-
-        // Create a unique file name
-        $new_image_name = uniqid('product_') . '.' . $image_extension;
-
-        $upload_path = '../../uploads/products/' . $new_image_name;
-
-        if (move_uploaded_file($image_tmp, $upload_path)) {
-
-            $image_path = 'uploads/products/' . $new_image_name;
-
-        } else {
-
-            $_SESSION['error'] = "Failed to upload product image.";
-            header("Location: product_form.php");
-            exit;
-        }
-    }
-
-    // Insert product with stock quantity fixed at 0
-    $sql = "INSERT INTO tbl_products
-            (
-                category_id,
-                product_name,
-                product_description,
-                unit_price,
-                stock_quantity,
-                image_path,
-                product_status
-            )
-            VALUES (?, ?, ?, ?, 0, ?, ?)";
-
-    $stmt = mysqli_prepare($conn, $sql);
-
-    mysqli_stmt_bind_param(
-        $stmt,
-        "issdss",
-        $category_id,
-        $product_name,
-        $product_description,
-        $unit_price,
-        $image_path,
-        $product_status
+    $image_extension = strtolower(
+        pathinfo($imageFile['name'], PATHINFO_EXTENSION)
     );
 
-    if (mysqli_stmt_execute($stmt)) {
+    $new_image_name = uniqid('product_') . '.' . $image_extension;
+    $upload_path = '../../uploads/products/' . $new_image_name;
 
-        mysqli_stmt_close($stmt);
+    if (move_uploaded_file($imageFile['tmp_name'], $upload_path)) {
 
-        $_SESSION['success'] = "Product added successfully with 0 stock. Use Inventory Management to add stock.";
-        header("Location: products.php");
-        exit;
+        $image_path = 'uploads/products/' . $new_image_name;
 
     } else {
 
-        mysqli_stmt_close($stmt);
-
-        $_SESSION['error'] = "Failed to add product.";
+        $_SESSION['error'] = "Failed to upload product image.";
+        $_SESSION['form_old'] = $old;
         header("Location: product_form.php");
         exit;
     }
 }
-?>
+
+$category = (int)$category_id;
+$price = (float)$unit_price;
+
+$sql = "INSERT INTO tbl_products
+        (
+            category_id,
+            product_name,
+            product_description,
+            unit_price,
+            stock_quantity,
+            image_path,
+            product_status
+        )
+        VALUES (?, ?, ?, ?, 0, ?, ?)";
+
+$stmt = mysqli_prepare($conn, $sql);
+
+mysqli_stmt_bind_param(
+    $stmt,
+    "issdss",
+    $category,
+    $product_name,
+    $product_description,
+    $price,
+    $image_path,
+    $product_status
+);
+
+if (mysqli_stmt_execute($stmt)) {
+
+    $new_product_id = mysqli_insert_id($conn);
+    mysqli_stmt_close($stmt);
+
+    $saved = savePhotos($conn, $new_product_id, $photos);
+
+    $_SESSION['success'] = "Product added successfully with 0 stock. Use Inventory Management to add stock.";
+
+    if ($saved < count($photos)) {
+        $_SESSION['success'] .= " Some additional photos could not be saved.";
+    }
+
+    header("Location: products.php");
+    exit;
+
+} else {
+
+    mysqli_stmt_close($stmt);
+
+    if ($image_path != '' && file_exists($upload_path)) {
+        unlink($upload_path);
+    }
+
+    $_SESSION['error'] = "Failed to add product.";
+    $_SESSION['form_old'] = $old;
+    header("Location: product_form.php");
+    exit;
+}
