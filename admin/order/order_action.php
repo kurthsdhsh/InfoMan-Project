@@ -5,8 +5,15 @@ require_once '../../includes/config.php';
 require_once '../../includes/order_helpers.php';
 require_once '../../includes/email_templates.php';
 
-class StoreRuleError extends Exception
+function actionFail($conn, $message, $back, $do)
 {
+    mysqli_rollback($conn);
+    $_SESSION['error'] = $message;
+    if ($do === 'cancel' && isset($_SESSION['ao_form'])) {
+        $back .= '&cancel=1';
+    }
+    header('Location: ' . $back);
+    exit();
 }
 
 $adminId  = (int) $_SESSION['admin_id'];
@@ -31,7 +38,7 @@ if ($saved === '' || !hash_equals($saved, (string) ($_POST['token'] ?? ''))) {
 
 $reason  = trim((string) ($_POST['reason'] ?? ''));
 $restock = isset($_POST['restock']);
-$newStatus = null;   // set only after a successful commit, so we know an email is due
+$newStatus = null;   
 
 $pendingStatus = null;
 try {
@@ -44,17 +51,17 @@ try {
     );
     $order = mysqli_fetch_assoc($res);
     if (!$order) {
-        throw new StoreRuleError('That order was not found.');
+        actionFail($conn, 'That order was not found.', $back, $do);
     }
     $status = $order['order_status'];
     if ($status !== $from) {
-        throw new StoreRuleError('This order was just changed (it is now ' . $status . '). The page was refreshed, please check it.');
+        actionFail($conn, 'This order was just changed (it is now ' . $status . '). The page was refreshed, please check it.', $back, $do);
     }
 
     if ($do === 'next') {
         $step = nextOrderStep($status, $order['fulfillment_method']);
         if (!$step) {
-            throw new StoreRuleError('This order cannot move to a next step from here.');
+            actionFail($conn, 'This order cannot move to a next step from here.', $back, $do);
         }
         mysqli_execute_query($conn, "UPDATE tbl_orders SET order_status = ? WHERE order_id = ?", [$step[0], $orderId]);
         $done = orderNumber($orderId) . ' is now ' . $step[0] . '.';
@@ -62,7 +69,7 @@ try {
 
     } elseif ($do === 'complete') {
         if ($status !== 'Ready' && $status !== 'Out for Delivery') {
-            throw new StoreRuleError('Cash can be received only when the order is Ready or Out for Delivery.');
+            actionFail($conn, 'Cash can be received only when the order is Ready or Out for Delivery.', $back, $do);
         }
 
         $res = mysqli_execute_query(
@@ -80,7 +87,7 @@ try {
             [$total, $adminId, $orderId]
         );
         if (mysqli_affected_rows($conn) !== 1) {
-            throw new StoreRuleError('The payment of this order is not Unpaid, so nothing was changed.');
+            actionFail($conn, 'The payment of this order is not Unpaid, so nothing was changed.', $back, $do);
         }
         mysqli_execute_query($conn, "UPDATE tbl_orders SET order_status = 'Completed' WHERE order_id = ?", [$orderId]);
         $done = orderNumber($orderId) . ' is completed. Cash received: ' . peso($total) . '.';
@@ -88,11 +95,11 @@ try {
 
     } else {   // cancel
         if (!storeCanCancel($status)) {
-            throw new StoreRuleError('This order is already ' . $status . ', so it cannot be cancelled.');
+            actionFail($conn, 'This order is already ' . $status . ', so it cannot be cancelled.', $back, $do);
         }
         if (mb_strlen($reason) < 5) {
             $_SESSION['ao_form'] = ['reason' => $reason] + ($restock ? ['restock' => 1] : []);
-            throw new StoreRuleError('Please write the reason for cancelling (at least 5 letters). The customer will see it.');
+            actionFail($conn, 'Please write the reason for cancelling (at least 5 letters). The customer will see it.', $back, $do);
         }
 
         if ($restock) {
@@ -127,25 +134,18 @@ try {
     $_SESSION['success'] = $done;
     $newStatus = $pendingStatus;   // the change is saved for good
 
-} catch (StoreRuleError $e) {
-    mysqli_rollback($conn);
-    $_SESSION['error'] = $e->getMessage();
-    if ($do === 'cancel' && isset($_SESSION['ao_form'])) {
-        $back .= '&cancel=1';                                    
-    }
 } catch (Throwable $e) {
     mysqli_rollback($conn);                                      
     error_log('order_action failed: ' . $e->getMessage());
     $_SESSION['error'] = 'Something went wrong and nothing was changed. Please try again.';
 }
 
-// Email the customer. This is OUTSIDE the transaction on purpose:
-// the status is already saved, and a mail error must never undo it.
 if ($newStatus !== null) {
     if (sendOrderStatusEmail($conn, $orderId)) {
         $_SESSION['success'] .= ' An email was sent to the customer.';
     } else {
-        $_SESSION['success'] .= ' (The email to the customer could not be sent.)';
+        $why = mb_substr(strip_tags((string) ($GLOBALS['last_mail_error'] ?? '')), 0, 250);
+        $_SESSION['success'] .= ' (The email to the customer could not be sent: ' . ($why !== '' ? $why : 'unknown reason') . ')';
     }
 }
 

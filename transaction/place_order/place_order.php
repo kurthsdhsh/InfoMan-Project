@@ -5,8 +5,10 @@ include('../../includes/config.php');
 require_once __DIR__ . '/../../includes/order_helpers.php';
 require_once __DIR__ . '/../../includes/email_templates.php';
 
-class OrderRuleError extends Exception
+function orderFail($conn, $message)
 {
+    mysqli_rollback($conn);
+    backToCheckout([$message]);
 }
 
 $checkoutPage = '/InfoMan-Project/transaction/checkout/checkout.php';
@@ -32,7 +34,7 @@ $token = $_POST['token'] ?? '';
 $saved = $_SESSION['place_token'] ?? '';
 unset($_SESSION['place_token']);
 if ($saved === '' || !hash_equals($saved, $token)) {
-    if (!empty($_SESSION['last_order_id'])) {          // just placed it: show that order again
+    if (!empty($_SESSION['last_order_id'])) {          
         header('Location: ' . $successPage . '?id=' . (int) $_SESSION['last_order_id']);
         exit();
     }
@@ -110,7 +112,7 @@ try {
     // fake-order guard
     $res = mysqli_execute_query($conn, "SELECT COUNT(*) AS n FROM tbl_orders WHERE customer_id = ? AND order_status = 'Pending'", [$customerId]);
     if ((int) mysqli_fetch_assoc($res)['n'] >= MAX_PENDING_ORDERS) {
-        throw new OrderRuleError('You already have ' . MAX_PENDING_ORDERS . ' pending orders. Please wait for the store to confirm them first.');
+        orderFail($conn, 'You already have ' . MAX_PENDING_ORDERS . ' pending orders. Please wait for the store to confirm them first.');
     }
 
     $ids   = array_map(fn($l) => $l['product_id'], $lines);
@@ -124,10 +126,10 @@ try {
     foreach ($lines as $l) {
         $p = $products[$l['product_id']] ?? null;
         if (!$p || $p['product_status'] !== 'Active') {
-            throw new OrderRuleError($l['name'] . ' is no longer available.');
+            orderFail($conn, $l['name'] . ' is no longer available.');
         }
         if ($l['qty'] > (int) $p['stock_quantity']) {
-            throw new OrderRuleError('Only ' . (int) $p['stock_quantity'] . ' left of ' . $p['product_name'] . '.');
+            orderFail($conn, 'Only ' . (int) $p['stock_quantity'] . ' left of ' . $p['product_name'] . '.');
         }
     }
 
@@ -154,7 +156,7 @@ try {
         $res = mysqli_execute_query($conn, "SELECT delivery_fee FROM tbl_delivery_areas WHERE area_id = ? LIMIT 1", [$areaId]);
         $fee = mysqli_fetch_assoc($res);
         if (!$fee) {
-            throw new OrderRuleError('We no longer deliver to that city. Please choose another city.');
+            orderFail($conn, 'We no longer deliver to that city. Please choose another city.');
         }
         mysqli_execute_query($conn, "INSERT INTO tbl_deliveries (order_id, area_id, delivery_address, delivery_fee) VALUES (?, ?, ?, ?)", [$orderId, $areaId, $address, $fee['delivery_fee']]);
     }
@@ -166,10 +168,7 @@ try {
     );
 
     mysqli_commit($conn);   
-} catch (OrderRuleError $e) {            
-    mysqli_rollback($conn);
-    backToCheckout([$e->getMessage()]);
-} catch (Throwable $e) {                 
+} catch (Throwable $e) {
     mysqli_rollback($conn);
     error_log('place_order failed: ' . $e->getMessage());
     backToCheckout(['Something went wrong and your order was NOT placed. Please try again.']);
@@ -178,6 +177,7 @@ try {
 
 unset($_SESSION['cart_products'], $_SESSION['checkout'], $_SESSION['pending_add']);
 $_SESSION['last_order_id'] = $orderId;
+
 
 sendOrderStatusEmail($conn, $orderId);
 

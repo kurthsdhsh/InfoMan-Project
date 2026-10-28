@@ -5,15 +5,20 @@ include('../includes/config.php');
 require_once __DIR__ . '/../includes/order_helpers.php';
 require_once __DIR__ . '/../includes/email_templates.php';
 
-class CancelRuleError extends Exception
+
+function cancelFail($conn, $message, $back)
 {
+    mysqli_rollback($conn);
+    $_SESSION['mo_error'] = $message;
+    header('Location: ' . $back);
+    exit();
 }
 
 requireCustomer();
 $customerId = (int) $_SESSION['customer_id'];
 $orderId    = (int) ($_POST['order_id'] ?? 0);
 $viewPage   = '/InfoMan-Project/user/order_view.php?id=' . $orderId;
-$cancelled  = false;   // becomes true only after the cancel is saved
+$cancelled  = false;   
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || $orderId < 1) {
     header('Location: /InfoMan-Project/user/myorders.php');
@@ -38,13 +43,13 @@ try {
     );
     $order = mysqli_fetch_assoc($res);
     if (!$order) {
-        throw new CancelRuleError('We could not find that order.');
+        cancelFail($conn, 'We could not find that order.', $viewPage);
     }
     if ($order['order_status'] === 'Cancelled') {
-        throw new CancelRuleError('This order was already cancelled.');
+        cancelFail($conn, 'This order was already cancelled.', $viewPage);
     }
     if ($order['order_status'] !== 'Pending') {
-        throw new CancelRuleError('The store is already working on this order, so it can no longer be cancelled here. Please contact the store.');
+        cancelFail($conn, 'The store is already working on this order, so it can no longer be cancelled here. Please contact the store.', $viewPage);
     }
 
     $res   = mysqli_execute_query($conn, "SELECT product_id, quantity FROM tbl_order_items WHERE order_id = ? ORDER BY product_id", [$orderId]);
@@ -70,11 +75,8 @@ try {
     mysqli_commit($conn);
     $cancelled = true;
     $_SESSION['mo_message'] = 'Your order ' . orderNumber($orderId) . ' was cancelled.';
-} catch (CancelRuleError $e) {
-    mysqli_rollback($conn);
-    $_SESSION['mo_error'] = $e->getMessage();
 } catch (Throwable $e) {
-    mysqli_rollback($conn);                                  
+    mysqli_rollback($conn);                                   // nothing was saved
     error_log('cancel_order failed: ' . $e->getMessage());
     $_SESSION['mo_error'] = 'Something went wrong and your order was NOT cancelled. Please try again.';
 }
