@@ -2,6 +2,7 @@
 require __DIR__ . '/../PHPMailer/src/Exception.php';
 require __DIR__ . '/../PHPMailer/src/PHPMailer.php';
 require __DIR__ . '/../PHPMailer/src/SMTP.php';
+require __DIR__ . '/../config/mail_config.php';
 
 define('MAIL_HOST', 'sandbox.smtp.mailtrap.io');
 define('MAIL_PORT', 2525);
@@ -15,14 +16,14 @@ define('BASE_URL',  'http://localhost/InfoMan-Project');
     $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
     try {
         $mail->isSMTP();
-        $mail->Host       = 'sandbox.smtp.mailtrap.io';
+        $mail->Host     = MAIL_HOST;
         $mail->SMTPAuth   = true;
-        $mail->Username   = '78e3dc74e9f7cf';
-        $mail->Password   = '08f7d417c4ffcc';
+        $mail->Username = MAIL_USER;
+        //$mail->Password   = '08f7d417c4ffcc';
         // $mail->Username   = 'c6936cafdcc61a';
-        // $mail->Password   = '77682cc3ef3793';
+        $mail->Password = MAIL_PASS;
         $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = 2525;
+        $mail->Port     = MAIL_PORT;
 
         $mail->setFrom(MAIL_FROM, 'KURDIELLA\'S BAGUIO TREASURES');
         $mail->addAddress($toEmail);

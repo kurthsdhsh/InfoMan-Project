@@ -1,0 +1,4 @@
+config/mail_config.php
+.vscode/ 
+Thumbs.db
+*.log 
