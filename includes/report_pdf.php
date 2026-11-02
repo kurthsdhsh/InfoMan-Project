@@ -2,6 +2,7 @@
 
 date_default_timezone_set('Asia/Manila');
 require_once __DIR__ . '/fpdf/fpdf.php';
+require_once __DIR__ . '/store_info.php';
 
 function pdfText($text)
 {
@@ -47,7 +48,7 @@ class ReportPDF extends FPDF
         $this->SetTextColor(255, 243, 220);
         $this->SetFont('Arial', '', 8);
         $this->SetXY(10, 6);
-        $this->Cell($pageWidth - 20, 4, 'BAGUIO PASALUBONG SHOP', 0, 0, 'L');
+        $this->Cell($pageWidth - 20, 4, pdfText(STORE_NAME), 0, 0, 'L');
         $this->SetXY(10, 6);
         $this->Cell($pageWidth - 20, 4, 'ADMIN REPORT', 0, 0, 'R');
 
