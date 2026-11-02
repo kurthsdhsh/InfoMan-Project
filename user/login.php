@@ -69,45 +69,77 @@ if (isset($_POST['submit'])) {
 include("../includes/head.php");
 
 ?>
-<div class="row col-md-8 mx-auto ">
-    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+<link rel="stylesheet" href="/InfoMan-Project/includes/style/auth.css?v=<?php echo time(); ?>">
 
-        <?php if ($success): ?>
-            <div class="alert alert-success" role="alert"><?php echo htmlspecialchars($success); ?></div>
-        <?php endif; ?>
-        <?php if ($error): ?>
-            <div class="alert alert-danger" role="alert"><?php echo htmlspecialchars($error); ?></div>
-        <?php endif; ?>
+<div class="auth-page">
 
-        <!-- Email input -->
-        <div class="form-outline mb-4">
-           <input type="text" id="form2Example1" class="form-control" name="email"
-            value="<?php echo htmlspecialchars($email); ?>" />
-            <?php if (isset($errors['email'])): ?><div class="text-danger small"><?php echo $errors['email']; ?></div><?php endif; ?>
-            <label class="form-label" for="form2Example1">Email address</label>
+    <a href="/InfoMan-Project/index.php" class="auth-back">
+        <i class="fa-solid fa-arrow-left"></i> Back to home
+    </a>
+
+    <div class="auth-card">
+
+        <div class="auth-form-wrap">
+            <h1>Sign in</h1>
+            <p class="auth-sub">Welcome back! Please enter your details.</p>
+
+            <?php if ($success): ?>
+                <div class="auth-alert success" role="alert"><?php echo htmlspecialchars($success); ?></div>
+            <?php endif; ?>
+            <?php if ($error): ?>
+                <div class="auth-alert danger" role="alert"><?php echo htmlspecialchars($error); ?></div>
+            <?php endif; ?>
+
+            <form action="" method="POST">
+
+                <!-- Email input -->
+                <div class="auth-field <?php echo isset($errors['email']) ? 'has-error' : ''; ?>">
+                    <label for="form2Example1">Email address</label>
+                    <div class="auth-input">
+                        <i class="fa-regular fa-envelope"></i>
+                        <input type="text" id="form2Example1" name="email" placeholder="you@example.com"
+                            value="<?php echo htmlspecialchars($email); ?>" />
+                    </div>
+                    <?php if (isset($errors['email'])): ?>
+                        <div class="auth-error"><?php echo htmlspecialchars($errors['email']); ?></div>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Password input -->
+                <div class="auth-field <?php echo isset($errors['password']) ? 'has-error' : ''; ?>">
+                    <label for="form2Example2">Password</label>
+                    <div class="auth-input">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="form2Example2" name="password" placeholder="Enter your password" />
+                    </div>
+                    <?php if (isset($errors['password'])): ?>
+                        <div class="auth-error"><?php echo htmlspecialchars($errors['password']); ?></div>
+                    <?php endif; ?>
+                </div>
+
+                <div class="auth-forgot">
+                    <a href="forgot_password.php">Forgot Password?</a>
+                </div>
+
+                <!-- Submit button -->
+                <button type="submit" class="auth-btn" name="submit">Sign in</button>
+
+                <p class="auth-switch">Not a member? <a href="register.php">Register</a></p>
+
+            </form>
         </div>
 
-        <!-- Password input -->
-        <div class="form-outline mb-4">
-            <input type="password" id="form2Example2" class="form-control" name="password" />
-            <?php if (isset($errors['password'])): ?><div class="text-danger small"><?php echo $errors['password']; ?></div><?php endif; ?>
-            <label class="form-label" for="form2Example2">Password</label>
+        <div class="auth-brand">
+            <div class="auth-logo"><i class="fa-solid fa-store"></i></div>
+            <div class="auth-store">Kurdiella's Baguio Treasures</div>
+            <h2>Welcome back!</h2>
+            <p>Good to see you again. Sign in to order your favorite Baguio pasalubong and track your orders.</p>
+            <ul>
+                <li><i class="fa-solid fa-basket-shopping"></i> Easy ordering</li>
+                <li><i class="fa-solid fa-truck-fast"></i> Pick-up or delivery</li>
+                <li><i class="fa-solid fa-receipt"></i> Receipts sent to your email</li>
+            </ul>
         </div>
 
-        
-            <p class="form-outline mb-4">
-                <a href="forgot_password.php" style="font-size: 12px;">Forgot Password?</a>
-            </p>
-
-        
-
-        <!-- Submit button -->
-        <button type="submit" class="btn btn-primary btn-block mb-4" name="submit">Sign in</button>
-
-        <!-- Register buttons -->
-        <div class="text-center">
-            <p>Not a member? <a href="register.php">Register</a></p>
-        </div>
-
-    </form>
+    </div>
 </div>

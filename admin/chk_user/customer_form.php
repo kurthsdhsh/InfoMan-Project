@@ -11,7 +11,7 @@ $customer_id = (int)($_GET['id'] ?? $_POST['customer_id'] ?? 0);
 // ---------- load the customer ----------
 $result = mysqli_execute_query(
     $conn,
-    "SELECT customer_id, first_name, last_name, email, contact_number, account_status, role
+    "SELECT customer_id, first_name, last_name, email, contact_number, account_status, role, profile_photo
     FROM tbl_customers WHERE customer_id = ? LIMIT 1",
     [$customer_id]
 );
@@ -35,6 +35,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $account_status = $_POST['account_status'] ?? '';
     $role           = $_POST['role'] ?? '';
 
+    $photoErr = $_FILES['profile_photo']['error'] ?? UPLOAD_ERR_NO_FILE;
+        $ext = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp']
+            [$photoErr === UPLOAD_ERR_OK ? mime_content_type($_FILES['profile_photo']['tmp_name']) : ''] ?? null;
+
     if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'] ?? '')) {
         $error = 'Invalid request. Please try again.'; //protection checker
     } elseif ($first_name === '' || $last_name === '') {
@@ -50,6 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($customer_id === (int)$_SESSION['admin_id']
               && ($role !== $customer['role'] || $account_status !== 'Active')) {
         $error = 'You cannot change your own role or deactivate yourself.';
+    } elseif ($photoErr !== UPLOAD_ERR_NO_FILE && (!$ext || $_FILES['profile_photo']['size'] > 2 * 1024 * 1024)) {
+    $error = 'Photo must be a JPG, PNG or WEBP under 2MB.';
     } else {
         try {
             // check lang if nagamit naba yung email ng iba
@@ -62,12 +68,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (mysqli_num_rows($check) > 0) {
                 $error = 'That email is already used by another customer.';
             } else {
+                $photo = null;
+                if ($photoErr === UPLOAD_ERR_OK) {
+                    $photo = 'uploads/profiles/' . bin2hex(random_bytes(8)) . '.' . $ext;
+                    move_uploaded_file($_FILES['profile_photo']['tmp_name'], '../../' . $photo);
+                    if (!empty($customer['profile_photo'])) {
+                        @unlink('../../' . $customer['profile_photo']); // remove old photo
+                    }
+                }
+
                 mysqli_execute_query(
                     $conn,
                     "UPDATE tbl_customers
-                    SET first_name = ?, last_name = ?, email = ?, contact_number = ?, account_status = ?, role = ?
+                    SET first_name = ?, last_name = ?, email = ?, contact_number = ?, account_status = ?, role = ?,
+                        profile_photo = COALESCE(?, profile_photo)
                     WHERE customer_id = ?",
-                    [$first_name, $last_name, $email, $contact_number, $account_status, $role, $customer_id]
+                    [$first_name, $last_name, $email, $contact_number, $account_status, $role, $photo, $customer_id]
                 );
 
                 $_SESSION['success'] = 'Customer details updated.';
@@ -106,7 +122,7 @@ include('../../includes/adminSidebar.php');
             <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
-        <form action="customer_form.php?id=<?= (int)$customer['customer_id'] ?>" method="POST">
+        <form action="customer_form.php?id=<?= (int)$customer['customer_id'] ?>" method="POST" enctype="multipart/form-data">
 
             <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
             <input type="hidden" name="customer_id" value="<?= (int)$customer['customer_id'] ?>">
@@ -161,6 +177,16 @@ include('../../includes/adminSidebar.php');
                     <?php endforeach; ?>
                 </select>
                 <div class="form-text">Admins can open the admin pages. You cannot change your own role.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="profile_photo" class="form-label">Profile photo</label>
+                <?php if (!empty($customer['profile_photo'])): ?>
+                   <img src="../../<?= htmlspecialchars($customer['profile_photo']) ?>" alt="" height="60">
+                <?php endif; ?>
+                <input type="file" class="form-control" id="profile_photo" name="profile_photo"
+                    accept="image/jpeg,image/png,image/webp">
+                <div class="form-text">Leave empty to keep the current photo.</div>
             </div>
 
             <div class="d-flex gap-2">
