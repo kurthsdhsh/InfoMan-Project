@@ -4,7 +4,6 @@ $pageTitle = 'Admin Dashboard';
 include('../includes/adminSidebar.php');
 include('../includes/config.php');
 
-// ---- table / column names: change these if yours are different ----
 $stockMovesTable     = 'tbl_stock_movements';
 $ordersTable         = 'tbl_orders';
 $orderStatusColumn   = 'order_status';
