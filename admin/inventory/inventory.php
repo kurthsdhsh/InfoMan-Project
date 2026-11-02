@@ -3,6 +3,8 @@ include('../auth.php');
 include('../../includes/config.php');
 include('../../includes/filter_helper.php');
 
+$pageTitle = 'Inventory Management';
+
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 // process stock updates

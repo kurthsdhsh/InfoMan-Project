@@ -4,6 +4,8 @@ require_once '../../includes/config.php';
 require_once '../../includes/order_helpers.php';
 require_once '../../includes/report_helpers.php';
 
+$pageTitle = 'Best-Selling Products';
+
 [$from, $to, $error] = getReportDates();
 
 $sql = "SELECT p.product_name, c.category_name,

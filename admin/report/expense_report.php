@@ -4,6 +4,8 @@ require_once '../../includes/config.php';
 require_once '../../includes/order_helpers.php';
 require_once '../../includes/report_helpers.php';
 
+$pageTitle = 'Expenses Summary';
+
 [$from, $to, $error] = getReportDates();
 
 $sql = "SELECT e.expense_type,

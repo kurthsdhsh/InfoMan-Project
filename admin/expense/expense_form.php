@@ -4,6 +4,7 @@ require_once '../../includes/config.php';
 
 $expense_id = filter_input(INPUT_GET, 'expense_id', FILTER_VALIDATE_INT);
 $is_edit = $expense_id !== null && $expense_id !== false && $expense_id > 0;
+$pageTitle = $is_edit ? 'Edit Expense' : 'Add Expense';
 
 $expense = [
     'expense_type' => '',

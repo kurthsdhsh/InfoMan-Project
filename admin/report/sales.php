@@ -4,6 +4,8 @@ require_once '../../includes/config.php';
 require_once '../../includes/order_helpers.php';
 require_once '../../includes/report_helpers.php';
 
+$pageTitle = 'Sales Report';
+
 [$from, $to, $error] = getReportDates();
 
 $sql = "SELECT o.order_id, o.order_date, o.fulfillment_method,
