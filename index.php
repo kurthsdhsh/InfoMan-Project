@@ -3,7 +3,7 @@ session_start();
 include('./includes/config.php');
 include('./includes/header.php');
 
-// ---- EDIT THIS: the image column in tbl_products (I couldn't see it in your query) ----
+
 $imageColumn = 'image_path';
 ?>
 <h1 class="text-center my-4">Products</h1>

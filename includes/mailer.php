@@ -4,11 +4,6 @@ require __DIR__ . '/../PHPMailer/src/PHPMailer.php';
 require __DIR__ . '/../PHPMailer/src/SMTP.php';
 require __DIR__ . '/../config/mail_config.php';
 
-define('MAIL_HOST', 'sandbox.smtp.mailtrap.io');
-define('MAIL_PORT', 2525);
-define('MAIL_USER', 'PASTE_SANDBOX_USERNAME');
-define('MAIL_PASS', 'PASTE_SANDBOX_PASSWORD');
-define('MAIL_FROM', 'noreply@myshop.test');
 define('BASE_URL',  'http://localhost/InfoMan-Project');
 
    function sendMail($toEmail, $subject, $htmlBody, array $attachments = [])
