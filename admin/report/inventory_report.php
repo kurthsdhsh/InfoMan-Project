@@ -3,6 +3,8 @@ require_once '../auth.php';
 require_once '../../includes/config.php';
 require_once '../../includes/order_helpers.php';
 
+$pageTitle = 'Inventory and Low Stock';
+
 $sql = "SELECT p.product_name, c.category_name, p.stock_quantity, p.reorder_level
         FROM tbl_products p
         INNER JOIN tbl_categories c ON p.category_id = c.category_id

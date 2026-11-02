@@ -3,6 +3,8 @@ include('../auth.php');
 include('../../includes/config.php');
 include('../../includes/filter_helper.php');
 
+$pageTitle = 'Stock History';
+
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 

@@ -4,6 +4,8 @@ require_once '../../includes/config.php';
 require_once '../../includes/order_helpers.php';
 require_once '../../includes/report_helpers.php';
 
+$pageTitle = 'Total Income and Net Income';
+
 [$from, $to, $error] = getReportDates();
 
 $incomeSql = "SELECT COALESCE(SUM(amount_paid), 0) AS total_income,

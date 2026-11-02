@@ -3,6 +3,7 @@ require_once '../auth.php';
 require_once '../../includes/config.php';
 require_once '../../includes/filter_helper.php';
 
+$pageTitle = 'Expense Management';
 
 // Read search and expense-type filters.
 $search = adminFilterValue('search');
