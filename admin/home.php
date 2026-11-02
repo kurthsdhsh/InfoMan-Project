@@ -10,7 +10,6 @@ $orderStatusColumn   = 'order_status';
 $pendingValue        = 'Pending';
 $expensesTable       = 'tbl_expenses';
 $expenseAmountColumn = 'amount';
-$lowStockLimit       = 5;     // products with this many or fewer are "low stock"
 
 // runs a query that returns one number; returns null if the table/column does not exist
 function dashValue($conn, $sql)
@@ -36,8 +35,8 @@ $categoryCount  = dashValue($conn, "SELECT COUNT(*) FROM tbl_categories");
 $productCount   = dashValue($conn, "SELECT COUNT(*) FROM tbl_products");
 $activeProducts = dashValue($conn, "SELECT COUNT(*) FROM tbl_products WHERE product_status = 'Active'");
 $totalStock     = dashValue($conn, "SELECT COALESCE(SUM(stock_quantity), 0) FROM tbl_products");
-$lowStock       = dashValue($conn, "SELECT COUNT(*) FROM tbl_products WHERE stock_quantity > 0 AND stock_quantity <= $lowStockLimit");
-$outOfStock     = dashValue($conn, "SELECT COUNT(*) FROM tbl_products WHERE stock_quantity <= 0");
+$lowStock       = dashValue($conn, "SELECT COUNT(*) FROM tbl_products WHERE stock_quantity > 0 AND stock_quantity <= reorder_level"); //fixed
+$outOfStock     = dashValue($conn, "SELECT COUNT(*) FROM tbl_products WHERE stock_quantity = 0");
 $movementCount  = dashValue($conn, "SELECT COUNT(*) FROM $stockMovesTable");
 $orderCount     = dashValue($conn, "SELECT COUNT(*) FROM $ordersTable");
 $pendingOrders  = dashValue($conn, "SELECT COUNT(*) FROM $ordersTable WHERE $orderStatusColumn = '$pendingValue'");
@@ -56,9 +55,9 @@ $cards = [
 // products that need restocking
 $lowStockResult = mysqli_query(
     $conn,
-    "SELECT product_id, product_name, stock_quantity, product_status
+    "SELECT product_id, product_name, stock_quantity, reorder_level, product_status
      FROM tbl_products
-     WHERE stock_quantity <= " . (int)$lowStockLimit . "
+     WHERE stock_quantity <= reorder_level
      ORDER BY stock_quantity ASC, product_id DESC
      LIMIT 8"
 );
@@ -95,6 +94,7 @@ $lowStockResult = mysqli_query(
                     <th>ID</th>
                     <th>Name</th>
                     <th>Stock</th>
+                    <th>Reorder Level</th>
                     <th>Status</th>
                 </tr>
             </thead>
@@ -109,12 +109,13 @@ $lowStockResult = mysqli_query(
                             <td><?= (int)$row['product_id'] ?></td>
                             <td><?= htmlspecialchars($row['product_name']) ?></td>
                             <td><span class="status <?= $stockClass ?>"><?= (int)$row['stock_quantity'] ?></span></td>
+                            <td><?= (int)$row['reorder_level'] ?></td>
                             <td><span class="status <?= $statusClass ?>"><?= htmlspecialchars($row['product_status']) ?></span></td>
                         </tr>
                     <?php endwhile; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="4">All products are well stocked.</td>
+                        <td colspan="5">All products are well stocked.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
