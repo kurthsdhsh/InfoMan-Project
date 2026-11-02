@@ -35,7 +35,7 @@ $categoryCount  = dashValue($conn, "SELECT COUNT(*) FROM tbl_categories");
 $productCount   = dashValue($conn, "SELECT COUNT(*) FROM tbl_products");
 $activeProducts = dashValue($conn, "SELECT COUNT(*) FROM tbl_products WHERE product_status = 'Active'");
 $totalStock     = dashValue($conn, "SELECT COALESCE(SUM(stock_quantity), 0) FROM tbl_products");
-$lowStock       = dashValue($conn, "SELECT COUNT(*) FROM tbl_products WHERE stock_quantity > 0 AND stock_quantity <= reorder_level");
+$lowStock       = dashValue($conn, "SELECT COUNT(*) FROM tbl_products WHERE stock_quantity > 0 AND stock_quantity <= reorder_level"); //fixed
 $outOfStock     = dashValue($conn, "SELECT COUNT(*) FROM tbl_products WHERE stock_quantity = 0");
 $movementCount  = dashValue($conn, "SELECT COUNT(*) FROM $stockMovesTable");
 $orderCount     = dashValue($conn, "SELECT COUNT(*) FROM $ordersTable");
