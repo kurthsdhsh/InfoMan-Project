@@ -46,14 +46,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['role'] = 'Invalid role.';
     }
 
+    $photo = null;
+    $photoErr = $_FILES['profile_photo']['error'] ?? UPLOAD_ERR_NO_FILE;
+    if ($photoErr === UPLOAD_ERR_OK) {
+    $photo = 'uploads/profiles/' . bin2hex(random_bytes(8)) . '.' . $ext;
+    move_uploaded_file($_FILES['profile_photo']['tmp_name'], '../../' . $photo);
+    }
+
     if (empty($errors)) {
         try {
+                if ($photoErr === UPLOAD_ERR_OK) {
+                    $photo = bin2hex(random_bytes(8)) . '.' . $ext;
+                    move_uploaded_file($_FILES['profile_photo']['tmp_name'], '../../uploads/profiles/' . $photo);
+                }
+
+
             mysqli_execute_query(
                 $conn,
-                "INSERT INTO tbl_customers (first_name, last_name, email, password_hash, contact_number, account_status, role)
-                 VALUES (?, ?, ?, ?, ?, 'Active', ?)",
+                "INSERT INTO tbl_customers (first_name, last_name, email, password_hash, contact_number, account_status, role, profile_photo)
+                VALUES (?, ?, ?, ?, ?, 'Active', ?, ?)",
                 [$old['first_name'], $old['last_name'], $old['email'],
-                 password_hash($password, PASSWORD_BCRYPT), $old['contact_number'], $old['role']]
+                password_hash($password, PASSWORD_BCRYPT), $old['contact_number'], $old['role'], $photo]
             );
             $_SESSION['success'] = 'User added.';
             header("Location: user.php");
@@ -80,7 +93,7 @@ include('../../includes/adminSidebar.php');
             <div class="alert alert-danger"><?= htmlspecialchars($errors['general']) ?></div>
         <?php endif; ?>
 
-        <form action="user_add.php" method="POST">
+        <form action="user_add.php" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
 
             <div class="row">
@@ -128,6 +141,13 @@ include('../../includes/adminSidebar.php');
                     <?php endforeach; ?>
                 </select>
                 <?php if (isset($errors['role'])): ?><div class="text-danger small"><?= $errors['role'] ?></div><?php endif; ?>
+            </div>
+
+            <div class="mb-3">
+                <label for="profile_photo" class="form-label">Profile photo</label>
+                <input type="file" class="form-control" id="profile_photo" name="profile_photo"
+                    accept="image/jpeg,image/png,image/webp">
+                <?php if (isset($errors['profile_photo'])): ?><div class="text-danger small"><?= $errors['profile_photo'] ?></div><?php endif; ?>
             </div>
 
             <div class="d-flex gap-2">
