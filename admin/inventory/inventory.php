@@ -7,37 +7,68 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 // process stock updates
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_stock'])) {
-    $product_id = filter_var(
-        $_POST['product_id'] ?? '',
-        FILTER_VALIDATE_INT
-    );
-
+    
+    $product_id = trim($_POST['product_id'] ?? '');
     $movement_type = $_POST['movement_type'] ?? '';
-    $quantity = filter_var(
-        $_POST['quantity'] ?? '',
-        FILTER_VALIDATE_INT
-    );
+    $quantity_input = trim($_POST['quantity'] ?? '');
     $reason = trim($_POST['reason'] ?? '');
-
     $admin_id = $_SESSION['admin_id'] ?? null;
 
-    if (
-        !$product_id ||
-        !$quantity ||
-        !in_array($movement_type, ['Restock', 'Adjustment'], true) ||
-        $reason === '' ||
-        !$admin_id
-    ) {
-        $_SESSION['error'] = "Please complete all fields correctly.";
+    $old = [
+        'product_id' => $product_id,
+        'movement_type' => $movement_type,
+        'quantity' => $quantity_input,
+        'reason' => $reason
+    ];
+
+    $errors = [];
+
+    if ($product_id === '') {
+        $errors['product'] = 'Please select a product.';
+    } elseif (!ctype_digit($product_id)) {
+        $errors['product'] = 'Invalid product.';
+    }
+
+    if ($movement_type === '') {
+        $errors['movement'] = 'Please select a movement type.';
+    } elseif (!in_array($movement_type, ['Restock', 'Adjustment'], true)) {
+        $errors['movement'] = 'Invalid movement type.';
+    }
+
+    if ($quantity_input === '') {
+        $errors['quantity'] = 'Please enter the quantity change.';
+    } elseif (!preg_match('/^-?\d+$/', $quantity_input)) {
+        $errors['quantity'] = 'Quantity must be a whole number, like 10 or -2.';
+    } elseif ((int)$quantity_input == 0) {
+        $errors['quantity'] = 'Quantity cannot be zero.';
+    } elseif (abs((int)$quantity_input) > 1000000) {
+        $errors['quantity'] = 'Quantity is too large.';
+    } elseif ($movement_type === 'Restock' && (int)$quantity_input < 0) {
+        $errors['quantity'] = 'Restock quantity must be greater than zero.';
+    }
+
+    if ($reason === '') {
+        $errors['reason'] = 'Please enter the reason.';
+    } elseif (mb_strlen($reason) > 255) {
+        $errors['reason'] = 'Reason must not be more than 255 characters.';
+    }
+
+    if (!empty($errors)) {
+        $_SESSION['form_errors'] = $errors;
+        $_SESSION['form_old'] = $old;
         header("Location: inventory.php");
         exit;
     }
 
-    if ($movement_type === 'Restock' && $quantity < 1) {
-        $_SESSION['error'] = "Restock quantity must be greater than zero.";
+    if (!$admin_id) {
+        $_SESSION['error'] = "Unable to identify the logged-in admin.";
         header("Location: inventory.php");
         exit;
     }
+
+    $product_id = (int)$product_id;
+    $quantity = (int)$quantity_input;
+
 
     try {
         $conn->begin_transaction();
@@ -130,6 +161,11 @@ $sql = "SELECT product_id, product_name, stock_quantity
         ORDER BY product_name ASC";
 
 $productResult = mysqli_query($conn, $sql);
+
+$errors = $_SESSION['form_errors'] ?? [];
+$old = $_SESSION['form_old'] ?? [];
+
+unset($_SESSION['form_errors'], $_SESSION['form_old']);
 
 // Read search and stock-status filters.
 $search = adminFilterValue('search');
@@ -332,31 +368,39 @@ $itemCount = mysqli_num_rows($result);
             </div>
         </div>
 
-        <form method="POST" action="inventory.php" class="stock-form">
+        <form method="POST" action="inventory.php" class="stock-form" novalidate>
 
             <div class="form-field">
                 <label for="product_id">Product</label>
-                <select name="product_id" id="product_id" required>
+                <select name="product_id" id="product_id">
                     <option value="">Select a product</option>
 
                     <?php
                     while ($product = mysqli_fetch_assoc($productResult)):
                     ?>
-                        <option value="<?= (int) $product['product_id'] ?>">
+                        <option
+                            value="<?= (int) $product['product_id'] ?>"
+                            <?= ($old['product_id'] ?? '') == $product['product_id'] ? 'selected' : '' ?>>
                             <?= htmlspecialchars($product['product_name']) ?>
-                            | Stock: <?= (int) $product['stock_quantity'] ?>
+                            — Stock: <?= (int) $product['stock_quantity'] ?>
                         </option>
                     <?php endwhile; ?>
                 </select>
+                <?php if (isset($errors['product'])): ?>
+                    <small class="text-danger"><?= htmlspecialchars($errors['product']) ?></small>
+                <?php endif; ?>
             </div>
 
             <div class="form-field">
                 <label for="movement_type">Movement Type</label>
-                <select name="movement_type" id="movement_type" required>
+                <select name="movement_type" id="movement_type">
                     <option value="">Select movement type</option>
-                    <option value="Restock">Restock</option>
-                    <option value="Adjustment">Adjustment</option>
+                    <option value="Restock" <?= ($old['movement_type'] ?? '') === 'Restock' ? 'selected' : '' ?>>Restock</option>
+                    <option value="Adjustment" <?= ($old['movement_type'] ?? '') === 'Adjustment' ? 'selected' : '' ?>>Adjustment</option>
                 </select>
+                <?php if (isset($errors['movement'])): ?>
+                    <small class="text-danger"><?= htmlspecialchars($errors['movement']) ?></small>
+                <?php endif; ?>
                 <small>
                     Use a positive quantity to add stock or a negative quantity
                     for a stock reduction.
@@ -365,14 +409,17 @@ $itemCount = mysqli_num_rows($result);
 
             <div class="form-field">
                 <label for="quantity">Quantity Change</label>
-                <input
-                    type="number"
+                <inputs
+                    type="text"
+                    inputmode="numeric"
                     name="quantity"
                     id="quantity"
-                    step="1"
-                    required
+                    value="<?= htmlspecialchars($old['quantity'] ?? '') ?>"
                     placeholder="Example: 10 or -2"
                 >
+                <?php if (isset($errors['quantity'])): ?>
+                    <small class="text-danger"><?= htmlspecialchars($errors['quantity']) ?></small>
+                <?php endif; ?>
             </div>
 
             <div class="form-field">
@@ -381,10 +428,12 @@ $itemCount = mysqli_num_rows($result);
                     type="text"
                     name="reason"
                     id="reason"
-                    maxlength="255"
-                    required
+                    value="<?= htmlspecialchars($old['reason'] ?? '') ?>"
                     placeholder="Example: New delivery received"
                 >
+                <?php if (isset($errors['reason'])): ?>
+                    <small class="text-danger"><?= htmlspecialchars($errors['reason']) ?></small>
+                <?php endif; ?>
             </div>
 
             <div class="form-actions">

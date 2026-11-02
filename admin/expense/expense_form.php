@@ -59,6 +59,20 @@ $success = $_SESSION['success'] ?? '';
 $error = $_SESSION['error'] ?? '';
 
 unset($_SESSION['success'], $_SESSION['error']);
+
+$errors = $_SESSION['form_errors'] ?? [];
+$old = $_SESSION['form_old'] ?? [];
+
+unset($_SESSION['form_errors'], $_SESSION['form_old']);
+
+if (!empty($old)) {
+    $selected_type = $old['expense_type'];
+    $custom_type = $old['other_type'];
+    $expense['expense_date'] = $old['expense_date'];
+    $expense['amount'] = $old['amount'];
+    $expense['description'] = $old['description'];
+}
+
 ?>
 
 <?php require_once '../../includes/adminSidebar.php'; ?>
@@ -84,12 +98,19 @@ unset($_SESSION['success'], $_SESSION['error']);
         </div>
     <?php endif; ?>
 
+    <?php if (!empty($errors)): ?>
+        <div class="alert alert-danger">
+            Please correct the errors below.
+        </div>
+    <?php endif; ?>
+
     <div class="card">
         <div class="card-body">
 
             <form
                 action="<?= $is_edit ? 'update.php' : 'store.php' ?>"
-                method="POST">
+                method="POST"
+                novalidate>
 
                 <?php if ($is_edit): ?>
                     <input type="hidden"
@@ -105,8 +126,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                     <select
                         class="form-select"
                         id="expense_type"
-                        name="expense_type"
-                        required>
+                        name="expense_type">
 
                         <option value="">Select expense type</option>
 
@@ -123,6 +143,13 @@ unset($_SESSION['success'], $_SESSION['error']);
                             Other
                         </option>
                     </select>
+
+                    <?php if (isset($errors['type'])): ?>
+                        <small class="text-danger">
+                            <?= htmlspecialchars($errors['type']) ?>
+                        </small>
+                    <?php endif; ?>
+
                 </div>
 
                 <div class="mb-3"
@@ -138,9 +165,15 @@ unset($_SESSION['success'], $_SESSION['error']);
                         class="form-control"
                         id="other_type"
                         name="other_type"
-                        maxlength="80"
                         value="<?= htmlspecialchars($custom_type) ?>"
                         placeholder="Enter expense type">
+
+                    <?php if (isset($errors['other'])): ?>
+                        <small class="text-danger">
+                            <?= htmlspecialchars($errors['other']) ?>
+                        </small>
+                    <?php endif; ?>
+                    
                 </div>
 
                 <div class="mb-3">
@@ -153,8 +186,14 @@ unset($_SESSION['success'], $_SESSION['error']);
                         class="form-control"
                         id="expense_date"
                         name="expense_date"
-                        value="<?= htmlspecialchars($expense['expense_date']) ?>"
-                        required>
+                        value="<?= htmlspecialchars($expense['expense_date']) ?>">
+
+                    <?php if (isset($errors['date'])): ?>
+                        <small class="text-danger">
+                            <?= htmlspecialchars($errors['date']) ?>
+                        </small>
+                    <?php endif; ?>
+
                 </div>
 
                 <div class="mb-3">
@@ -163,16 +202,20 @@ unset($_SESSION['success'], $_SESSION['error']);
                     </label>
 
                     <input
-                        type="number"
+                        type="text"
+                        inputmode="decimal"
                         class="form-control"
                         id="amount"
                         name="amount"
-                        min="0.01"
-                        max="99999999.99"
-                        step="0.01"
                         value="<?= htmlspecialchars((string)$expense['amount']) ?>"
-                        placeholder="0.00"
-                        required>
+                        placeholder="0.00">
+
+                    <?php if (isset($errors['amount'])): ?>
+                        <small class="text-danger">
+                            <?= htmlspecialchars($errors['amount']) ?>
+                        </small>
+                    <?php endif; ?>
+
                 </div>
 
                 <div class="mb-3">
@@ -184,9 +227,15 @@ unset($_SESSION['success'], $_SESSION['error']);
                         class="form-control"
                         id="description"
                         name="description"
-                        maxlength="255"
                         rows="3"
                         placeholder="Additional details"><?= htmlspecialchars($expense['description'] ?? '') ?></textarea>
+
+                    <?php if (isset($errors['description'])): ?>
+                        <small class="text-danger">
+                            <?= htmlspecialchars($errors['description']) ?>
+                        </small>
+                    <?php endif; ?>
+
                 </div>
 
                 <div class="d-flex gap-2">
@@ -218,7 +267,6 @@ function toggleOtherType() {
     const isOther = expenseType.value === 'Other';
 
     otherContainer.style.display = isOther ? 'block' : 'none';
-    otherInput.required = isOther;
 
     if (!isOther) {
         otherInput.value = '';
