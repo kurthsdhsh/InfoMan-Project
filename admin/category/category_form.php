@@ -40,6 +40,17 @@ if (isset($_GET['id'])) {
     mysqli_stmt_close($stmt);
 }
 
+$errors = $_SESSION['form_errors'] ?? [];
+$old = $_SESSION['form_old'] ?? [];
+$error = $_SESSION['error'] ?? '';
+
+unset($_SESSION['form_errors'], $_SESSION['form_old'], $_SESSION['error']);
+
+if (!empty($old)) {
+    $category_name = $old['category_name'];
+    $description = $old['description'];
+}
+
 ?>
 
 <div class="admin-container">
@@ -56,13 +67,26 @@ if (isset($_GET['id'])) {
             ?>
         </h2>
 
-    </div>
+    </div> 
+
+    <?php if ($error != ''): ?>
+        <div class="alert alert-danger">
+            <?php echo htmlspecialchars($error); ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if (!empty($errors)): ?>
+        <div class="alert alert-danger">
+            Please correct the errors below.
+        </div>
+    <?php endif; ?>
 
     <div class="table-card" style="padding: 30px;">
 
-        <form
-            action="<?php echo $isEdit ? 'update.php' : 'store.php'; ?>"
-            method="POST">
+    <form
+        action="<?php echo $isEdit ? 'update.php' : 'store.php'; ?>"
+        method="POST"
+        novalidate>
 
             <?php if ($isEdit): ?>
 
@@ -85,9 +109,13 @@ if (isset($_GET['id'])) {
                     class="form-control"
                     id="category_name"
                     name="category_name"
-                    value="<?php echo htmlspecialchars($category_name); ?>"
-                    maxlength="80"
-                    required>
+                    value="<?php echo htmlspecialchars($category_name); ?>">
+
+                <?php if (isset($errors['name'])): ?>
+                    <small class="text-danger">
+                        <?php echo htmlspecialchars($errors['name']); ?>
+                    </small>
+                <?php endif; ?>
 
             </div>
 
@@ -102,8 +130,13 @@ if (isset($_GET['id'])) {
                     class="form-control"
                     id="description"
                     name="description"
-                    maxlength="255"
                     rows="4"><?php echo htmlspecialchars($description ?? ''); ?></textarea>
+
+                <?php if (isset($errors['description'])): ?>
+                    <small class="text-danger">
+                        <?php echo htmlspecialchars($errors['description']); ?>
+                    </small>
+                <?php endif; ?>
 
             </div>
 
