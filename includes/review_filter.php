@@ -5,7 +5,7 @@ function badWordList(): array
     return [
         // English
         'fuck', 'fucking', 'fucker', 'shit', 'bullshit', 'bitch', 'asshole', 'bastard', 'damn',
-        'crap', 'dick', 'piss', 'slut', 'whore', 'idiot', 'stupid', 'moron', 'hell', 
+        'crap', 'dick', 'piss', 'slut', 'whore', 'idiot', 'stupid', 'moron', 'hell', 'wtf', 'wth', 'freak',
         // Filipino
         'esmiringhoy','putang ina', 'putangina', 'nakakatangina', 'puta', 'tangina', 'tang ina', 'gago', 'gaga', 'tanga', 'bobo',
         'ulol', 'tarantado', 'letse', 'punyeta', 'pakyu', 'pakshet', 'siraulo', 'buwisit', 'ukinam', 'ukininam',

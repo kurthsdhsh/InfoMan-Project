@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $role           = $_POST['role'] ?? '';
 
     if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'] ?? '')) {
-        $error = 'Invalid request. Please try again.';
+        $error = 'Invalid request. Please try again.'; //protection checker
     } elseif ($first_name === '' || $last_name === '') {
         $error = 'First name and last name are required.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'You cannot change your own role or deactivate yourself.';
     } else {
         try {
-            // email already used by another customer?
+            // check lang if nagamit naba yung email ng iba
             $check = mysqli_execute_query(
                 $conn,
                 "SELECT customer_id FROM tbl_customers WHERE email = ? AND customer_id <> ? LIMIT 1",
@@ -81,13 +81,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // something failed: show what was typed instead of the saved values
+    // kapag may nag fail, hindi basta basta masasave yung values
     $customer['first_name']     = $first_name;
     $customer['last_name']      = $last_name;
     $customer['email']          = $email;
     $customer['contact_number'] = $contact_number;
     $customer['account_status'] = $account_status;
-     $customer['role']           = $role;
+    $customer['role']           = $role;
 }
 
 $pageTitle = 'Edit customer';

@@ -7,10 +7,7 @@ include('../../includes/filter_helper.php');
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(16));
 }
-
-// ---- steps used by the hard delete (a customer's orders are deleted with the customer) ----
-// [SQL, optional]. An optional step is skipped when that table does not exist.
-// Change the table / column names here if yours are different.
+//delete all data sa ibang table kapag nag delete
 $deleteSteps = [
     ["DELETE p FROM tbl_payments p INNER JOIN tbl_orders o ON p.order_id = o.order_id WHERE o.customer_id = ?", true],
     ["DELETE oi FROM tbl_order_items oi INNER JOIN tbl_orders o ON oi.order_id = o.order_id WHERE o.customer_id = ?", true],
@@ -126,7 +123,7 @@ try {
     while ($r = mysqli_fetch_assoc($oc)) {
         $orderCounts[$r['customer_id']] = (int)$r['n'];
     }
-} catch (Throwable $e) {
+} catch (Throwable $e) { // catch any throwable error or exception and store it in the variable $e
     $ordersKnown = false;   // no orders table found
 }
 
