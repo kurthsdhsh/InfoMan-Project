@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 mysqli_report(MYSQLI_REPORT_OFF);
 

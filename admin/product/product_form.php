@@ -12,6 +12,7 @@ $product_description = '';
 $unit_price = '';
 $image_path = '';
 $product_status = 'Active';
+$reorder_level = '5';
 
 $isEdit = false;
 
@@ -39,6 +40,7 @@ if (isset($_GET['id'])) {
         $unit_price = $row['unit_price'];
         $image_path = $row['image_path'];
         $product_status = $row['product_status'];
+        $reorder_level = $row['reorder_level'];
 
     } else {
 
@@ -63,6 +65,7 @@ if (!empty($old)) {
     $product_description = $old['product_description'];
     $unit_price = $old['unit_price'];
     $product_status = $old['product_status'];
+    $reorder_level = $old['reorder_level'] ?? '5';
 }
 
 
@@ -235,6 +238,36 @@ $category_result = mysqli_query($conn, $sql);
                 <?php if (isset($errors['price'])): ?>
                     <small class="text-danger">
                         <?php echo htmlspecialchars($errors['price']); ?>
+                    </small>
+                <?php endif; ?>
+
+            </div>
+
+            <!-- Reorder Level -->
+
+            <div class="mb-3">
+
+                <label for="reorder_level" class="form-label">
+                    Reorder Level
+                </label>
+
+                <input
+                    type="text"
+                    inputmode="numeric"
+                    class="form-control"
+                    id="reorder_level"
+                    name="reorder_level"
+                    value="<?php echo htmlspecialchars($reorder_level); ?>">
+
+                <small class="text-muted">
+                    Recommended: 5. The product counts as "Low stock" when its
+                    stock is at or below this number. You can change it.
+                </small>
+
+                <?php if (isset($errors['reorder'])): ?>
+                    <br>
+                    <small class="text-danger">
+                        <?php echo htmlspecialchars($errors['reorder']); ?>
                     </small>
                 <?php endif; ?>
 

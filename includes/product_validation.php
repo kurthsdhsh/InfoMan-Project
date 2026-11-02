@@ -37,7 +37,7 @@ function checkImageFile($file)
 }
 
 
-function validateProduct($conn, $category_id, $product_name, $product_description, $unit_price, $product_status, $imageFile)
+function validateProduct($conn, $category_id, $product_name, $product_description, $unit_price, $product_status, $reorder_level, $imageFile)
 {
     $errors = [];
 
@@ -82,6 +82,14 @@ function validateProduct($conn, $category_id, $product_name, $product_descriptio
 
     if ($product_status !== 'Active' && $product_status !== 'Inactive') {
         $errors['status'] = 'Please choose a valid status.';
+    }
+
+    if ($reorder_level === '') {
+        $errors['reorder'] = 'Please enter the reorder level.';
+    } elseif (!ctype_digit($reorder_level)) {
+        $errors['reorder'] = 'Reorder level must be a whole number, 0 or more.';
+    } elseif ((int)$reorder_level > 100000) {
+        $errors['reorder'] = 'Reorder level is too large.';
     }
 
     if ($imageFile['error'] != UPLOAD_ERR_NO_FILE) {
