@@ -1,7 +1,4 @@
 <?php
-// adminSidebar.php: replaces adminHeader.php. Opens <html>, <body>, the left sidebar and <main>.
-// Every admin page does:  include('../includes/adminSidebar.php');  ...content...  </main></body></html>
-// Set $pageTitle before including it to change the browser tab title.
 
 $current = $_SERVER['SCRIPT_NAME'];
 
