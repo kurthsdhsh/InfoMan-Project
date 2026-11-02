@@ -259,6 +259,7 @@ $itemCount = mysqli_num_rows($result);
                         <th>Product</th>
                         <th>Category</th>
                         <th>Current Stock</th>
+                        <th>Reorder Level</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -299,6 +300,8 @@ $itemCount = mysqli_num_rows($result);
                                     <?= $stock ?>
                                 </span>
                             </td>
+
+                            <td><?= $reorder ?></td>
 
 
                             <td>
@@ -341,7 +344,7 @@ $itemCount = mysqli_num_rows($result);
                     ?>
                         <option value="<?= (int) $product['product_id'] ?>">
                             <?= htmlspecialchars($product['product_name']) ?>
-                            — Stock: <?= (int) $product['stock_quantity'] ?>
+                            | Stock: <?= (int) $product['stock_quantity'] ?>
                         </option>
                     <?php endwhile; ?>
                 </select>

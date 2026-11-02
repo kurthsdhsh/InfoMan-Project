@@ -2,25 +2,25 @@
 require __DIR__ . '/../PHPMailer/src/Exception.php';
 require __DIR__ . '/../PHPMailer/src/PHPMailer.php';
 require __DIR__ . '/../PHPMailer/src/SMTP.php';
-require __DIR__ . '/../config/mail_config.php';
+$mailConfig = __DIR__ . '/../config/mail_config.php';
+if (is_file($mailConfig)) {
+    require $mailConfig;
+}
 
-define('MAIL_HOST', 'sandbox.smtp.mailtrap.io');
-define('MAIL_PORT', 2525);
-define('MAIL_USER', 'PASTE_SANDBOX_USERNAME');
-define('MAIL_PASS', 'PASTE_SANDBOX_PASSWORD');
-define('MAIL_FROM', 'noreply@myshop.test');
 define('BASE_URL',  'http://localhost/InfoMan-Project');
 
    function sendMail($toEmail, $subject, $htmlBody, array $attachments = [])
 {
+    if (!defined('MAIL_HOST')) {
+        return false;   
+    }
+
     $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
     try {
         $mail->isSMTP();
         $mail->Host     = MAIL_HOST;
         $mail->SMTPAuth   = true;
         $mail->Username = MAIL_USER;
-        //$mail->Password   = '08f7d417c4ffcc';
-        // $mail->Username   = 'c6936cafdcc61a';
         $mail->Password = MAIL_PASS;
         $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port     = MAIL_PORT;

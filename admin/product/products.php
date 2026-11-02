@@ -5,7 +5,7 @@ include('../../includes/adminSidebar.php');
 include('../../includes/config.php');
 include('../../includes/filter_helper.php');
 
-$search = adminFilterValue('search');
+$search = adminFilterValue('search'); // helper function
 $categoryFilter = adminFilterValue('category_id');
 $statusFilter = adminFilterValue('status');
 
@@ -31,7 +31,6 @@ if ($statusFilter !== '') {
     $types .= 's';
 }
 
-// LEFT JOIN so products without a category still show up
 $sql = "SELECT
             p.product_id,
             p.product_name,
@@ -71,7 +70,7 @@ $result = mysqli_stmt_get_result($stmt);
 
 $itemCount = mysqli_num_rows($result);
 
-// Load categories for the dropdown.
+// load categories for the dropdown
 $categoryResult = mysqli_query(
     $conn,
     "SELECT category_id, category_name

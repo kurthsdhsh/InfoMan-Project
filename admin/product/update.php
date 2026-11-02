@@ -44,6 +44,7 @@ $product_name = productInput('product_name');
 $product_description = productInput('product_description');
 $unit_price = productInput('unit_price');
 $product_status = productInput('product_status');
+$reorder_level = productInput('reorder_level');
 $imageFile = $_FILES['image'] ?? ['error' => UPLOAD_ERR_NO_FILE];
 $photos = productPhotos();
 
@@ -71,7 +72,8 @@ $old = [
     'product_name' => $product_name,
     'product_description' => $product_description,
     'unit_price' => $unit_price,
-    'product_status' => $product_status
+    'product_status' => $product_status,
+    'reorder_level' => $reorder_level
 ];
 
 $errors = validateProduct(
@@ -81,6 +83,7 @@ $errors = validateProduct(
     $product_description,
     $unit_price,
     $product_status,
+    $reorder_level,
     $imageFile
 );
 
@@ -119,6 +122,7 @@ if ($imageFile['error'] == UPLOAD_ERR_OK) {
 
 $category = (int)$category_id;
 $price = (float)$unit_price;
+$reorder = (int)$reorder_level;
 
 $sql = "UPDATE tbl_products
         SET
@@ -127,20 +131,22 @@ $sql = "UPDATE tbl_products
             product_description = ?,
             unit_price = ?,
             image_path = ?,
-            product_status = ?
+            product_status = ?,
+            reorder_level = ?
         WHERE product_id = ?";
 
 $stmt = mysqli_prepare($conn, $sql);
 
 mysqli_stmt_bind_param(
     $stmt,
-    "issdssi",
+    "issdssii",
     $category,
     $product_name,
     $product_description,
     $price,
     $image_path,
     $product_status,
+    $reorder,
     $product_id
 );
 
