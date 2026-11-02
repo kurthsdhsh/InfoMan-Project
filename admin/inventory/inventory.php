@@ -411,7 +411,7 @@ $itemCount = mysqli_num_rows($result);
 
             <div class="form-field">
                 <label for="quantity">Quantity Change</label>
-                <inputs
+                <input
                     type="text"
                     inputmode="numeric"
                     name="quantity"
